@@ -153,82 +153,87 @@ class EcoleasePDFGenerator:
         width, height = landscape(A4)
 
         # 二重線の大外枠
-        margin = 15*mm
+        outer_margin = 12*mm
         inner_margin = 3*mm
         c.setLineWidth(2.5)
-        c.rect(margin, margin, width - 2*margin, height - 2*margin, stroke=1, fill=0)
-        c.setLineWidth(1)
-        c.rect(margin + inner_margin, margin + inner_margin,
-               width - 2*margin - 2*inner_margin, height - 2*margin - 2*inner_margin, stroke=1, fill=0)
+        c.rect(outer_margin, outer_margin, width - 2*outer_margin, height - 2*outer_margin, stroke=1, fill=0)
+        c.setLineWidth(0.8)
+        c.rect(outer_margin + inner_margin, outer_margin + inner_margin,
+               width - 2*outer_margin - 2*inner_margin, height - 2*outer_margin - 2*inner_margin, stroke=1, fill=0)
 
-        # 内部マージン
-        left_x = margin + inner_margin + 10*mm
-        right_x = width - margin - inner_margin - 10*mm
-        top_y = height - margin - inner_margin - 10*mm
+        # コンテンツエリア
+        content_left = outer_margin + inner_margin + 8*mm
+        content_right = width - outer_margin - inner_margin - 8*mm
+        content_top = height - outer_margin - inner_margin - 8*mm
 
         # 見積No（左上）
         c.setFont(self.font_name, 10)
         quote_no = fmt_doc.metadata.get('quote_no', 'XXXXXXX-00')
-        c.drawString(left_x, top_y, f"見積No　{quote_no}")
+        c.drawString(content_left, content_top, f"見積No　{quote_no}")
 
         # 日付（右上）
-        c.drawRightString(right_x, top_y, datetime.now().strftime("%Y年　%m月　%d日"))
+        c.drawRightString(content_right, content_top, datetime.now().strftime("%Y年　%m月　%d日"))
 
-        # タイトル「御　見　積　書」（中央）
-        c.setFont(self.font_name, 24)
-        c.drawCentredString(width / 2, top_y - 25*mm, "御　見　積　書")
+        # タイトル「御　見　積　書」（中央上部）
+        c.setFont(self.font_name, 22)
+        c.drawCentredString(width / 2, content_top - 22*mm, "御　見　積　書")
 
-        # 左側コンテンツ
-        left_y = top_y - 45*mm
-
-        # 宛先
-        c.setFont(self.font_name, 12)
+        # 宛先（左上、タイトルの下）
+        y = content_top - 38*mm
+        c.setFont(self.font_name, 11)
         client_name = fmt_doc.project_info.client_name or ""
-        c.drawString(left_x, left_y, f"{client_name}　御中")
-        left_y -= 20*mm
+        client_text = f"{client_name}　御中"
+        c.drawString(content_left, y, client_text)
+
+        # 宛先の下線
+        text_width = c.stringWidth(client_text, self.font_name, 11)
+        c.line(content_left, y - 2*mm, content_left + text_width, y - 2*mm)
 
         # 御見積金額
+        y -= 18*mm
         total_amount = sum(item.amount or 0 for item in fmt_doc.estimate_items if item.level == 0)
-        c.setFont(self.font_name, 11)
-        c.drawString(left_x, left_y, "御見積金額")
-        c.setFont(self.font_name, 20)
-        c.drawString(left_x + 25*mm, left_y, f"￥{int(total_amount):,}*")
+        c.setFont(self.font_name, 10)
+        c.drawString(content_left, y, "御見積金額")
+        c.setFont(self.font_name, 18)
+        c.drawString(content_left + 28*mm, y, f"￥{int(total_amount):,}*")
+
+        # NET金額注釈
         c.setFont(self.font_name, 7)
-        c.drawString(left_x + 25*mm, left_y - 5*mm, "上記NET金額の為値引き不可となります")
-        left_y -= 25*mm
+        c.drawString(content_left + 28*mm, y - 4*mm, "上記NET金額の為値引き不可となります")
 
         # 「上記の通り御見積申し上げます。」
+        y -= 22*mm
         c.setFont(self.font_name, 10)
-        c.drawString(left_x, left_y, "上記の通り御見積申し上げます。")
-        left_y -= 15*mm
+        c.drawString(content_left, y, "上記の通り御見積申し上げます。")
 
-        # 工事情報
-        c.drawString(left_x, left_y, "工　事　名")
-        c.drawString(left_x + 30*mm, left_y, fmt_doc.project_info.project_name)
-        left_y -= 10*mm
+        # 工事情報（左側）
+        y -= 12*mm
+        c.drawString(content_left, y, "工　事　名")
+        c.drawString(content_left + 25*mm, y, fmt_doc.project_info.project_name)
 
-        c.drawString(left_x, left_y, "工事場所")
+        y -= 8*mm
+        c.drawString(content_left, y, "工事場所")
         location = fmt_doc.project_info.location or ""
-        c.drawString(left_x + 30*mm, left_y, location)
-        left_y -= 10*mm
+        c.drawString(content_left + 25*mm, y, location)
 
-        c.drawString(left_x, left_y, "リース期間")
+        y -= 8*mm
+        c.drawString(content_left, y, "リース期間")
         period = fmt_doc.project_info.contract_period or ""
-        c.drawString(left_x + 30*mm, left_y, period)
-        left_y -= 10*mm
+        c.drawString(content_left + 25*mm, y, period)
 
-        c.drawString(left_x, left_y, "決済条件")
-        c.drawString(left_x + 30*mm, left_y, "本紙記載内容のみ有効とする。")
-        left_y -= 10*mm
+        y -= 8*mm
+        c.drawString(content_left, y, "決済条件")
+        c.drawString(content_left + 25*mm, y, "本紙記載内容のみ有効とする。")
 
-        c.drawString(left_x, left_y, "備　　　考")
-        c.drawString(left_x + 30*mm, left_y, "法定福利費を含む。")
+        y -= 8*mm
+        c.drawString(content_left, y, "備　　　考")
+        c.drawString(content_left + 25*mm, y, "法定福利費を含む。")
 
-        # 検印欄（右上）
-        stamp_x = right_x - 50*mm
-        stamp_y = top_y - 60*mm
+        # 検印欄（右側中央）
         stamp_width = 50*mm
-        stamp_height = 20*mm
+        stamp_height = 18*mm
+        stamp_x = content_right - stamp_width
+        stamp_y = content_top - 52*mm
 
         c.rect(stamp_x, stamp_y, stamp_width, stamp_height)
 
@@ -239,24 +244,25 @@ class EcoleasePDFGenerator:
 
         # ラベル
         c.setFont(self.font_name, 8)
-        c.drawCentredString(stamp_x + col_width / 2, stamp_y + stamp_height - 5*mm, "検印")
-        c.drawCentredString(stamp_x + col_width * 1.5, stamp_y + stamp_height - 5*mm, "検印")
-        c.drawCentredString(stamp_x + col_width * 2.5, stamp_y + stamp_height - 5*mm, "作成者")
+        label_y = stamp_y + stamp_height - 4*mm
+        c.drawCentredString(stamp_x + col_width / 2, label_y, "検印")
+        c.drawCentredString(stamp_x + col_width * 1.5, label_y, "検印")
+        c.drawCentredString(stamp_x + col_width * 2.5, label_y, "作成者")
 
         # 会社情報（右下）
-        company_y = margin + inner_margin + 35*mm
-        c.setFont(self.font_name, 14)
-        c.drawRightString(right_x, company_y, "株式会社　エコリース")
-        company_y -= 7*mm
-        c.setFont(self.font_name, 9)
-        c.drawRightString(right_x, company_y, "代表取締役　　赤澤　健一")
+        company_y = outer_margin + inner_margin + 38*mm
+        c.setFont(self.font_name, 13)
+        c.drawRightString(content_right, company_y, "株式会社　エコリース")
         company_y -= 6*mm
+        c.setFont(self.font_name, 9)
+        c.drawRightString(content_right, company_y, "代表取締役　　赤澤　健一")
+        company_y -= 5*mm
         c.setFont(self.font_name, 8)
-        c.drawRightString(right_x, company_y, "徳島県板野郡板野町川端字鶴ヶ須47-10")
-        company_y -= 5*mm
-        c.drawRightString(right_x, company_y, "TEL　(088)　672-0441(代)")
-        company_y -= 5*mm
-        c.drawRightString(right_x, company_y, "FAX　(088)　672-3623")
+        c.drawRightString(content_right, company_y, "徳島県板野郡板野町川端字鶴ヶ須47-10")
+        company_y -= 4*mm
+        c.drawRightString(content_right, company_y, "TEL　(088)　672-0441(代)")
+        company_y -= 4*mm
+        c.drawRightString(content_right, company_y, "FAX　(088)　672-3623")
 
     def _create_detail_pages(self, c, fmt_doc: FMTDocument):
         """見積内訳明細書ページ（2ページ目以降、横向き）"""
@@ -264,18 +270,19 @@ class EcoleasePDFGenerator:
         lwidth, lheight = landscape(A4)
 
         # タイトル
-        c.setFont(self.font_name, 14)
-        title_y = lheight - 20*mm
+        c.setFont(self.font_name, 13)
+        title_y = lheight - 15*mm
         c.drawCentredString(lwidth / 2, title_y, "見　積　内　訳　明　細　書")
 
         # タイトル下線
-        line_margin = 30*mm
-        c.line(line_margin, title_y - 3*mm, lwidth - line_margin, title_y - 3*mm)
+        line_start = 80*mm
+        line_end = lwidth - 80*mm
+        c.line(line_start, title_y - 2*mm, line_end, title_y - 2*mm)
 
         # 見積番号
         c.setFont(self.font_name, 9)
         quote_no = fmt_doc.metadata.get('quote_no', 'XXXXXXX-00')
-        c.drawString(20*mm, lheight - 32*mm, f"({quote_no})")
+        c.drawString(25*mm, lheight - 25*mm, f"({quote_no})")
 
         # テーブルデータ準備
         table_data = []
@@ -283,59 +290,75 @@ class EcoleasePDFGenerator:
         # ヘッダー
         table_data.append(['No', '名　　　称', '仕　　　様', '数　量', '単位', '単　　価', '金　　額', '摘　　要'])
 
+        # プロジェクトタイトル行（結合セル）
+        project_name = fmt_doc.project_info.project_name
+        table_data.append(['', project_name, '', '', '', '', '', ''])
+
+        # 空行
+        table_data.append(['', '', '', '', '', '', '', ''])
+
+        # 大項目のみ（level=0）を表示
         for item in fmt_doc.estimate_items:
-            indent = "　" * item.level
-            row = [
-                item.item_no if not item.level else "",
-                f"{indent}{item.name}",
-                item.specification or "",
-                str(int(item.quantity)) if item.quantity and item.quantity == int(item.quantity) else (str(item.quantity) if item.quantity else ""),
-                item.unit or "",
-                f"{int(item.unit_price):,}" if item.unit_price and item.level > 0 else "",
-                f"{int(item.amount):,}" if item.amount else "",
-                item.remarks or ""
-            ]
-            table_data.append(row)
+            if item.level == 0:
+                row = [
+                    item.item_no,
+                    item.name,
+                    '',
+                    '1',
+                    '式',
+                    '',
+                    f"{int(item.amount):,}",
+                    ''
+                ]
+                table_data.append(row)
+
+        # 空行を追加（合計20行程度にする）
+        while len(table_data) < 20:
+            table_data.append(['', '', '', '', '', '', '', ''])
 
         # 総計行
         total_amount = sum(item.amount or 0 for item in fmt_doc.estimate_items if item.level == 0)
         table_data.append(['', '総　　　計', '', '', '', '', f"{int(total_amount):,}", ''])
 
-        # テーブル描画（列幅を調整）
-        col_widths = [15*mm, 60*mm, 60*mm, 20*mm, 15*mm, 25*mm, 28*mm, 35*mm]
+        # テーブル描画
+        col_widths = [18*mm, 60*mm, 50*mm, 20*mm, 15*mm, 25*mm, 28*mm, 42*mm]
 
         table = Table(table_data, colWidths=col_widths, rowHeights=7*mm)
         table.setStyle(TableStyle([
             # フォント
             ('FONTNAME', (0, 0), (-1, -1), self.font_name),
-            ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
 
             # ヘッダー
             ('FONTSIZE', (0, 0), (-1, 0), 9),
             ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
 
+            # プロジェクトタイトル行（2行目）を結合
+            ('SPAN', (1, 1), (3, 1)),
+            ('FONTSIZE', (1, 1), (1, 1), 9),
+
             # 数値列右寄せ
             ('ALIGN', (3, 1), (3, -1), 'RIGHT'),
-            ('ALIGN', (5, 1), (6, -1), 'RIGHT'),
+            ('ALIGN', (6, 1), (6, -1), 'RIGHT'),
 
             # 罫線
             ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
-            ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.black),
-            ('LINEBELOW', (0, 0), (-1, 0), 1.5, colors.black),
+            ('LINEABOVE', (0, 0), (-1, 0), 1, colors.black),
+            ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black),
 
             # 最終行（総計）
-            ('LINEABOVE', (0, -1), (-1, -1), 1.5, colors.black),
+            ('LINEABOVE', (0, -1), (-1, -1), 1, colors.black),
             ('FONTSIZE', (0, -1), (-1, -1), 9),
             ('ALIGN', (1, -1), (1, -1), 'CENTER'),
         ]))
 
         # テーブル配置
-        table_start_y = lheight - 45*mm
+        table_start_y = lheight - 35*mm
         table.wrapOn(c, lwidth, lheight)
-        table.drawOn(c, 10*mm, table_start_y - len(table_data) * 7*mm)
+        table.drawOn(c, 25*mm, table_start_y - len(table_data) * 7*mm)
 
         # フッター
         c.setFont(self.font_name, 9)
-        c.drawString(10*mm, 10*mm, "株式会社　　エコリース")
-        c.drawRightString(lwidth - 10*mm, 10*mm, "No　1")
+        c.drawString(25*mm, 12*mm, "株式会社　　エコリース")
+        c.drawRightString(lwidth - 25*mm, 12*mm, "No　1")
