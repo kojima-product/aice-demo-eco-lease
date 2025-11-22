@@ -303,8 +303,8 @@ class EstimateExporter:
 
         # ヘッダー行
         row = 3
-        headers = ['No', '名　　　称', '仕　　　様', '数　量', '単位', '単　　価', '金　　額', '摘　　要']
-        column_widths = [8, 30, 30, 10, 8, 15, 15, 25]
+        headers = ['No', '名　　　称', '仕　　　様', '数　量', '単位', '単　　価', '金　　額', '摘　　要', '根拠情報']
+        column_widths = [8, 30, 30, 10, 8, 15, 15, 20, 35]
 
         thin_border = Border(
             left=Side(style='thin'),
@@ -383,8 +383,20 @@ class EstimateExporter:
             ws.cell(row, 8, item.remarks or "")
             ws.cell(row, 8).font = Font(name='MS Gothic', size=8)
 
+            # 根拠情報（新規追加）
+            source_info = ""
+            if item.source_reference:
+                source_info = item.source_reference
+            elif item.price_references:
+                # KB IDsがある場合
+                source_info = f"KB: {', '.join(item.price_references)}"
+
+            ws.cell(row, 9, source_info)
+            ws.cell(row, 9).font = Font(name='MS Gothic', size=7)
+            ws.cell(row, 9).alignment = Alignment(wrap_text=True, vertical='top')
+
             # 罫線
-            for col in range(1, 9):
+            for col in range(1, 10):  # 9列に拡張
                 ws.cell(row, col).border = thin_border
 
             row += 1
@@ -399,7 +411,7 @@ class EstimateExporter:
         ws.cell(row, 7).number_format = '#,##0'
 
         # 総計行の罫線（上線を太く）
-        for col in range(1, 9):
+        for col in range(1, 10):  # 9列に拡張
             ws.cell(row, col).border = Border(
                 left=Side(style='thin'),
                 right=Side(style='thin'),

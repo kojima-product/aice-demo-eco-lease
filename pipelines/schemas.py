@@ -75,6 +75,7 @@ class ProjectInfo(BaseModel):
     delivery_date: Optional[date] = Field(default=None, description="納期")
     deadline: Optional[date] = Field(default=None, description="締切日")
     contract_period: Optional[str] = Field(default=None, description="契約期間")
+    remarks: Optional[str] = Field(default=None, description="備考・特記事項")
 
 
 class EstimateItem(BaseModel):

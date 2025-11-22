@@ -658,10 +658,11 @@ def generate_estimate(
 
                     # 見積書を生成
                     if use_ai_generation:
-                        # AI自動生成モード（ガス設備のみ対応）
-                        if discipline == DisciplineType.GAS:
+                        # AI自動生成モード（ガス・電気・機械設備対応）
+                        if discipline in [DisciplineType.GAS, DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL]:
                             st.write(f"  🤖 AIが仕様書から詳細な見積項目を自動生成中...")
                             st.write(f"  　📚 建物情報を分析中...")
+                            st.write(f"  　📊 諸元表・図面データを抽出中...")
 
                             ai_generator = AIEstimateGenerator(kb_path="kb/price_kb.json")
                             fmt_doc = ai_generator.generate_estimate(
@@ -679,7 +680,7 @@ def generate_estimate(
                             st.info(f"  　💰 単価マッチング率: {match_rate:.1f}% ({with_price}/{len(fmt_doc.estimate_items)}項目)")
 
                         elif discipline in reference_pdfs_map:
-                            # 電気・機械は参照見積書ベースにフォールバック
+                            # 参照見積書ベースにフォールバック
                             st.warning(f"  ⚠️ {discipline.value}はAI自動生成未対応のため、参照見積書ベースで生成します")
                             st.write(f"  📋 参照見積書から詳細な項目・単価を抽出中...")
 

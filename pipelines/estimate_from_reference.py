@@ -19,6 +19,7 @@ from pipelines.schemas import (
     EstimateItem, DisciplineType, FMTDocument, ProjectInfo, FacilityType,
     CostType, OverheadCalculation
 )
+from pipelines.cost_tracker import record_cost
 
 
 class EstimateFromReference:
@@ -52,20 +53,43 @@ class EstimateFromReference:
         logger.info(f"Extracting estimate from reference PDF: {pdf_path}")
 
         try:
-            # PDFからテキストを抽出
+            # PDFからテキストを抽出（全ページ対応）
             with open(pdf_path, 'rb') as file:
                 pdf_reader = PyPDF2.PdfReader(file)
                 text = ""
-                for page_num in range(min(len(pdf_reader.pages), 20)):
+                total_pages = len(pdf_reader.pages)
+                # 全ページを処理（制限なし）
+                for page_num in range(total_pages):
                     text += pdf_reader.pages[page_num].extract_text() + "\n"
 
-            logger.info(f"Extracted {len(text)} characters from reference PDF")
+            logger.info(f"Extracted {len(text)} characters from reference PDF ({total_pages} pages)")
+
+            # テキストがほとんど抽出できない場合はOCRを使用（スキャンPDFの可能性）
+            # 閾値を緩和: 100 → 500文字
+            if len(text.strip()) < 500:
+                logger.warning(f"Text extraction yielded only {len(text)} chars, using OCR for reference PDF...")
+                from pipelines.ocr_extractor import OCRExtractor
+                ocr = OCRExtractor()
+
+                # OCRで全ページ抽出
+                items_data = ocr.extract_from_pdf(pdf_path)
+
+                # OCR結果をテキストに変換
+                text = "\n".join([
+                    f"【項目】 {item.get('name', '')} | 仕様: {item.get('specification', '')} | "
+                    f"数量: {item.get('quantity', '')} | 単位: {item.get('unit', '')} | "
+                    f"単価: {item.get('unit_price', '')} | 金額: {item.get('amount', '')}"
+                    for item in items_data
+                ])
+
+                logger.info(f"OCR extraction completed: {len(text)} characters, {len(items_data)} items")
 
             # LLMで構造化データに変換
+            # テキスト制限を緩和: 最大60000文字（大規模PDF対応）
             prompt = f"""以下の見積書PDFから、見積項目を詳細に抽出してください。
 
 見積書テキスト:
-{text[:15000]}
+{text[:60000]}
 
 【抽出する情報】
 各見積項目について、以下の情報を正確に抽出してください：
@@ -172,6 +196,15 @@ JSON配列形式で出力してください：
                 max_tokens=16000,
                 temperature=0,
                 messages=[{"role": "user", "content": prompt}]
+            )
+
+            # コスト記録
+            record_cost(
+                operation="見積抽出（参照PDF）",
+                model_name=self.model_name,
+                input_tokens=response.usage.input_tokens,
+                output_tokens=response.usage.output_tokens,
+                metadata={"file": Path(pdf_path).name, "discipline": discipline.value}
             )
 
             response_text = response.content[0].text
