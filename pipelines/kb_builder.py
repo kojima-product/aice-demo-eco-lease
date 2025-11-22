@@ -86,10 +86,17 @@ class PriceKBBuilder:
                         "消防": DisciplineType.FIRE_PROTECTION
                     }
 
-                    discipline = discipline_map.get(
-                        item.get("discipline", "ガス").replace("設備工事", ""),
-                        DisciplineType.GAS
-                    )
+                    # OCR結果の工事区分を使用、なければキーワードベースで推定
+                    ocr_discipline = item.get("discipline", "").replace("設備工事", "")
+                    if ocr_discipline in discipline_map:
+                        discipline = discipline_map[ocr_discipline]
+                    else:
+                        # キーワードベースで自動推定（ファイル名もヒント）
+                        discipline = self._infer_discipline(
+                            item.get("name", ""),
+                            item.get("specification", ""),
+                            project_name
+                        )
 
                     # コンテキストタグの生成
                     context_tags = []
@@ -124,43 +131,73 @@ class PriceKBBuilder:
 
         # LLMで構造化データに変換
         # テキスト制限を緩和: 最大60000文字（大規模PDF対応）
-        prompt = f"""以下の見積書PDFから、単価情報を抽出してください。
+        prompt = f"""以下の見積書PDFから、単価情報を抽出して単価データベース（KB）を構築します。
 
 見積書テキスト:
 {text[:60000]}
 
 【抽出する情報】
 各見積項目について：
-1. 項目名（name）
-2. 仕様（specification）
+1. 項目名（name）- 具体的で検索可能な名称
+2. 仕様（specification）- サイズ、型番、材質等
 3. 数量（quantity）
 4. 単位（unit）
-5. 単価（unit_price）
+5. 単価（unit_price）- 必須
 6. 金額（amount）
-7. 工事区分（discipline: 電気|機械|空調|衛生|ガス|消防）
+7. 工事区分（discipline）- 下記から選択
+
+【工事区分の判定基準】
+- 電気: キュービクル、分電盤、配電盤、ケーブル、CV、配線、照明、コンセント、接地、ブレーカー
+- 機械: ダクト、換気扇、ファン、ポンプ、エレベーター、ボイラー
+- 空調: エアコン、パッケージ、室外機、室内機、冷媒配管、ヒートポンプ
+- 衛生: 給水管、排水管、給湯、トイレ、洗面、受水槽
+- ガス: ガス管、ガスコンセント、ガス栓、PE管、ガスメーター
+- 消防: スプリンクラー、感知器、消火栓、誘導灯、火災報知
+
+【重要な処理ルール】
+1. **「同上」「〃」「上記と同じ」などの省略表記は、直前の具体的な項目名に置き換えて出力してください**
+   例: 「同上施工費」→「架橋ポリエチレンケーブル施工費」
+   例: 「同上支持材」→「600Vビニル絶縁電線支持材」
+
+2. **以下の項目は除外してください:**
+   - 小計・合計・計行
+   - 項目名が空または「計」「小計」「合計」のみのもの
+   - 単価が0円または記載なしのもの
+   - 諸経費、法定福利費（率計算のため）
+
+3. **項目名は単独で意味が通じる形にしてください:**
+   悪い例: 「同上」「〃」「設置費」
+   良い例: 「気中開閉器設置費」「CVTケーブル布設費」
 
 【出力形式】
 JSON配列で出力してください：
 ```json
 [
   {{
-    "name": "白ガス管（ネジ接合）",
-    "specification": "15A",
-    "quantity": 93,
+    "name": "架橋ポリエチレンケーブル",
+    "specification": "6KV CVT38sq",
+    "quantity": 153,
     "unit": "m",
-    "unit_price": 8990,
-    "amount": 836070,
-    "discipline": "ガス"
+    "unit_price": 10300,
+    "amount": 1575900,
+    "discipline": "電気"
+  }},
+  {{
+    "name": "架橋ポリエチレンケーブル布設費",
+    "specification": "6KV CVT38sq",
+    "quantity": 153,
+    "unit": "m",
+    "unit_price": 2500,
+    "amount": 382500,
+    "discipline": "電気"
   }}
 ]
-```
-
-単価が記載されている具体的な項目のみを抽出してください。親項目（小計のみ）は除外してください。"""
+```"""
 
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=8000,
+                max_tokens=16000,  # 詳細な抽出のため増加
                 temperature=0,
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -205,10 +242,17 @@ JSON配列で出力してください：
                         "消防": DisciplineType.FIRE_PROTECTION
                     }
 
-                    discipline = discipline_map.get(
-                        item.get("discipline", ""),
-                        DisciplineType.GAS
-                    )
+                    # LLMの結果を使用、なければキーワードベースで推定
+                    llm_discipline = item.get("discipline", "")
+                    if llm_discipline in discipline_map:
+                        discipline = discipline_map[llm_discipline]
+                    else:
+                        # キーワードベースで自動推定（ファイル名もヒント）
+                        discipline = self._infer_discipline(
+                            item.get("name", ""),
+                            item.get("specification", ""),
+                            project_name
+                        )
 
                     # コンテキストタグの生成
                     context_tags = []
@@ -355,8 +399,8 @@ JSON配列で出力してください：
                 if not name or not unit_price or unit_price <= 0:
                     continue
 
-                # 工事区分を推定
-                discipline = self._infer_discipline(name, spec)
+                # 工事区分を推定（ファイル名もヒントとして使用）
+                discipline = self._infer_discipline(name, spec, project_name)
 
                 # コンテキストタグ生成
                 context_tags = []
@@ -394,24 +438,116 @@ JSON配列で出力してください：
             logger.error(f"Error extracting from Excel: {e}")
             return []
 
-    def _infer_discipline(self, name: str, spec: str) -> DisciplineType:
-        """項目名・仕様から工事区分を推定"""
-        text = name + " " + spec
+    def _infer_discipline(self, name: str, spec: str, filename: str = "") -> DisciplineType:
+        """項目名・仕様・ファイル名から工事区分を推定
 
-        if any(kw in text for kw in ["ガス", "配管", "PE管", "分岐"]):
-            return DisciplineType.GAS
-        elif any(kw in text for kw in ["電気", "配線", "コンセント", "照明"]):
+        Args:
+            name: 項目名
+            spec: 仕様
+            filename: 元ファイル名（追加のヒントとして使用）
+
+        Returns:
+            推定された工事区分
+        """
+        text = (name + " " + spec).lower()
+        filename_lower = filename.lower()
+
+        # ガス設備工事のキーワード（最も具体的）
+        gas_keywords = [
+            "ガス", "都市ガス", "lpガス", "プロパン",
+            "ガス管", "白ガス管", "pe管", "ガスコンセント",
+            "ネジコック", "分岐コック", "ガス栓", "ガスメーター",
+            "ガス漏れ", "遮断弁", "ガス工事"
+        ]
+
+        # 電気設備工事のキーワード
+        electrical_keywords = [
+            "電気", "電線", "ケーブル", "cv", "cvt", "iv",
+            "配線", "幹線", "分電盤", "配電盤", "動力盤",
+            "コンセント", "照明", "led", "蛍光灯", "器具",
+            "スイッチ", "接地", "アース", "ブレーカー", "遮断器",
+            "キュービクル", "受電", "変電", "変圧器", "トランス",
+            "pas", "高圧", "低圧", "電灯", "動力",
+            "インターホン", "放送", "lan", "弱電", "通信",
+            "火災報知", "自火報", "非常照明", "誘導灯",
+            "避雷", "雷", "接地工事", "電気工事"
+        ]
+
+        # 機械設備工事のキーワード
+        mechanical_keywords = [
+            "機械", "ダクト", "換気", "送風", "排風",
+            "ファン", "モーター", "ポンプ", "揚水",
+            "エレベーター", "昇降機", "リフト",
+            "ボイラー", "熱源", "チラー",
+            "機械工事", "機械設備"
+        ]
+
+        # 空調設備工事のキーワード
+        hvac_keywords = [
+            "空調", "エアコン", "冷暖房", "冷房", "暖房",
+            "パッケージ", "ヒートポンプ", "室外機", "室内機",
+            "ビル用マルチ", "ghp", "ehp",
+            "冷媒", "r410", "r32", "フロン",
+            "全熱交換", "ロスナイ", "換気空調",
+            "空調工事", "空調設備"
+        ]
+
+        # 衛生設備工事のキーワード
+        plumbing_keywords = [
+            "衛生", "給水", "排水", "給湯", "温水",
+            "配水管", "給水管", "排水管", "汚水", "雑排水",
+            "トイレ", "便器", "洗面", "流し", "シンク",
+            "受水槽", "高架水槽", "貯水槽",
+            "衛生器具", "水栓", "バルブ",
+            "浄化槽", "グリストラップ",
+            "衛生工事", "衛生設備", "給排水"
+        ]
+
+        # 消防設備工事のキーワード
+        fire_keywords = [
+            "消防", "消火", "スプリンクラー", "消火栓",
+            "消火器", "泡消火", "ガス消火",
+            "火災報知", "感知器", "発信機", "警報",
+            "避難", "誘導灯", "非常放送",
+            "防火", "防排煙", "排煙",
+            "消防工事", "消防設備"
+        ]
+
+        # ファイル名からのヒント（優先度高）
+        if "ガス" in filename_lower or "gas" in filename_lower:
+            # ただし電気・機械が含まれていなければ
+            if "電気" not in filename_lower and "機械" not in filename_lower:
+                return DisciplineType.GAS
+        if "電気" in filename_lower or "electrical" in filename_lower:
             return DisciplineType.ELECTRICAL
-        elif any(kw in text for kw in ["機械", "ダクト", "ポンプ"]):
+        if "機械" in filename_lower or "mechanical" in filename_lower:
             return DisciplineType.MECHANICAL
-        elif any(kw in text for kw in ["空調", "エアコン", "冷暖房"]):
+        if "空調" in filename_lower or "hvac" in filename_lower:
             return DisciplineType.HVAC
-        elif any(kw in text for kw in ["衛生", "給水", "排水"]):
+        if "衛生" in filename_lower or "給排水" in filename_lower:
             return DisciplineType.PLUMBING
-        elif any(kw in text for kw in ["消防", "スプリンクラー", "警報"]):
+        if "消防" in filename_lower or "fire" in filename_lower:
             return DisciplineType.FIRE_PROTECTION
-        else:
-            return DisciplineType.GAS  # デフォルト
+
+        # 項目名・仕様からの判定（キーワードマッチング）
+        # スコアリング方式で最も該当するものを選択
+        scores = {
+            DisciplineType.GAS: sum(1 for kw in gas_keywords if kw in text),
+            DisciplineType.ELECTRICAL: sum(1 for kw in electrical_keywords if kw in text),
+            DisciplineType.MECHANICAL: sum(1 for kw in mechanical_keywords if kw in text),
+            DisciplineType.HVAC: sum(1 for kw in hvac_keywords if kw in text),
+            DisciplineType.PLUMBING: sum(1 for kw in plumbing_keywords if kw in text),
+            DisciplineType.FIRE_PROTECTION: sum(1 for kw in fire_keywords if kw in text),
+        }
+
+        max_score = max(scores.values())
+        if max_score > 0:
+            for discipline, score in scores.items():
+                if score == max_score:
+                    return discipline
+
+        # どれにも該当しない場合は「その他」としてMECHANICALを返す
+        return DisciplineType.MECHANICAL
 
     def aggregate_multiple_estimates(
         self,

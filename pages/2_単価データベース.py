@@ -398,7 +398,7 @@ def main():
                 "工事区分",
                 discipline_options,
                 index=0,
-                help="PDFから抽出する際の工事区分を指定"
+                help="自動判定: 項目名・ファイル名から電気/機械/ガス等を自動分類します"
             )
 
             with st.expander("詳細設定", expanded=False):
@@ -462,15 +462,35 @@ def main():
                         st.session_state.extracted_items = extracted_items
                         st.success(f"合計 {len(extracted_items)}項目を抽出しました")
 
-                        # サンプル表示
-                        with st.expander("抽出サンプル（最初の10項目）"):
-                            for idx, item in enumerate(extracted_items[:10], 1):
-                                spec = item.features.get('specification', '')
-                                spec_str = f" {spec}" if spec else ""
-                                st.text(
-                                    f"{idx}. {item.description}{spec_str}: "
-                                    f"¥{item.unit_price:,}/{item.unit}"
-                                )
+                        # 工事区分別の分布を表示
+                        discipline_dist = {}
+                        for item in extracted_items:
+                            d = item.discipline.value if hasattr(item.discipline, 'value') else str(item.discipline)
+                            discipline_dist[d] = discipline_dist.get(d, 0) + 1
+
+                        st.markdown("**工事区分別の自動分類結果**")
+                        cols = st.columns(len(discipline_dist) if len(discipline_dist) <= 4 else 4)
+                        for idx, (discipline, count) in enumerate(sorted(discipline_dist.items())):
+                            with cols[idx % len(cols)]:
+                                st.metric(discipline, f"{count}件")
+
+                        # サンプル表示（工事区分ごとにグループ化）
+                        with st.expander("抽出結果（工事区分別）"):
+                            for discipline in sorted(discipline_dist.keys()):
+                                items_in_discipline = [
+                                    item for item in extracted_items
+                                    if (item.discipline.value if hasattr(item.discipline, 'value') else str(item.discipline)) == discipline
+                                ]
+                                st.markdown(f"**{discipline}** ({len(items_in_discipline)}件)")
+                                for item in items_in_discipline[:5]:
+                                    spec = item.features.get('specification', '')
+                                    spec_str = f" {spec}" if spec else ""
+                                    st.text(
+                                        f"  - {item.description}{spec_str}: "
+                                        f"¥{item.unit_price:,}/{item.unit}"
+                                    )
+                                if len(items_in_discipline) > 5:
+                                    st.caption(f"  ... 他 {len(items_in_discipline) - 5}件")
                     else:
                         st.error("抽出に失敗しました")
 

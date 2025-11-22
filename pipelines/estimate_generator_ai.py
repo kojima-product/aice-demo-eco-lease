@@ -1398,9 +1398,16 @@ JSON配列で、階層構造を持った見積項目を出力してください�
             category_fallback_score = 0.0
             kb_candidates = 0
 
+            # Phase 2: 類義語を取得
+            item_synonyms = self._find_synonyms(item.name)
+            item_synonyms_norm = [self._normalize_text(s) for s in item_synonyms]
+
             for kb_item in self.price_kb:
-                # 工事区分フィルタを無効化（KBは単価マスタとして共通利用）
-                # 仕様書の内容に基づいて項目名でマッチング
+                # Phase 2: 工事区分の互換性チェック（緩和版）
+                kb_discipline = kb_item.get("discipline", "")
+                if not self._is_discipline_compatible(kb_discipline, item.discipline.value):
+                    continue
+
                 kb_candidates += 1
 
                 kb_desc = kb_item.get("description", "")
@@ -1414,14 +1421,22 @@ JSON配列で、階層構造を持った見積項目を出力してください�
                 kb_size = self._extract_size(kb_spec)
                 kb_category = self._get_category(kb_desc)
 
+                # KB側の類義語も取得
+                kb_synonyms = self._find_synonyms(kb_desc)
+                kb_synonyms_norm = [self._normalize_text(s) for s in kb_synonyms]
+
                 # 詳細な類似度計算
                 score = 0.0
 
-                # 1. 項目名の一致（正規化後）
+                # 1. 項目名の一致（正規化後）- 類義語も考慮
                 if item_name_norm == kb_desc_norm:
                     score += 2.0  # 完全一致は高スコア
                 elif item_name_norm in kb_desc_norm or kb_desc_norm in item_name_norm:
                     score += 1.5
+                # Phase 2: 類義語でのマッチング
+                elif any(syn in kb_synonyms_norm for syn in item_synonyms_norm):
+                    score += 1.8  # 類義語一致は高スコア
+                    logger.debug(f"  Synonym match: {item.name} ↔ {kb_desc}")
                 elif any(word in kb_desc_norm for word in item_name_norm.split() if len(word) > 1):
                     score += 1.0
 
@@ -1513,17 +1528,25 @@ JSON配列で、階層構造を持った見積項目を出力してください�
                 normalized_score = min(best_score / 5.0, 1.0)
                 confidence_pct = int(normalized_score * 100)
 
+                # Phase 2: 単価妥当性チェック
+                matched_price = matched_item.get("unit_price")
+                price_valid = self._validate_price(item.name, matched_price)
+
                 # 50%以上のマッチングで単価を適用（閾値緩和）
-                if normalized_score >= 0.50 or best_score >= 1.0:
-                    item.unit_price = matched_item.get("unit_price")
+                if (normalized_score >= 0.50 or best_score >= 1.0) and price_valid:
+                    item.unit_price = matched_price
                     if item.quantity and item.unit_price:
                         item.amount = item.quantity * item.unit_price
                     item.confidence = normalized_score
                     logger.info(f"✓ Match applied ({confidence_pct}%): {item.name} → ¥{item.unit_price:,.0f}")
+                elif not price_valid:
+                    # 単価が妥当でない場合は適用しない
+                    item.confidence = normalized_score * 0.5  # 信頼度を下げる
+                    logger.warning(f"⚠ Price rejected ({confidence_pct}%): {item.name} - KB has ¥{matched_price:,.0f} but price validation failed")
                 else:
                     # 75%未満は参考値として記録するが金額は空
                     item.confidence = normalized_score
-                    logger.info(f"△ Low confidence ({confidence_pct}%): {item.name} - KB has ¥{matched_item.get('unit_price'):,.0f} but not applied")
+                    logger.info(f"△ Low confidence ({confidence_pct}%): {item.name} - KB has ¥{matched_price:,.0f} but not applied")
 
                 item.price_references = [matched_item.get("item_id")]
                 item.source_reference = f"KB:{matched_item.get('item_id')}[{match_type}]({confidence_pct}%), {item.source_reference}"
@@ -1593,7 +1616,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         # 2. 建物情報を詳細抽出
         building_info = self.extract_building_info(spec_text)
 
-        # 2.5. 諸元表から詳細な部屋・設備情報を抽出
+        # 2.5. 諸元表から詳細な部屋・設備情報を抽出（テキストベース）
         spec_table_data = self.extract_specification_tables(spec_pdf_path, spec_text)
         if spec_table_data.get("rooms"):
             # 諸元表データを building_info にマージ
@@ -1604,6 +1627,26 @@ JSON配列で、階層構造を持った見積項目を出力してください�
             if equipment_summary.get("total_rooms"):
                 building_info.setdefault("building_info", {})["num_rooms"] = equipment_summary["total_rooms"]
             logger.info(f"Merged spec table data: {len(spec_table_data.get('rooms', []))} rooms, {equipment_summary.get('total_gas_outlets', 0)} gas outlets")
+
+        # 2.6. Phase 1: Vision抽出による諸元表データ取得（より正確）
+        if HAS_PYMUPDF:
+            vision_table_data = self.extract_specification_table_with_vision(spec_pdf_path)
+            if vision_table_data.get("rooms"):
+                # Vision抽出データで上書き・補完
+                building_info["spec_table_vision"] = vision_table_data
+                totals = vision_table_data.get("totals", {})
+
+                # Vision抽出結果でより正確な値を上書き
+                if totals.get("room_count"):
+                    building_info.setdefault("building_info", {})["num_rooms"] = totals["room_count"]
+                if totals.get("gas_outlet_total"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("gas", {})["num_connection_points"] = totals["gas_outlet_total"]
+                if totals.get("electrical_outlet_total"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("electrical", {})["outlet_count"] = totals["electrical_outlet_total"]
+
+                logger.info(f"Vision extraction merged: {totals.get('room_count', 0)} rooms, "
+                           f"{totals.get('gas_outlet_total', 0)} gas outlets, "
+                           f"{totals.get('electrical_outlet_total', 0)} electrical outlets")
 
         # 2.7. 図面から設備情報を抽出（オプション）
         if HAS_PYMUPDF:
