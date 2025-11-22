@@ -1,13 +1,12 @@
 """
 見積生成デモ - エントリーポイント
 
-Streamlitマルチページアプリのエントリーポイント
-サイドバーから「ホーム」を選択してください
+Streamlit st.navigation APIを使用したマルチページアプリ
 """
 
 import streamlit as st
 
-# ページ設定
+# ページ設定（navigationより前に設定）
 st.set_page_config(
     page_title="見積生成デモ",
     page_icon="page_facing_up",
@@ -15,30 +14,36 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# サイドバーから「app」を非表示にするCSS
+# カスタムCSS
 st.markdown("""
 <style>
-    [data-testid="stSidebarNav"] > ul > li:first-child {
-        display: none;
+    /* サイドバー幅を拡大 */
+    [data-testid="stSidebar"] {
+        min-width: 320px;
+        max-width: 380px;
+    }
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 1.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    /* メインコンテナ */
+    .main .block-container {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+        max-width: 1400px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 自動リダイレクト（Streamlit 1.30以降）
-try:
-    st.switch_page("pages/1_Estimate.py")
-except Exception:
-    # フォールバック: 手動でナビゲーションを案内
-    st.title("見積生成デモ")
-    st.info("サイドバーから「見積書作成」を選択してください。")
+# ページ定義（st.navigation API）
+pages = [
+    st.Page("pages/1.py", title="見積書作成", default=True),
+    st.Page("pages/2.py", title="単価データベース"),
+    st.Page("pages/3.py", title="法令データベース"),
+    st.Page("pages/4.py", title="利用状況"),
+]
 
-    st.markdown("""
-    ## ページ一覧
-
-    | ページ | 説明 |
-    |--------|------|
-    | **見積書作成** | 仕様書から見積書を自動生成 |
-    | **単価データベース** | 過去見積から単価を登録・管理 |
-    | **法令データベース** | 法令・基準の管理 |
-    | **利用状況** | API利用状況の確認 |
-    """)
+# ナビゲーション実行
+pg = st.navigation(pages)
+pg.run()

@@ -24,39 +24,9 @@ from pipelines.estimate_generator_ai import AIEstimateGenerator
 from pipelines.export import EstimateExporter
 
 
-# ページ設定
-st.set_page_config(
-    page_title="見積書作成",
-    page_icon="page_facing_up",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# カスタムCSS - サイドバー幅拡大・フォーマルデザイン
+# カスタムCSS（ページ固有）
 st.markdown("""
 <style>
-    /* サイドバーから「app」を非表示 */
-    [data-testid="stSidebarNav"] > ul > li:first-child {
-        display: none;
-    }
-    /* サイドバー幅を拡大（デフォルト21rem → 28rem） */
-    [data-testid="stSidebar"] {
-        min-width: 320px;
-        max-width: 380px;
-    }
-    [data-testid="stSidebar"] > div:first-child {
-        padding-top: 1.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-    /* メインコンテナ */
-    .main .block-container {
-        padding-top: 1rem;
-        padding-bottom: 2rem;
-        max-width: 1400px;
-    }
-
     /* メトリクスカード */
     [data-testid="stMetricValue"] {
         font-size: 1.4rem;
@@ -65,20 +35,17 @@ st.markdown("""
     [data-testid="stMetricLabel"] {
         font-size: 0.85rem;
     }
-
     /* タブスタイル */
     .stTabs [data-baseweb="tab"] {
         padding: 12px 24px;
         font-weight: 500;
         font-size: 0.95rem;
     }
-
     /* ボタンスタイル */
     .stButton > button[kind="primary"] {
         font-weight: 600;
         padding: 0.6rem 1.2rem;
     }
-
     /* セクションヘッダー */
     .sidebar-section-header {
         font-size: 0.9rem;
