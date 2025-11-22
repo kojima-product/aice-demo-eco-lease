@@ -36,7 +36,7 @@ class ProjectInfoExtractor:
         prompt = f"""以下の入札仕様書から、工事情報を抽出してください。
 
 仕様書テキスト:
-{raw_text[:5000]}
+{raw_text[:60000]}
 
 抽出する項目:
 1. 工事名（project_name）: 正式な工事名称

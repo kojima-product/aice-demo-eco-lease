@@ -41,9 +41,17 @@ class PriceKBBuilder:
 
         # 既存KBを読み込み
         if Path(kb_path).exists():
-            with open(kb_path, 'r', encoding='utf-8') as f:
-                self.kb_items = json.load(f)
-            logger.info(f"Loaded {len(self.kb_items)} items from KB")
+            try:
+                with open(kb_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    if content.strip():  # 空でない場合のみパース
+                        self.kb_items = json.loads(content)
+                        logger.info(f"Loaded {len(self.kb_items)} items from KB")
+                    else:
+                        logger.warning(f"KB file is empty: {kb_path}")
+            except json.JSONDecodeError as e:
+                logger.error(f"Invalid JSON in KB file: {e}")
+                self.kb_items = []
         else:
             logger.info(f"No existing KB found at {kb_path}, starting fresh")
 
@@ -747,7 +755,7 @@ class EnhancedEstimateExtractor:
         prompt = f"""以下の入札仕様書から、{discipline_name}に関連する見積項目を抽出してください。
 
 仕様書テキスト:
-{spec_text[:15000]}
+{spec_text[:60000]}
 
 【抽出する項目】
 各見積項目について、以下の情報を抽出してください：

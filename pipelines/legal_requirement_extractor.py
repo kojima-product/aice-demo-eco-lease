@@ -109,7 +109,7 @@ class LegalRequirementExtractor:
 
 # 仕様書テキスト
 
-{spec_text[:15000]}
+{spec_text[:60000]}
 
 # 抽出指示
 

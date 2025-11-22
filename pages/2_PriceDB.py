@@ -671,12 +671,28 @@ def main():
                     )
 
             with col2:
-                if st.button("KBをクリア", use_container_width=True, type="secondary"):
-                    if st.checkbox("本当にクリアしますか？"):
-                        st.session_state.kb_builder.kb_items = []
-                        st.session_state.kb_builder.save_kb_to_json([], st.session_state.kb_builder.kb_path)
-                        st.success("KBをクリアしました")
+                # KBクリア確認フロー
+                if "confirm_clear_kb" not in st.session_state:
+                    st.session_state.confirm_clear_kb = False
+
+                if not st.session_state.confirm_clear_kb:
+                    if st.button("KBをクリア", use_container_width=True, type="secondary"):
+                        st.session_state.confirm_clear_kb = True
                         st.rerun()
+                else:
+                    st.warning("本当にKBをクリアしますか？")
+                    col_yes, col_no = st.columns(2)
+                    with col_yes:
+                        if st.button("はい、クリアする", use_container_width=True, type="primary"):
+                            st.session_state.kb_builder.kb_items = []
+                            st.session_state.kb_builder.save_kb_to_json([], st.session_state.kb_builder.kb_path)
+                            st.session_state.confirm_clear_kb = False
+                            st.success("KBをクリアしました")
+                            st.rerun()
+                    with col_no:
+                        if st.button("キャンセル", use_container_width=True):
+                            st.session_state.confirm_clear_kb = False
+                            st.rerun()
 
     # ===== タブ3: 使い方 =====
     with tab3:

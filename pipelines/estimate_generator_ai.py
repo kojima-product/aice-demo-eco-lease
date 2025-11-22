@@ -229,7 +229,7 @@ class AIEstimateGenerator:
 
         return response
 
-    def extract_text_from_pdf(self, pdf_path: str, max_pages: int = 50) -> str:
+    def extract_text_from_pdf(self, pdf_path: str, max_pages: int = None) -> str:
         """PDFからテキストを抽出（ページ番号マーカー付き）"""
         logger.info(f"Extracting text from PDF: {pdf_path}")
 
@@ -237,7 +237,7 @@ class AIEstimateGenerator:
             with open(pdf_path, 'rb') as file:
                 pdf_reader = PyPDF2.PdfReader(file)
                 text = ""
-                total_pages = min(len(pdf_reader.pages), max_pages)
+                total_pages = len(pdf_reader.pages) if max_pages is None else min(len(pdf_reader.pages), max_pages)
                 for page_num in range(total_pages):
                     page_text = pdf_reader.pages[page_num].extract_text()
                     # ページ番号マーカーを追加（セクション特定用）

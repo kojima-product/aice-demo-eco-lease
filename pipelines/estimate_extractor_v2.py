@@ -28,22 +28,22 @@ class EstimateExtractorV2:
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.model_name = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
 
-    def extract_text_from_pdf(self, pdf_path: str, max_pages: int = 50) -> str:
-        """PDFからテキストを抽出"""
+    def extract_text_from_pdf(self, pdf_path: str, max_pages: int = None) -> str:
+        """PDFからテキストを抽出（ページ制限なし）"""
         logger.info(f"Extracting text from PDF: {pdf_path}")
 
         try:
             with open(pdf_path, 'rb') as file:
                 pdf_reader = PyPDF2.PdfReader(file)
                 total_pages = len(pdf_reader.pages)
-                pages_to_read = min(total_pages, max_pages)
+                pages_to_read = total_pages if max_pages is None else min(total_pages, max_pages)
 
                 text = ""
                 for page_num in range(pages_to_read):
                     page = pdf_reader.pages[page_num]
                     text += page.extract_text() + "\n"
 
-                logger.info(f"Extracted {len(text)} characters from {pages_to_read} pages")
+                logger.info(f"Extracted {len(text)} characters from {pages_to_read}/{total_pages} pages")
                 return text
         except Exception as e:
             logger.error(f"Error extracting text from PDF: {e}")
@@ -87,7 +87,7 @@ class EstimateExtractorV2:
 
 # 仕様書テキスト
 
-{spec_text[:15000]}
+{spec_text[:60000]}
 
 # 抽出指示
 
@@ -264,7 +264,7 @@ JSON配列形式で出力してください：
         prompt = f"""以下の入札仕様書から、工事の基本情報を抽出してください。
 
 仕様書テキスト:
-{spec_text[:10000]}
+{spec_text[:60000]}
 
 【抽出する項目】
 1. 工事名（project_name）
