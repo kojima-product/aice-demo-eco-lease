@@ -26,6 +26,16 @@ except ImportError:
     HAS_PYMUPDF = False
     logger.warning("PyMuPDF not available - drawing extraction disabled")
 
+# ベクトル検索用ライブラリ
+try:
+    import numpy as np
+    import faiss
+    from sentence_transformers import SentenceTransformer
+    HAS_VECTOR_SEARCH = True
+except ImportError:
+    HAS_VECTOR_SEARCH = False
+    logger.warning("FAISS/sentence-transformers not available - vector search disabled")
+
 from pipelines.schemas import (
     EstimateItem, DisciplineType, FMTDocument, ProjectInfo, FacilityType,
     CostType
@@ -35,28 +45,72 @@ from pipelines.cost_tracker import record_cost
 
 # ===== Phase 2: 類義語辞書（KBマッチング精度向上用）=====
 SYNONYM_DICT = {
-    # 電気設備
-    "気中開閉器": ["PAS", "高圧気中負荷開閉器", "高圧気中開閉器", "気中負荷開閉器"],
-    "架橋ポリエチレンケーブル": ["CV", "CVT", "高圧ケーブル", "CVケーブル", "CVTケーブル"],
-    "キュービクル": ["高圧受電設備", "受変電設備", "受電設備"],
-    "ビニル絶縁電線": ["IV", "IV電線", "600V IV"],
-    "接地工事": ["A種接地", "B種接地", "C種接地", "D種接地", "接地"],
-    "分電盤": ["動力盤", "電灯盤", "配電盤"],
-    "LED照明": ["LED", "LED器具", "照明器具"],
-    "非常照明": ["非常用照明", "誘導灯"],
-    "自動火災報知設備": ["自火報", "火災報知器", "火報"],
-    # 機械設備
-    "空冷ヒートポンプ": ["エアコン", "空調機", "ヒートポンプ", "EHP"],
-    "換気扇": ["換気設備", "排気ファン", "給気ファン"],
-    "給水ポンプ": ["加圧給水ポンプ", "揚水ポンプ", "ポンプユニット"],
-    "受水槽": ["貯水槽", "FRP受水槽"],
-    "給湯器": ["電気温水器", "ガス給湯器", "給湯設備"],
-    "衛生器具": ["便器", "洗面器", "流し台", "手洗器"],
+    # 電気設備 - 受変電
+    "気中開閉器": ["PAS", "高圧気中負荷開閉器", "高圧気中開閉器", "気中負荷開閉器", "LBS", "負荷開閉器"],
+    "架橋ポリエチレンケーブル": ["CV", "CVT", "高圧ケーブル", "CVケーブル", "CVTケーブル", "CVQ", "CVD"],
+    "キュービクル": ["高圧受電設備", "受変電設備", "受電設備", "変電設備", "高圧盤"],
+    "変圧器": ["トランス", "Tr", "単相変圧器", "三相変圧器", "乾式変圧器", "油入変圧器"],
+    "遮断器": ["VCB", "真空遮断器", "気中遮断器", "ACB", "MCCB", "配線用遮断器", "ブレーカー"],
+    "進相コンデンサ": ["SC", "力率改善コンデンサ", "コンデンサ"],
+    # 電気設備 - 配線
+    "ビニル絶縁電線": ["IV", "IV電線", "600V IV", "HIV", "耐熱電線"],
+    "VVFケーブル": ["VVF", "Fケーブル", "平形ケーブル"],
+    "CVVケーブル": ["CVV", "制御ケーブル"],
+    "電線管": ["金属管", "薄鋼電線管", "厚鋼電線管", "E管", "C管", "PF管", "CD管", "合成樹脂管"],
+    "ケーブルラック": ["ラック", "ケーブルトレイ", "配線ダクト"],
+    "プルボックス": ["PB", "ジョイントボックス", "JB"],
+    # 電気設備 - 盤類
+    "接地工事": ["A種接地", "B種接地", "C種接地", "D種接地", "接地", "アース", "接地極"],
+    "分電盤": ["動力盤", "電灯盤", "配電盤", "動力制御盤", "OA盤"],
+    "制御盤": ["操作盤", "監視盤", "中央監視盤"],
+    "端子盤": ["TB", "端子台"],
+    # 電気設備 - 照明
+    "LED照明": ["LED", "LED器具", "照明器具", "LED灯", "LEDベースライト", "LED一体型"],
+    "非常照明": ["非常用照明", "誘導灯", "避難誘導灯", "非常灯"],
+    "ダウンライト": ["DL", "埋込照明", "天井埋込"],
+    "スポットライト": ["SL", "スポット"],
+    "高天井照明": ["投光器", "水銀灯", "メタルハライド", "HID"],
+    # 電気設備 - 弱電
+    "自動火災報知設備": ["自火報", "火災報知器", "火報", "感知器", "煙感知器", "熱感知器"],
+    "インターホン": ["インターフォン", "ドアホン", "呼出設備"],
+    "LAN配線": ["情報コンセント", "LANコンセント", "データコンセント", "カテゴリ6"],
+    "テレビ共聴設備": ["CATV", "TV共聴", "アンテナ"],
+    # 機械設備 - 空調
+    "空冷ヒートポンプ": ["エアコン", "空調機", "ヒートポンプ", "EHP", "パッケージエアコン", "PAC"],
+    "ガスヒートポンプ": ["GHP", "ガスエアコン", "ガスヒーポン"],
+    "ビル用マルチ": ["マルチエアコン", "VRF", "ビルマル"],
+    "全熱交換器": ["ロスナイ", "熱交換換気", "熱交換ユニット"],
+    "換気扇": ["換気設備", "排気ファン", "給気ファン", "天井扇", "有圧換気扇"],
+    "ダクト": ["亜鉛鉄板ダクト", "スパイラルダクト", "フレキシブルダクト", "フレキ"],
+    "制気口": ["吹出口", "吸込口", "アネモ", "ライン型", "VHS"],
+    # 機械設備 - 給排水
+    "給水ポンプ": ["加圧給水ポンプ", "揚水ポンプ", "ポンプユニット", "給水ユニット"],
+    "排水ポンプ": ["汚水ポンプ", "雑排水ポンプ", "水中ポンプ"],
+    "受水槽": ["貯水槽", "FRP受水槽", "地下水槽", "高架水槽"],
+    "給湯器": ["電気温水器", "ガス給湯器", "給湯設備", "貯湯槽", "エコキュート"],
+    "衛生器具": ["便器", "洗面器", "流し台", "手洗器", "小便器", "大便器", "洗面化粧台"],
+    "給水管": ["水道管", "VP管", "HIVP", "ライニング鋼管", "ステンレス管", "SUS管"],
+    "排水管": ["VU管", "排水用硬質塩ビ管", "鋳鉄管", "DVLP"],
+    # 機械設備 - 消火
+    "消火栓": ["屋内消火栓", "屋外消火栓", "連結送水管"],
+    "スプリンクラー": ["SP", "スプリンクラーヘッド", "SPヘッド", "閉鎖型SP"],
+    "消火器": ["ABC消火器", "粉末消火器"],
     # ガス設備
-    "白ガス管": ["鋼管", "ガス管", "SGP"],
-    "PE管": ["ポリエチレン管", "ポリ管"],
-    "ガスコンセント": ["ガス栓", "コンセント"],
-    "ネジコック": ["コック", "バルブ"],
+    "白ガス管": ["鋼管", "ガス管", "SGP", "配管用炭素鋼鋼管", "白管"],
+    "カラー鋼管": ["塗覆装鋼管", "被覆鋼管", "カラー管"],
+    "PE管": ["ポリエチレン管", "ポリ管", "樹脂管", "PE80", "PE100"],
+    "ガスコンセント": ["ガス栓", "コンセント", "ガス接続口"],
+    "ネジコック": ["コック", "バルブ", "ガスコック", "ガスバルブ", "止めコック"],
+    "分岐コック": ["分岐バルブ", "チーズ", "分岐管"],
+    "ボールバルブ": ["ボール弁", "ボールスライドジョイント", "BSJ"],
+    "ガスメーター": ["メーター", "マイコンメーター", "計量器"],
+    "ガス漏れ警報器": ["ガス警報器", "ガス検知器", "警報器"],
+    # 共通 - 仮設・諸経費
+    "諸経費": ["一般管理費", "現場管理費", "共通仮設費"],
+    "足場": ["枠組足場", "単管足場", "移動式足場", "ローリングタワー"],
+    "養生": ["床養生", "壁養生", "防護", "シート養生"],
+    "産業廃棄物処分": ["産廃処分", "廃棄物処理", "残材処分", "ガラ処分"],
+    "運搬費": ["搬入費", "搬出費", "資機材運搬", "小運搬"],
 }
 
 # 高額機器リスト（単価妥当性チェック用）
@@ -77,6 +131,148 @@ HIGH_VALUE_ITEMS = {
 }
 
 
+# ===== ベクトル検索クラス =====
+class VectorKBSearch:
+    """
+    FAISSを使用したKBベクトル検索
+
+    sentence-transformersで日本語テキストをベクトル化し、
+    FAISSで高速な類似度検索を行います。
+    """
+
+    def __init__(self, model_name: str = "intfloat/multilingual-e5-small"):
+        """
+        Args:
+            model_name: 使用するembeddingモデル名
+                推奨: "intfloat/multilingual-e5-small" (高速・日本語対応)
+                高精度: "intfloat/multilingual-e5-base"
+        """
+        if not HAS_VECTOR_SEARCH:
+            logger.warning("Vector search not available - using fallback string matching")
+            self.model = None
+            self.index = None
+            self.kb_items = []
+            return
+
+        logger.info(f"Initializing vector search with model: {model_name}")
+        try:
+            self.model = SentenceTransformer(model_name)
+            self.index = None
+            self.kb_items = []
+            self.dimension = self.model.get_sentence_embedding_dimension()
+            logger.info(f"Vector search initialized (dimension={self.dimension})")
+        except Exception as e:
+            logger.error(f"Failed to load embedding model: {e}")
+            self.model = None
+            self.index = None
+            self.kb_items = []
+
+    def build_index(self, kb_items: List[Dict]) -> bool:
+        """
+        KBアイテムからFAISSインデックスを構築
+
+        Args:
+            kb_items: KB項目のリスト
+
+        Returns:
+            成功した場合True
+        """
+        if not self.model or not kb_items:
+            return False
+
+        self.kb_items = kb_items
+
+        # KB項目からテキストを生成（項目名 + 仕様 + 工事区分）
+        texts = []
+        for item in kb_items:
+            desc = item.get("description", "")
+            spec = item.get("features", {}).get("specification", "")
+            discipline = item.get("discipline", "")
+            # E5モデル用のプレフィックス
+            text = f"passage: {desc} {spec} {discipline}"
+            texts.append(text)
+
+        logger.info(f"Building vector index for {len(texts)} KB items...")
+
+        try:
+            # ベクトル化
+            embeddings = self.model.encode(texts, show_progress_bar=False)
+            embeddings = np.array(embeddings).astype('float32')
+
+            # FAISSインデックス構築（L2距離）
+            self.index = faiss.IndexFlatIP(self.dimension)  # 内積（コサイン類似度用）
+
+            # 正規化（コサイン類似度計算のため）
+            faiss.normalize_L2(embeddings)
+            self.index.add(embeddings)
+
+            logger.info(f"Vector index built successfully: {self.index.ntotal} vectors")
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to build vector index: {e}")
+            return False
+
+    def search(self, query: str, discipline: str = None, top_k: int = 5) -> List[Dict]:
+        """
+        クエリに類似したKB項目を検索
+
+        Args:
+            query: 検索クエリ（項目名 + 仕様）
+            discipline: 工事区分でフィルタ（任意）
+            top_k: 返す結果数
+
+        Returns:
+            類似KB項目のリスト（スコア付き）
+        """
+        if not self.model or not self.index or self.index.ntotal == 0:
+            return []
+
+        try:
+            # クエリをベクトル化（E5モデル用プレフィックス）
+            query_text = f"query: {query}"
+            query_embedding = self.model.encode([query_text], show_progress_bar=False)
+            query_embedding = np.array(query_embedding).astype('float32')
+            faiss.normalize_L2(query_embedding)
+
+            # 検索（多めに取得してフィルタ後に絞る）
+            search_k = top_k * 3 if discipline else top_k
+            distances, indices = self.index.search(query_embedding, min(search_k, len(self.kb_items)))
+
+            results = []
+            for i, (dist, idx) in enumerate(zip(distances[0], indices[0])):
+                if idx < 0 or idx >= len(self.kb_items):
+                    continue
+
+                kb_item = self.kb_items[idx]
+
+                # 工事区分フィルタ
+                if discipline:
+                    kb_discipline = kb_item.get("discipline", "")
+                    if discipline not in kb_discipline and kb_discipline not in discipline:
+                        if kb_discipline != "設備工事":  # 汎用項目は許可
+                            continue
+
+                results.append({
+                    "kb_item": kb_item,
+                    "score": float(dist),  # コサイン類似度（0-1）
+                    "rank": len(results) + 1
+                })
+
+                if len(results) >= top_k:
+                    break
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Vector search error: {e}")
+            return []
+
+    def is_available(self) -> bool:
+        """ベクトル検索が利用可能かどうか"""
+        return self.model is not None and self.index is not None and self.index.ntotal > 0
+
+
 class AIEstimateGenerator:
     """
     AI自動見積生成器
@@ -85,12 +281,18 @@ class AIEstimateGenerator:
     詳細な見積項目（配管サイズ、数量、材料等）を自動生成します。
     """
 
-    def __init__(self, kb_path: str = "kb/price_kb.json"):
+    def __init__(self, kb_path: str = "kb/price_kb.json", use_vector_search: bool = True):
         load_dotenv()
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.model_name = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
         self.kb_path = kb_path
         self.price_kb = self._load_price_kb()
+
+        # ベクトル検索の初期化
+        self.vector_search = None
+        self.use_vector_search = use_vector_search
+        if use_vector_search and HAS_VECTOR_SEARCH and self.price_kb:
+            self._init_vector_search()
 
     def _load_price_kb(self) -> List[Dict]:
         """価格KBを読み込み"""
@@ -99,6 +301,52 @@ class AIEstimateGenerator:
                 return json.load(f)
         logger.warning(f"Price KB not found: {self.kb_path}")
         return []
+
+    def _init_vector_search(self):
+        """ベクトル検索インデックスを初期化"""
+        logger.info("Initializing vector search for KB...")
+        self.vector_search = VectorKBSearch()
+        if self.vector_search.model:
+            success = self.vector_search.build_index(self.price_kb)
+            if success:
+                logger.info(f"Vector search ready: {len(self.price_kb)} KB items indexed")
+            else:
+                logger.warning("Vector search index build failed - using fallback")
+                self.vector_search = None
+        else:
+            logger.warning("Vector search model not loaded - using fallback")
+            self.vector_search = None
+
+    def _vector_search_match(self, item_name: str, item_spec: str, discipline: str) -> Optional[Dict]:
+        """
+        ベクトル検索でKBマッチングを行う
+
+        Args:
+            item_name: 見積項目名
+            item_spec: 仕様
+            discipline: 工事区分
+
+        Returns:
+            最良マッチのKB項目とスコア、またはNone
+        """
+        if not self.vector_search or not self.vector_search.is_available():
+            return None
+
+        # クエリ生成
+        query = f"{item_name} {item_spec}".strip()
+        if not query:
+            return None
+
+        # ベクトル検索実行
+        results = self.vector_search.search(query, discipline=discipline, top_k=3)
+
+        if results and results[0]["score"] >= 0.5:  # 類似度閾値
+            best = results[0]
+            logger.debug(f"Vector match: '{query}' → '{best['kb_item'].get('description')}' "
+                        f"(score={best['score']:.3f})")
+            return best
+
+        return None
 
     # ===== Phase 2: KBマッチング改善用ヘルパーメソッド =====
 
@@ -200,6 +448,42 @@ class AIEstimateGenerator:
                         f"but minimum expected is ¥{min_price:,.0f}"
                     )
                     return False
+
+        return True
+
+    def _check_unit_compatibility(self, item_unit: str, kb_unit: str) -> bool:
+        """
+        単位の互換性をチェック
+
+        Args:
+            item_unit: 見積項目の単位
+            kb_unit: KB項目の単位
+
+        Returns:
+            互換性があればTrue
+        """
+        if not item_unit or not kb_unit:
+            return True
+
+        # 正規化
+        unit_norm_item = self._normalize_text(item_unit)
+        unit_norm_kb = self._normalize_text(kb_unit)
+
+        # 完全一致または包含
+        if unit_norm_item == unit_norm_kb:
+            return True
+        if unit_norm_item in unit_norm_kb or unit_norm_kb in unit_norm_item:
+            return True
+
+        # 互換性のない単位ペア
+        incompatible_pairs = [
+            ("式", "箇所"), ("式", "個"), ("式", "m"), ("式", "台"),
+            ("箇所", "m"), ("個", "m"), ("台", "m"), ("ヶ所", "m")
+        ]
+        for u1, u2 in incompatible_pairs:
+            if (u1 in unit_norm_item and u2 in unit_norm_kb) or \
+               (u2 in unit_norm_item and u1 in unit_norm_kb):
+                return False
 
         return True
 
@@ -1364,7 +1648,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
 
     def enrich_with_prices(self, estimate_items: List[EstimateItem]) -> List[EstimateItem]:
         """
-        KBから単価を取得して項目に付与（改善版）
+        KBから単価を取得して項目に付与（ベクトル検索 + フォールバック版）
 
         Args:
             estimate_items: 単価未設定の見積項目リスト
@@ -1372,9 +1656,13 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         Returns:
             単価・金額が設定された見積項目リスト
         """
-        logger.info(f"Enriching {len(estimate_items)} items with prices from KB ({len(self.price_kb)} KB items loaded)")
+        vector_search_available = self.vector_search and self.vector_search.is_available()
+        logger.info(f"Enriching {len(estimate_items)} items with prices from KB "
+                   f"({len(self.price_kb)} KB items, vector_search={vector_search_available})")
 
         enriched_items = []
+        vector_match_count = 0
+        string_match_count = 0
 
         for item in estimate_items:
             # 親項目（level 0や単価不要項目）はスキップ
@@ -1389,138 +1677,164 @@ JSON配列で、階層構造を持った見積項目を出力してください�
             item_category = self._get_category(item.name)
 
             logger.debug(f"Matching: '{item.name}' {item.specification} | discipline={item.discipline.value}")
-            logger.debug(f"  Normalized: name='{item_name_norm}', spec='{item_spec_norm}', size={item_size}, category={item_category}")
 
-            # KBから類似項目を検索
-            best_match = None
-            best_score = 0.0
-            category_fallback = None
-            category_fallback_score = 0.0
-            kb_candidates = 0
-
-            # Phase 2: 類義語を取得
-            item_synonyms = self._find_synonyms(item.name)
-            item_synonyms_norm = [self._normalize_text(s) for s in item_synonyms]
-
-            for kb_item in self.price_kb:
-                # Phase 2: 工事区分の互換性チェック（緩和版）
-                kb_discipline = kb_item.get("discipline", "")
-                if not self._is_discipline_compatible(kb_discipline, item.discipline.value):
-                    continue
-
-                kb_candidates += 1
-
-                kb_desc = kb_item.get("description", "")
-                kb_spec = kb_item.get("features", {}).get("specification", "")
-                kb_full_text = f"{kb_desc} {kb_spec}"
-
-                # 正規化
-                kb_desc_norm = self._normalize_text(kb_desc)
-                kb_spec_norm = self._normalize_text(kb_spec)
-                kb_full_norm = self._normalize_text(kb_full_text)
-                kb_size = self._extract_size(kb_spec)
-                kb_category = self._get_category(kb_desc)
-
-                # KB側の類義語も取得
-                kb_synonyms = self._find_synonyms(kb_desc)
-                kb_synonyms_norm = [self._normalize_text(s) for s in kb_synonyms]
-
-                # 詳細な類似度計算
-                score = 0.0
-
-                # 1. 項目名の一致（正規化後）- 類義語も考慮
-                if item_name_norm == kb_desc_norm:
-                    score += 2.0  # 完全一致は高スコア
-                elif item_name_norm in kb_desc_norm or kb_desc_norm in item_name_norm:
-                    score += 1.5
-                # Phase 2: 類義語でのマッチング
-                elif any(syn in kb_synonyms_norm for syn in item_synonyms_norm):
-                    score += 1.8  # 類義語一致は高スコア
-                    logger.debug(f"  Synonym match: {item.name} ↔ {kb_desc}")
-                elif any(word in kb_desc_norm for word in item_name_norm.split() if len(word) > 1):
-                    score += 1.0
-
-                # 2. カテゴリの一致
-                if item_category and kb_category and item_category == kb_category:
-                    score += 1.0
-                    # カテゴリが一致する場合はフォールバック候補
-                    if score > category_fallback_score:
-                        category_fallback = kb_item
-                        category_fallback_score = score
-
-                # 3. 仕様・サイズの一致
-                if item_spec_norm and kb_spec_norm:
-                    # 完全一致
-                    if item_spec_norm == kb_spec_norm:
-                        score += 1.5
-                    # サイズ一致（例: 15A）
-                    elif item_size and kb_size and item_size == kb_size:
-                        score += 1.2
-                    # 仕様が含まれる
-                    elif item_spec_norm in kb_full_norm or kb_spec_norm in item_spec_norm:
-                        score += 0.8
-
-                # 4. 単位の一致
-                unit_match_score = 0.0
-                unit_compatible = True  # 単位の互換性フラグ
-
-                if item.unit == kb_item.get("unit"):
-                    unit_match_score = 0.5
-                elif item.unit and kb_item.get("unit"):
-                    # m と メートル、式 と 式 等
-                    unit_norm_item = self._normalize_text(item.unit)
-                    unit_norm_kb = self._normalize_text(kb_item.get("unit", ""))
-                    if unit_norm_item == unit_norm_kb:
-                        unit_match_score = 0.5
-                    elif unit_norm_item in unit_norm_kb or unit_norm_kb in unit_norm_item:
-                        unit_match_score = 0.3
-                    else:
-                        # 単位が完全に異なる場合は互換性なし（例: 式 vs 箇所）
-                        incompatible_pairs = [
-                            ("式", "箇所"), ("式", "個"), ("式", "m"), ("式", "台"),
-                            ("箇所", "m"), ("個", "m"), ("台", "m"), ("ヶ所", "m")
-                        ]
-                        for u1, u2 in incompatible_pairs:
-                            if (u1 in unit_norm_item and u2 in unit_norm_kb) or \
-                               (u2 in unit_norm_item and u1 in unit_norm_kb):
-                                unit_compatible = False
-                                break
-
-                # 単位が互換性ありの場合のみスコアに加算
-                if unit_compatible:
-                    score += unit_match_score
-                else:
-                    # 単位不整合の場合はマッチング対象外
-                    score = 0
-                    logger.debug(f"  ✗ Unit incompatible: {item.unit} vs {kb_item.get('unit')} - skipping")
-                    continue
-
-                if score > best_score:
-                    best_score = score
-                    best_match = kb_item
-
-            # マッチング成功（閾値を調整）
-            logger.debug(f"  KB candidates: {kb_candidates}, best_score={best_score:.2f}")
-
+            # ===== Phase 3: ベクトル検索を最初に試行 =====
             matched_item = None
             match_type = ""
+            best_score = 0.0
 
-            if best_match and best_score >= 1.0:
-                # 高品質マッチ（項目名+仕様が一致）
-                matched_item = best_match
-                match_type = "exact"
-                logger.debug(f"✓ Exact match '{item.name}' → '{best_match.get('item_id')}' (score={best_score:.2f})")
-            elif best_match and best_score >= 0.5:
-                # 中品質マッチ（項目名 or カテゴリが一致）
-                matched_item = best_match
-                match_type = "partial"
-                logger.debug(f"≈ Partial match '{item.name}' → '{best_match.get('item_id')}' (score={best_score:.2f})")
-            elif category_fallback and category_fallback_score >= 0.8:
-                # カテゴリフォールバック（カテゴリは一致するが仕様が異なる）
-                matched_item = category_fallback
-                match_type = "category"
-                logger.debug(f"↳ Category fallback '{item.name}' → '{category_fallback.get('item_id')}' (score={category_fallback_score:.2f})")
-            else:
+            if vector_search_available:
+                vector_result = self._vector_search_match(
+                    item.name,
+                    item.specification or "",
+                    item.discipline.value
+                )
+                if vector_result:
+                    kb_item = vector_result["kb_item"]
+                    # 単位互換性チェック
+                    if self._check_unit_compatibility(item.unit, kb_item.get("unit", "")):
+                        # 単価妥当性チェック
+                        if self._validate_price(item.name, kb_item.get("unit_price")):
+                            matched_item = kb_item
+                            match_type = "vector"
+                            best_score = vector_result["score"]
+                            vector_match_count += 1
+                            logger.debug(f"✓ Vector match: '{item.name}' → '{kb_item.get('item_id')}' "
+                                       f"(score={best_score:.3f})")
+
+            # ===== フォールバック: 文字列マッチング =====
+            if not matched_item:
+                # KBから類似項目を検索
+                best_match = None
+                category_fallback = None
+                category_fallback_score = 0.0
+                kb_candidates = 0
+
+                # Phase 2: 類義語を取得
+                item_synonyms = self._find_synonyms(item.name)
+                item_synonyms_norm = [self._normalize_text(s) for s in item_synonyms]
+
+                for kb_item in self.price_kb:
+                    # Phase 2: 工事区分の互換性チェック（緩和版）
+                    kb_discipline = kb_item.get("discipline", "")
+                    if not self._is_discipline_compatible(kb_discipline, item.discipline.value):
+                        continue
+
+                    kb_candidates += 1
+
+                    kb_desc = kb_item.get("description", "")
+                    kb_spec = kb_item.get("features", {}).get("specification", "")
+                    kb_full_text = f"{kb_desc} {kb_spec}"
+
+                    # 正規化
+                    kb_desc_norm = self._normalize_text(kb_desc)
+                    kb_spec_norm = self._normalize_text(kb_spec)
+                    kb_full_norm = self._normalize_text(kb_full_text)
+                    kb_size = self._extract_size(kb_spec)
+                    kb_category = self._get_category(kb_desc)
+
+                    # KB側の類義語も取得
+                    kb_synonyms = self._find_synonyms(kb_desc)
+                    kb_synonyms_norm = [self._normalize_text(s) for s in kb_synonyms]
+
+                    # 詳細な類似度計算
+                    score = 0.0
+
+                    # 1. 項目名の一致（正規化後）- 類義語も考慮
+                    if item_name_norm == kb_desc_norm:
+                        score += 2.0  # 完全一致は高スコア
+                    elif item_name_norm in kb_desc_norm or kb_desc_norm in item_name_norm:
+                        score += 1.5
+                    # Phase 2: 類義語でのマッチング
+                    elif any(syn in kb_synonyms_norm for syn in item_synonyms_norm):
+                        score += 1.8  # 類義語一致は高スコア
+                        logger.debug(f"  Synonym match: {item.name} ↔ {kb_desc}")
+                    elif any(word in kb_desc_norm for word in item_name_norm.split() if len(word) > 1):
+                        score += 1.0
+
+                    # 2. カテゴリの一致
+                    if item_category and kb_category and item_category == kb_category:
+                        score += 1.0
+                        # カテゴリが一致する場合はフォールバック候補
+                        if score > category_fallback_score:
+                            category_fallback = kb_item
+                            category_fallback_score = score
+
+                    # 3. 仕様・サイズの一致
+                    if item_spec_norm and kb_spec_norm:
+                        # 完全一致
+                        if item_spec_norm == kb_spec_norm:
+                            score += 1.5
+                        # サイズ一致（例: 15A）
+                        elif item_size and kb_size and item_size == kb_size:
+                            score += 1.2
+                        # 仕様が含まれる
+                        elif item_spec_norm in kb_full_norm or kb_spec_norm in item_spec_norm:
+                            score += 0.8
+
+                    # 4. 単位の一致
+                    unit_match_score = 0.0
+                    unit_compatible = True  # 単位の互換性フラグ
+
+                    if item.unit == kb_item.get("unit"):
+                        unit_match_score = 0.5
+                    elif item.unit and kb_item.get("unit"):
+                        # m と メートル、式 と 式 等
+                        unit_norm_item = self._normalize_text(item.unit)
+                        unit_norm_kb = self._normalize_text(kb_item.get("unit", ""))
+                        if unit_norm_item == unit_norm_kb:
+                            unit_match_score = 0.5
+                        elif unit_norm_item in unit_norm_kb or unit_norm_kb in unit_norm_item:
+                            unit_match_score = 0.3
+                        else:
+                            # 単位が完全に異なる場合は互換性なし（例: 式 vs 箇所）
+                            incompatible_pairs = [
+                                ("式", "箇所"), ("式", "個"), ("式", "m"), ("式", "台"),
+                                ("箇所", "m"), ("個", "m"), ("台", "m"), ("ヶ所", "m")
+                            ]
+                            for u1, u2 in incompatible_pairs:
+                                if (u1 in unit_norm_item and u2 in unit_norm_kb) or \
+                                   (u2 in unit_norm_item and u1 in unit_norm_kb):
+                                    unit_compatible = False
+                                    break
+
+                    # 単位が互換性ありの場合のみスコアに加算
+                    if unit_compatible:
+                        score += unit_match_score
+                    else:
+                        # 単位不整合の場合はマッチング対象外
+                        score = 0
+                        logger.debug(f"  ✗ Unit incompatible: {item.unit} vs {kb_item.get('unit')} - skipping")
+                        continue
+
+                    if score > best_score:
+                        best_score = score
+                        best_match = kb_item
+
+                # マッチング成功（閾値を調整）
+                logger.debug(f"  KB candidates: {kb_candidates}, best_score={best_score:.2f}")
+
+                if best_match and best_score >= 1.0:
+                    # 高品質マッチ（項目名+仕様が一致）
+                    matched_item = best_match
+                    match_type = "exact"
+                    string_match_count += 1
+                    logger.debug(f"✓ Exact match '{item.name}' → '{best_match.get('item_id')}' (score={best_score:.2f})")
+                elif best_match and best_score >= 0.5:
+                    # 中品質マッチ（項目名 or カテゴリが一致）
+                    matched_item = best_match
+                    match_type = "partial"
+                    string_match_count += 1
+                    logger.debug(f"≈ Partial match '{item.name}' → '{best_match.get('item_id')}' (score={best_score:.2f})")
+                elif category_fallback and category_fallback_score >= 0.8:
+                    # カテゴリフォールバック（カテゴリは一致するが仕様が異なる）
+                    matched_item = category_fallback
+                    match_type = "category"
+                    string_match_count += 1
+                    logger.debug(f"↳ Category fallback '{item.name}' → '{category_fallback.get('item_id')}' (score={category_fallback_score:.2f})")
+
+            # マッチング失敗の場合
+            if not matched_item:
                 logger.warning(f"✗ No match for '{item.name}' {item.specification} (best={best_score:.2f})")
 
             if matched_item:
@@ -1558,7 +1872,10 @@ JSON配列で、階層構造を持った見積項目を出力してください�
 
         matched_count = sum(1 for item in enriched_items if item.unit_price is not None)
         if len(estimate_items) > 0:
-            logger.info(f"Price matching: {matched_count}/{len(estimate_items)} items ({matched_count/len(estimate_items)*100:.1f}%)")
+            match_rate = matched_count/len(estimate_items)*100
+            logger.info(f"Price matching: {matched_count}/{len(estimate_items)} items ({match_rate:.1f}%)")
+            logger.info(f"  - Vector search matches: {vector_match_count}")
+            logger.info(f"  - String matching matches: {string_match_count}")
         else:
             logger.warning("No items to match prices for")
 
