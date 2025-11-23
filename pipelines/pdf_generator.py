@@ -30,7 +30,10 @@ class EcoleasePDFGenerator:
 
         # 明朝体フォント候補（TTF/OTFのみ）
         mincho_fonts = [
-            # IPA明朝（インストール済み、またはLinux）
+            # IPA明朝（Streamlit Cloud: packages.txt でインストール）
+            ('/usr/share/fonts/opentype/ipafont-mincho/ipam.ttf', None),
+            ('/usr/share/fonts/truetype/fonts-japanese-mincho.ttf', None),
+            # IPA明朝（ローカル環境）
             ('/Library/Fonts/ipaexm.ttf', None),
             ('/usr/share/fonts/opentype/ipaexfont-mincho/ipaexm.ttf', None),
             ('/usr/share/fonts/truetype/takao-mincho/TakaoMincho.ttf', None),
@@ -41,6 +44,9 @@ class EcoleasePDFGenerator:
 
         # ゴシック体・Unicodeフォント候補（フォールバック、日本語対応）
         unicode_fonts = [
+            # IPAゴシック（Streamlit Cloud: packages.txt でインストール）
+            ('/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf', None),
+            ('/usr/share/fonts/truetype/fonts-japanese-gothic.ttf', None),
             # Arial Unicode（日本語を含む）
             ('/Library/Fonts/Arial Unicode.ttf', None),
             # Noto Sans JP

@@ -673,7 +673,7 @@ class AIEstimateGenerator:
 
     def _check_unit_compatibility(self, item_unit: str, kb_unit: str) -> bool:
         """
-        単位の互換性をチェック
+        単位の互換性をチェック（強化版）
 
         Args:
             item_unit: 見積項目の単位
@@ -695,15 +695,82 @@ class AIEstimateGenerator:
         if unit_norm_item in unit_norm_kb or unit_norm_kb in unit_norm_item:
             return True
 
-        # 互換性のない単位ペア
+        # 互換性のない単位ペア（強化版）
+        # 「式」「基」「面」「台」「組」は他の計量単位と互換性なし
+        lump_sum_units = ["式", "基", "面", "台", "組", "セット", "set", "ユニット"]
+        quantity_units = ["m", "ｍ", "本", "個", "箇所", "ケ所", "ヶ所", "点", "口"]
+
+        # どちらかが一式系で、もう一方が計量系なら互換性なし
+        item_is_lump = any(u in unit_norm_item for u in lump_sum_units)
+        kb_is_lump = any(u in unit_norm_kb for u in lump_sum_units)
+        item_is_qty = any(u in unit_norm_item for u in quantity_units)
+        kb_is_qty = any(u in unit_norm_kb for u in quantity_units)
+
+        if (item_is_lump and kb_is_qty) or (item_is_qty and kb_is_lump):
+            logger.debug(f"Unit incompatible: '{item_unit}' vs '{kb_unit}'")
+            return False
+
+        # 追加の互換性なしペア
         incompatible_pairs = [
-            ("式", "箇所"), ("式", "個"), ("式", "m"), ("式", "台"),
-            ("箇所", "m"), ("個", "m"), ("台", "m"), ("ヶ所", "m")
+            ("箇所", "m"), ("個", "m"), ("台", "m"), ("ヶ所", "m"), ("ケ所", "m"),
+            ("点", "m"), ("口", "m"), ("面", "m"), ("基", "m"),
         ]
         for u1, u2 in incompatible_pairs:
             if (u1 in unit_norm_item and u2 in unit_norm_kb) or \
                (u2 in unit_norm_item and u1 in unit_norm_kb):
                 return False
+
+        return True
+
+    def _check_price_sanity(self, item_name: str, item_unit: str, unit_price: float, quantity: float) -> bool:
+        """
+        単価と金額の妥当性をチェック（異常な高額マッチングを防ぐ）
+
+        Args:
+            item_name: 項目名
+            item_unit: 単位
+            unit_price: 単価
+            quantity: 数量
+
+        Returns:
+            妥当であればTrue
+        """
+        if not unit_price or not quantity:
+            return True
+
+        # 計算される金額
+        amount = unit_price * quantity
+
+        # 単位ごとの単価上限（異常検出用）
+        unit_price_limits = {
+            "m": 50000,      # 配管/配線は5万円/m以下が妥当
+            "ｍ": 50000,
+            "本": 100000,    # 10万円/本以下
+            "個": 50000,     # 5万円/個以下
+            "箇所": 100000,  # 10万円/箇所以下
+            "ケ所": 100000,
+            "ヶ所": 100000,
+            "点": 50000,     # 5万円/点以下
+            "口": 50000,     # 5万円/口以下
+        }
+
+        # 単価上限チェック
+        for unit_key, max_price in unit_price_limits.items():
+            if unit_key in (item_unit or ""):
+                if unit_price > max_price:
+                    logger.warning(
+                        f"Price sanity check failed: '{item_name}' "
+                        f"¥{unit_price:,.0f}/{item_unit} > max ¥{max_price:,}/{unit_key}"
+                    )
+                    return False
+
+        # 金額上限チェック（単一項目で1億円超は異常）
+        if amount > 100000000:
+            logger.warning(
+                f"Amount sanity check failed: '{item_name}' "
+                f"¥{amount:,.0f} > max ¥100,000,000"
+            )
+            return False
 
         return True
 
@@ -3141,14 +3208,21 @@ JSON配列形式で出力してください：
                     best_score = best_match_score
                     match_count += 1
 
-            # 単価を設定
+            # 単価を設定（妥当性チェック付き）
             if matched_item:
-                item.unit_price = matched_item.get("unit_price")
-                if item.quantity and item.unit_price:
-                    item.amount = item.quantity * item.unit_price
-                item.source_reference = f"KB:{matched_item.get('item_id')}[{match_type}](score={best_score:.2f})"
-                item.price_references = [matched_item.get("item_id")]
-                logger.debug(f"✓ Matched '{item.name}' → {matched_item.get('item_id')} @¥{item.unit_price:,.0f}")
+                candidate_price = matched_item.get("unit_price")
+                # 金額妥当性チェック
+                if self._check_price_sanity(item.name, item.unit, candidate_price, item.quantity or 0):
+                    item.unit_price = candidate_price
+                    if item.quantity and item.unit_price:
+                        item.amount = item.quantity * item.unit_price
+                    item.source_reference = f"KB:{matched_item.get('item_id')}[{match_type}](score={best_score:.2f})"
+                    item.price_references = [matched_item.get("item_id")]
+                    logger.debug(f"✓ Matched '{item.name}' → {matched_item.get('item_id')} @¥{item.unit_price:,.0f}")
+                else:
+                    # 妥当性チェック失敗 - 単価を適用しない
+                    logger.warning(f"✗ Price rejected for '{item.name}': ¥{candidate_price:,.0f} × {item.quantity} = ¥{candidate_price * (item.quantity or 0):,.0f}")
+                    match_count -= 1  # マッチカウントを減らす
 
             enriched_items.append(item)
 

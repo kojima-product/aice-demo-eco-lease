@@ -1,0 +1,3 @@
+fonts-ipafont
+fonts-ipafont-gothic
+fonts-ipafont-mincho
