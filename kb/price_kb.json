@@ -10723,7 +10723,7 @@
     "description": "空調設備工事",
     "discipline": "機械設備工事",
     "unit": "式",
-    "unit_price": 25000000,
+    "unit_price": 8000000,
     "features": {
       "note": "2000㎡×12500円/㎡"
     },
@@ -11007,7 +11007,7 @@
     "description": "空調設備工事",
     "discipline": "空調設備工事",
     "unit": "式",
-    "unit_price": 15000000,
+    "unit_price": 5000000,
     "features": {
       "note": "空調設備一式"
     },
@@ -11423,5 +11423,75 @@
     ],
     "valid_from": "2025-11-23",
     "source_project": "標準単価"
+  },
+  {
+    "item_id": "PIPE_NEW_001",
+    "description": "空調設備配管工事",
+    "discipline": "空調設備工事",
+    "unit": "式",
+    "unit_price": 2500000,
+    "features": {
+      "specification": "冷媒配管、ドレン配管一式"
+    },
+    "context_tags": [
+      "空調",
+      "配管"
+    ]
+  },
+  {
+    "item_id": "PIPE_NEW_002",
+    "description": "冷媒配管工事",
+    "discipline": "空調設備工事",
+    "unit": "m",
+    "unit_price": 8500,
+    "features": {
+      "specification": "被覆銅管"
+    },
+    "context_tags": [
+      "空調",
+      "配管"
+    ]
+  },
+  {
+    "item_id": "PIPE_NEW_003",
+    "description": "ドレン配管工事",
+    "discipline": "空調設備工事",
+    "unit": "m",
+    "unit_price": 3500,
+    "features": {
+      "specification": "VP管"
+    },
+    "context_tags": [
+      "空調",
+      "配管"
+    ]
+  },
+  {
+    "item_id": "PIPE_NEW_004",
+    "description": "給水配管工事",
+    "discipline": "衛生設備工事",
+    "unit": "m",
+    "unit_price": 8000,
+    "features": {
+      "specification": "ステンレス管またはポリエチレン管"
+    },
+    "context_tags": [
+      "給排水",
+      "配管"
+    ]
+  },
+  {
+    "item_id": "PIPE_NEW_005",
+    "description": "排水配管工事",
+    "discipline": "衛生設備工事",
+    "unit": "m",
+    "unit_price": 5500,
+    "features": {
+      "specification": "硬質塩化ビニル管"
+    },
+    "context_tags": [
+      "給排水",
+      "配管"
+    ]
   }
 ]

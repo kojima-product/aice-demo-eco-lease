@@ -411,8 +411,8 @@ class EcoleasePDFGenerator:
         self._draw_text_with_weight(c, content_left, y, "リース期間",
                                      work_info_font_weight, align='left')
         contract_period = fmt_doc.project_info.contract_period or ""
-        # 「、」「,」で分割して項目ごとに改行
-        period_items = re.split(r'[、,]', contract_period)
+        # 「工期」「レンタル」の前で分割（日付内の/は分割しない）
+        period_items = re.split(r'(?=工期[:：])|(?=レンタル)', contract_period)
         period_items = [item.strip() for item in period_items if item.strip()]
         for i, line in enumerate(period_items):
             self._draw_text_with_weight(c, content_left + label_width, y - (i * line_spacing * 0.85), line,

@@ -664,13 +664,48 @@ class AIEstimateGenerator:
         # ベクトル検索実行（単位リランキング付き）
         results = self.vector_search.search(query, discipline=discipline, top_k=5, target_unit=target_unit)
 
-        if results and results[0]["score"] >= 0.3:  # 類似度閾値緩和: 0.5 → 0.3
-            best = results[0]
-            logger.debug(f"Vector match: '{query}' → '{best['kb_item'].get('description')}' "
-                        f"(score={best['score']:.3f})")
-            return best
+        if not results:
+            return None
+
+        # 結果をフィルタリング（広すぎるマッチを除外）
+        for result in results:
+            if result["score"] < 0.3:
+                continue
+
+            kb_item = result["kb_item"]
+            kb_desc = kb_item.get("description", "")
+
+            # 広すぎるマッチを除外
+            if self._is_too_broad_match(item_name, kb_desc):
+                logger.debug(f"Skipping too broad match: '{item_name}' → '{kb_desc}'")
+                continue
+
+            logger.debug(f"Vector match: '{query}' → '{kb_desc}' (score={result['score']:.3f})")
+            return result
 
         return None
+
+    def _is_too_broad_match(self, item_name: str, kb_name: str) -> bool:
+        """
+        マッチが広すぎる（具体項目が設備工事全体にマッチ）かチェック
+
+        例: 「空調設備配管工事」→「空調設備工事」は広すぎる
+        """
+        # 具体的な作業を示すキーワード
+        specific_keywords = ["配管", "器具", "機器", "配線", "取付", "撤去", "試験", "調整"]
+
+        # KB側が「○○設備工事」のような広い項目かチェック
+        broad_patterns = ["設備工事", "工事一式", "設備一式"]
+
+        item_has_specific = any(kw in item_name for kw in specific_keywords)
+        kb_is_broad = any(pattern in kb_name for pattern in broad_patterns) and \
+                      not any(kw in kb_name for kw in specific_keywords)
+
+        # 見積項目が具体的で、KB項目が広い場合は除外
+        if item_has_specific and kb_is_broad:
+            return True
+
+        return False
 
     # ===== Phase 2: KBマッチング改善用ヘルパーメソッド =====
 
