@@ -1474,7 +1474,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         response = self.client.messages.create(
             model=self.model_name,
             max_tokens=8000,
-            temperature=0.1,  # より決定的に（仕様書準拠）
+            temperature=0,  # 決定的に（毎回同じ結果）
             messages=[{"role": "user", "content": prompt}]
         )
 
@@ -1618,7 +1618,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
             response = self.client.messages.create(
                 model=self.model_name,
                 max_tokens=8000,
-                temperature=0.1,  # より決定的に
+                temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
 
@@ -1823,7 +1823,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
             response = self.client.messages.create(
                 model=self.model_name,
                 max_tokens=8000,
-                temperature=0.1,  # より決定的に
+                temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
 
@@ -2529,7 +2529,7 @@ JSON配列形式で出力してください：
             response = self.client.messages.create(
                 model=self.model_name,
                 max_tokens=8000,
-                temperature=0.1,
+                temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
 
@@ -2840,7 +2840,7 @@ JSON配列形式で出力してください：
             response = self.client.messages.create(
                 model=self.model_name,
                 max_tokens=16000,  # 大量の項目に対応
-                temperature=0.1,
+                temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
 
