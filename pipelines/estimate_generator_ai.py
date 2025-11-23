@@ -10,6 +10,7 @@ import json
 import re
 import io
 import base64
+import hashlib
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -225,12 +226,16 @@ SYNONYM_DICT = {
     "プルボックス": ["PB", "ジョイントボックス", "JB"],
     # 電気設備 - 盤類
     "接地工事": ["A種接地", "B種接地", "C種接地", "D種接地", "接地", "アース", "接地極"],
-    "分電盤": ["動力盤", "電灯盤", "配電盤", "動力制御盤", "OA盤"],
-    "制御盤": ["操作盤", "監視盤", "中央監視盤"],
+    "分電盤": ["動力盤", "電灯盤", "配電盤", "動力制御盤", "OA盤", "盤", "電気盤", "分電盤工事"],
+    "制御盤": ["操作盤", "監視盤", "中央監視盤", "制御盤工事"],
     "端子盤": ["TB", "端子台"],
+    "受変電設備": ["キュービクル", "高圧受電設備", "変圧器", "トランス", "高圧盤", "低圧盤"],
     # 電気設備 - 照明
-    "LED照明": ["LED", "LED器具", "照明器具", "LED灯", "LEDベースライト", "LED一体型"],
-    "非常照明": ["非常用照明", "誘導灯", "避難誘導灯", "非常灯"],
+    "LED照明": ["LED", "LED器具", "照明器具", "LED灯", "LEDベースライト", "LED一体型", "照明設備"],
+    "照明設備": ["照明器具", "照明工事", "LED照明", "蛍光灯", "器具取付"],
+    "非常照明": ["非常用照明", "誘導灯", "避難誘導灯", "非常灯", "バッテリー内蔵"],
+    "誘導灯": ["避難誘導灯", "非常照明", "非常灯", "誘導灯工事", "避難口誘導灯", "通路誘導灯"],
+    "誘導灯信号装置": ["信号装置", "誘導灯用信号装置", "連動装置"],
     "ダウンライト": ["DL", "埋込照明", "天井埋込"],
     "スポットライト": ["SL", "スポット"],
     "高天井照明": ["投光器", "水銀灯", "メタルハライド", "HID"],
@@ -241,10 +246,14 @@ SYNONYM_DICT = {
     "テレビ共聴設備": ["CATV", "TV共聴", "アンテナ"],
     # 機械設備 - 空調
     "空冷ヒートポンプ": ["エアコン", "空調機", "ヒートポンプ", "EHP", "パッケージエアコン", "PAC"],
+    "パッケージエアコン": ["業務用エアコン", "エアコン", "空調機", "PAC", "EHP", "室内機", "天カセ", "天井埋込", "壁掛け"],
+    "業務用エアコン": ["パッケージエアコン", "エアコン", "空調機", "PAC", "室内機"],
+    "室外機": ["室外ユニット", "コンデンサー", "コンデンシングユニット", "屋外機"],
+    "リモコン": ["ワイヤードリモコン", "ワイヤレスリモコン", "集中リモコン", "個別リモコン", "操作パネル"],
     "ガスヒートポンプ": ["GHP", "ガスエアコン", "ガスヒーポン"],
     "ビル用マルチ": ["マルチエアコン", "VRF", "ビルマル"],
-    "全熱交換器": ["ロスナイ", "熱交換換気", "熱交換ユニット"],
-    "換気扇": ["換気設備", "排気ファン", "給気ファン", "天井扇", "有圧換気扇"],
+    "全熱交換器": ["ロスナイ", "熱交換換気", "熱交換ユニット", "全熱交換機", "HRV", "ERV"],
+    "換気扇": ["換気設備", "排気ファン", "給気ファン", "天井扇", "有圧換気扇", "換気扇工事"],
     "ダクト": ["亜鉛鉄板ダクト", "スパイラルダクト", "フレキシブルダクト", "フレキ"],
     "制気口": ["吹出口", "吸込口", "アネモ", "ライン型", "VHS"],
     # 機械設備 - 給排水
@@ -484,12 +493,18 @@ class AIEstimateGenerator:
     詳細な見積項目（配管サイズ、数量、材料等）を自動生成します。
     """
 
-    def __init__(self, kb_path: str = "kb/price_kb.json", use_vector_search: bool = True):
+    def __init__(self, kb_path: str = "kb/price_kb.json", use_vector_search: bool = True, use_cache: bool = True):
         load_dotenv()
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.model_name = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
         self.kb_path = kb_path
         self.price_kb = self._load_price_kb()
+
+        # キャッシュ設定
+        self.use_cache = use_cache
+        self.cache_dir = Path("cache/estimates")
+        if use_cache:
+            self.cache_dir.mkdir(parents=True, exist_ok=True)
 
         # ベクトル検索の初期化
         self.vector_search = None
@@ -504,6 +519,50 @@ class AIEstimateGenerator:
                 return json.load(f)
         logger.warning(f"Price KB not found: {self.kb_path}")
         return []
+
+    def _get_pdf_hash(self, pdf_path: str) -> str:
+        """PDFファイルのハッシュを計算（キャッシュキー用）"""
+        with open(pdf_path, 'rb') as f:
+            return hashlib.md5(f.read()).hexdigest()[:12]
+
+    def _get_cache_path(self, pdf_path: str) -> Path:
+        """キャッシュファイルのパスを取得"""
+        pdf_hash = self._get_pdf_hash(pdf_path)
+        pdf_name = Path(pdf_path).stem[:30]  # ファイル名の先頭30文字
+        return self.cache_dir / f"{pdf_name}_{pdf_hash}_items.json"
+
+    def _load_cached_items(self, pdf_path: str) -> Optional[List[Dict]]:
+        """キャッシュから生成済み項目を読み込み"""
+        if not self.use_cache:
+            return None
+        cache_path = self._get_cache_path(pdf_path)
+        if cache_path.exists():
+            try:
+                with open(cache_path, 'r', encoding='utf-8') as f:
+                    cached = json.load(f)
+                logger.info(f"✓ Cache hit: {len(cached.get('items', []))} items loaded from {cache_path.name}")
+                return cached.get('items')
+            except Exception as e:
+                logger.warning(f"Cache read error: {e}")
+        return None
+
+    def _save_items_to_cache(self, pdf_path: str, items: List[Dict]):
+        """生成した項目をキャッシュに保存"""
+        if not self.use_cache:
+            return
+        cache_path = self._get_cache_path(pdf_path)
+        try:
+            cache_data = {
+                'pdf_path': pdf_path,
+                'pdf_hash': self._get_pdf_hash(pdf_path),
+                'created_at': datetime.now().isoformat(),
+                'items': items
+            }
+            with open(cache_path, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, ensure_ascii=False, indent=2)
+            logger.info(f"✓ Cache saved: {len(items)} items to {cache_path.name}")
+        except Exception as e:
+            logger.warning(f"Cache write error: {e}")
 
     def _init_vector_search(self):
         """ベクトル検索インデックスを初期化"""
@@ -2820,47 +2879,70 @@ JSON配列形式で出力してください：
             if drawing_info.get("equipment_locations") or drawing_info.get("pipe_routes"):
                 building_info["drawing_info"] = drawing_info
 
-        # 3. 各工事区分を順番に生成してマージ（分割LLM呼び出し）
-        logger.info("Generating unified estimate items using split LLM calls for all 6 categories")
-        estimate_items = []
+        # 3. キャッシュから項目を読み込み、なければ生成
+        cached_items = self._load_cached_items(spec_pdf_path)
 
-        # 3.1 電気設備工事
-        logger.info("Generating electrical items...")
-        electrical_items = self.generate_detailed_items_for_electrical(building_info)
-        logger.info(f"Generated {len(electrical_items)} electrical items")
-        estimate_items.extend(electrical_items)
+        if cached_items:
+            # キャッシュから復元
+            logger.info(f"Using cached items: {len(cached_items)} items")
+            estimate_items = []
+            for item_dict in cached_items:
+                try:
+                    # discipline を Enum に変換
+                    if 'discipline' in item_dict and isinstance(item_dict['discipline'], str):
+                        for disc in DisciplineType:
+                            if disc.value == item_dict['discipline']:
+                                item_dict['discipline'] = disc
+                                break
+                    estimate_items.append(EstimateItem(**item_dict))
+                except Exception as e:
+                    logger.warning(f"Failed to restore cached item: {e}")
+        else:
+            # 新規生成
+            logger.info("Generating unified estimate items using split LLM calls for all 6 categories")
+            estimate_items = []
 
-        # 3.2 機械設備工事
-        logger.info("Generating mechanical items...")
-        mechanical_items = self.generate_detailed_items_for_mechanical(building_info)
-        logger.info(f"Generated {len(mechanical_items)} mechanical items")
-        estimate_items.extend(mechanical_items)
+            # 3.1 電気設備工事
+            logger.info("Generating electrical items...")
+            electrical_items = self.generate_detailed_items_for_electrical(building_info)
+            logger.info(f"Generated {len(electrical_items)} electrical items")
+            estimate_items.extend(electrical_items)
 
-        # 3.3 ガス設備工事
-        logger.info("Generating gas items...")
-        gas_items = self.generate_detailed_items_for_gas(building_info)
-        logger.info(f"Generated {len(gas_items)} gas items")
-        estimate_items.extend(gas_items)
+            # 3.2 機械設備工事
+            logger.info("Generating mechanical items...")
+            mechanical_items = self.generate_detailed_items_for_mechanical(building_info)
+            logger.info(f"Generated {len(mechanical_items)} mechanical items")
+            estimate_items.extend(mechanical_items)
 
-        # 3.4 空調設備工事
-        logger.info("Generating HVAC items...")
-        hvac_items = self.generate_detailed_items_generic(building_info, DisciplineType.HVAC)
-        logger.info(f"Generated {len(hvac_items)} HVAC items")
-        estimate_items.extend(hvac_items)
+            # 3.3 ガス設備工事
+            logger.info("Generating gas items...")
+            gas_items = self.generate_detailed_items_for_gas(building_info)
+            logger.info(f"Generated {len(gas_items)} gas items")
+            estimate_items.extend(gas_items)
 
-        # 3.5 衛生設備工事
-        logger.info("Generating plumbing items...")
-        plumbing_items = self.generate_detailed_items_generic(building_info, DisciplineType.PLUMBING)
-        logger.info(f"Generated {len(plumbing_items)} plumbing items")
-        estimate_items.extend(plumbing_items)
+            # 3.4 空調設備工事
+            logger.info("Generating HVAC items...")
+            hvac_items = self.generate_detailed_items_generic(building_info, DisciplineType.HVAC)
+            logger.info(f"Generated {len(hvac_items)} HVAC items")
+            estimate_items.extend(hvac_items)
 
-        # 3.6 消防設備工事
-        logger.info("Generating fire protection items...")
-        fire_items = self.generate_detailed_items_generic(building_info, DisciplineType.FIRE_PROTECTION)
-        logger.info(f"Generated {len(fire_items)} fire protection items")
-        estimate_items.extend(fire_items)
+            # 3.5 衛生設備工事
+            logger.info("Generating plumbing items...")
+            plumbing_items = self.generate_detailed_items_generic(building_info, DisciplineType.PLUMBING)
+            logger.info(f"Generated {len(plumbing_items)} plumbing items")
+            estimate_items.extend(plumbing_items)
 
-        logger.info(f"Generated total {len(estimate_items)} unified items across all 6 categories")
+            # 3.6 消防設備工事
+            logger.info("Generating fire protection items...")
+            fire_items = self.generate_detailed_items_generic(building_info, DisciplineType.FIRE_PROTECTION)
+            logger.info(f"Generated {len(fire_items)} fire protection items")
+            estimate_items.extend(fire_items)
+
+            logger.info(f"Generated total {len(estimate_items)} unified items across all 6 categories")
+
+            # 生成した項目をキャッシュに保存（単価付与前の状態）
+            items_for_cache = [item.model_dump(mode='json') for item in estimate_items]
+            self._save_items_to_cache(spec_pdf_path, items_for_cache)
 
         # 3.7. チェックリストで項目網羅性を検証・数量推定
         checker = EstimationChecker()
