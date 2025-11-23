@@ -3056,7 +3056,7 @@
   },
   {
     "item_id": "tmpl4jn4xcw_314",
-    "description": "業務用エオメイ",
+    "description": "業務用エアコン",
     "discipline": "機械設備工事",
     "unit": "台",
     "unit_price": 172000.0,
@@ -3143,7 +3143,7 @@
   },
   {
     "item_id": "tmpl4jn4xcw_319",
-    "description": "業務用エオメイ",
+    "description": "業務用エアコン",
     "discipline": "機械設備工事",
     "unit": "台",
     "unit_price": 218000.0,
@@ -3196,7 +3196,7 @@
   },
   {
     "item_id": "tmpl4jn4xcw_324",
-    "description": "エオメイ用コンバクトリモコン",
+    "description": "エアコン用コンバクトリモコン",
     "discipline": "機械設備工事",
     "unit": "個",
     "unit_price": 14000.0,
@@ -10581,5 +10581,441 @@
       "quantity": 1
     },
     "similarity_score": 0.0
+  },
+  {
+    "item_id": "STD_ELEC_001",
+    "description": "受変電設備",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 3500000,
+    "features": {
+      "note": "500kVA級標準"
+    },
+    "context_tags": [
+      "学校",
+      "キュービクル",
+      "高圧受電"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_002",
+    "description": "幹線設備",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 1500000,
+    "features": {
+      "note": "CV幹線一式"
+    },
+    "context_tags": [
+      "学校",
+      "幹線",
+      "ケーブル"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_003",
+    "description": "分電盤",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 180000,
+    "features": {
+      "note": "電灯分電盤標準"
+    },
+    "context_tags": [
+      "学校",
+      "分電盤",
+      "配電盤"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_004",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 250000,
+    "features": {
+      "note": "動力制御盤標準"
+    },
+    "context_tags": [
+      "学校",
+      "動力盤",
+      "制御盤"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_005",
+    "description": "照明設備",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 8000000,
+    "features": {
+      "note": "2000㎡×4000円/㎡"
+    },
+    "context_tags": [
+      "学校",
+      "照明",
+      "LED"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_006",
+    "description": "コンセント設備",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 2500000,
+    "features": {
+      "note": "コンセント一式"
+    },
+    "context_tags": [
+      "学校",
+      "コンセント",
+      "配線"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_007",
+    "description": "誘導灯",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 35000,
+    "features": {
+      "note": "LED誘導灯"
+    },
+    "context_tags": [
+      "学校",
+      "誘導灯",
+      "避難"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_ELEC_008",
+    "description": "誘導灯信号装置",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 85000,
+    "features": {
+      "note": "信号装置"
+    },
+    "context_tags": [
+      "学校",
+      "誘導灯",
+      "信号"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_001",
+    "description": "空調設備工事",
+    "discipline": "機械設備工事",
+    "unit": "式",
+    "unit_price": 25000000,
+    "features": {
+      "note": "2000㎡×12500円/㎡"
+    },
+    "context_tags": [
+      "学校",
+      "空調",
+      "エアコン"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_002",
+    "description": "パッケージエアコン",
+    "discipline": "機械設備工事",
+    "unit": "台",
+    "unit_price": 350000,
+    "features": {
+      "note": "天カセ4方向5HP"
+    },
+    "context_tags": [
+      "学校",
+      "エアコン",
+      "PAC"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_003",
+    "description": "室外機",
+    "discipline": "機械設備工事",
+    "unit": "台",
+    "unit_price": 180000,
+    "features": {
+      "note": "室外ユニット"
+    },
+    "context_tags": [
+      "学校",
+      "室外機",
+      "コンデンサー"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_004",
+    "description": "全熱交換器",
+    "discipline": "機械設備工事",
+    "unit": "台",
+    "unit_price": 280000,
+    "features": {
+      "note": "天井埋込型"
+    },
+    "context_tags": [
+      "学校",
+      "全熱交換",
+      "ロスナイ"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_005",
+    "description": "換気設備工事",
+    "discipline": "機械設備工事",
+    "unit": "式",
+    "unit_price": 3000000,
+    "features": {
+      "note": "換気設備一式"
+    },
+    "context_tags": [
+      "学校",
+      "換気",
+      "換気扇"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_006",
+    "description": "集中リモコン",
+    "discipline": "機械設備工事",
+    "unit": "台",
+    "unit_price": 150000,
+    "features": {
+      "note": "集中制御リモコン"
+    },
+    "context_tags": [
+      "学校",
+      "リモコン",
+      "制御"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_MECH_007",
+    "description": "個別リモコン",
+    "discipline": "機械設備工事",
+    "unit": "台",
+    "unit_price": 8000,
+    "features": {
+      "note": "ワイヤードリモコン"
+    },
+    "context_tags": [
+      "学校",
+      "リモコン"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_GAS_001",
+    "description": "ガス引込工事",
+    "discipline": "ガス設備工事",
+    "unit": "式",
+    "unit_price": 850000,
+    "features": {
+      "note": "本支管接続含む"
+    },
+    "context_tags": [
+      "学校",
+      "ガス",
+      "引込"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_GAS_002",
+    "description": "屋内配管工事",
+    "discipline": "ガス設備工事",
+    "unit": "式",
+    "unit_price": 1200000,
+    "features": {
+      "note": "屋内ガス配管一式"
+    },
+    "context_tags": [
+      "学校",
+      "ガス",
+      "配管"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_GAS_003",
+    "description": "ガス栓設置工事",
+    "discipline": "ガス設備工事",
+    "unit": "式",
+    "unit_price": 450000,
+    "features": {
+      "note": "ガス栓取付一式"
+    },
+    "context_tags": [
+      "学校",
+      "ガス栓"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_GAS_004",
+    "description": "配管支持金物",
+    "discipline": "ガス設備工事",
+    "unit": "箇所",
+    "unit_price": 3500,
+    "features": {
+      "note": "配管支持金具"
+    },
+    "context_tags": [
+      "学校",
+      "支持金物",
+      "配管"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_GAS_005",
+    "description": "ガスメーター",
+    "discipline": "ガス設備工事",
+    "unit": "台",
+    "unit_price": 45000,
+    "features": {
+      "note": "マイコンメーター"
+    },
+    "context_tags": [
+      "学校",
+      "メーター"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_PLMB_001",
+    "description": "排水設備工事",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 2500000,
+    "features": {
+      "note": "排水配管一式"
+    },
+    "context_tags": [
+      "学校",
+      "排水",
+      "配管"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_PLMB_002",
+    "description": "給湯設備",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 800000,
+    "features": {
+      "note": "給湯器＋配管"
+    },
+    "context_tags": [
+      "学校",
+      "給湯"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_PLMB_003",
+    "description": "衛生器具設備",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 3500000,
+    "features": {
+      "note": "衛生器具一式"
+    },
+    "context_tags": [
+      "学校",
+      "衛生器具",
+      "便器"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_FIRE_001",
+    "description": "消火設備",
+    "discipline": "消防設備工事",
+    "unit": "式",
+    "unit_price": 2000000,
+    "features": {
+      "note": "消火設備一式"
+    },
+    "context_tags": [
+      "学校",
+      "消火",
+      "消防"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_FIRE_002",
+    "description": "非常放送設備",
+    "discipline": "消防設備工事",
+    "unit": "式",
+    "unit_price": 1500000,
+    "features": {
+      "note": "非常放送一式"
+    },
+    "context_tags": [
+      "学校",
+      "非常放送"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
+  },
+  {
+    "item_id": "STD_HVAC_001",
+    "description": "空調設備工事",
+    "discipline": "空調設備工事",
+    "unit": "式",
+    "unit_price": 15000000,
+    "features": {
+      "note": "空調設備一式"
+    },
+    "context_tags": [
+      "学校",
+      "空調"
+    ],
+    "valid_from": "2025-11-23",
+    "source_project": "標準単価"
   }
 ]

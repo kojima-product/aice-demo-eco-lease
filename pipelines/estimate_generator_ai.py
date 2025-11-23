@@ -425,14 +425,44 @@ class VectorKBSearch:
             logger.error(f"Failed to build vector index: {e}")
             return False
 
-    def search(self, query: str, discipline: str = None, top_k: int = 5) -> List[Dict]:
+    def _expand_query_with_synonyms(self, query: str) -> str:
         """
-        クエリに類似したKB項目を検索
+        同義語辞書を使ってクエリを展開
+
+        Args:
+            query: 元のクエリ
+
+        Returns:
+            同義語を含む拡張クエリ
+        """
+        expanded_terms = [query]
+
+        # SYNONYM_DICTから同義語を探す
+        for key, synonyms in SYNONYM_DICT.items():
+            # クエリにキーが含まれる場合
+            if key in query:
+                expanded_terms.extend(synonyms[:3])  # 最大3つの同義語を追加
+                break
+            # クエリが同義語に含まれる場合
+            for syn in synonyms:
+                if syn in query:
+                    expanded_terms.append(key)
+                    expanded_terms.extend([s for s in synonyms if s != syn][:2])
+                    break
+
+        # 重複を除去して結合
+        unique_terms = list(dict.fromkeys(expanded_terms))
+        return " ".join(unique_terms[:5])  # 最大5語
+
+    def search(self, query: str, discipline: str = None, top_k: int = 5, target_unit: str = None) -> List[Dict]:
+        """
+        クエリに類似したKB項目を検索（同義語展開・単位リランキング付き）
 
         Args:
             query: 検索クエリ（項目名 + 仕様）
             discipline: 工事区分でフィルタ（任意）
             top_k: 返す結果数
+            target_unit: 希望する単位（指定時は単位一致にボーナス）
 
         Returns:
             類似KB項目のリスト（スコア付き）
@@ -441,8 +471,13 @@ class VectorKBSearch:
             return []
 
         try:
+            # 同義語展開
+            expanded_query = self._expand_query_with_synonyms(query)
+            if expanded_query != query:
+                logger.debug(f"Query expanded: '{query}' -> '{expanded_query}'")
+
             # クエリをベクトル化（E5モデル用プレフィックス）
-            query_text = f"query: {query}"
+            query_text = f"query: {expanded_query}"
             query_embedding = self.model.encode([query_text], show_progress_bar=False)
             query_embedding = np.array(query_embedding).astype('float32')
             faiss.normalize_L2(query_embedding)
@@ -465,16 +500,27 @@ class VectorKBSearch:
                         if kb_discipline != "設備工事":  # 汎用項目は許可
                             continue
 
+                # 単位一致ボーナス
+                adjusted_score = float(dist)
+                if target_unit:
+                    kb_unit = kb_item.get("unit", "")
+                    if kb_unit == target_unit or target_unit in kb_unit or kb_unit in target_unit:
+                        adjusted_score += 0.05  # 単位一致で+0.05ボーナス
+
                 results.append({
                     "kb_item": kb_item,
-                    "score": float(dist),  # コサイン類似度（0-1）
+                    "score": adjusted_score,
+                    "original_score": float(dist),
                     "rank": len(results) + 1
                 })
 
-                if len(results) >= top_k:
-                    break
+            # 単位リランキング: スコアで再ソート
+            if target_unit and len(results) > 1:
+                results.sort(key=lambda x: x["score"], reverse=True)
+                for i, r in enumerate(results):
+                    r["rank"] = i + 1
 
-            return results
+            return results[:top_k]
 
         except Exception as e:
             logger.error(f"Vector search error: {e}")
@@ -579,14 +625,15 @@ class AIEstimateGenerator:
             logger.warning("Vector search model not loaded - using fallback")
             self.vector_search = None
 
-    def _vector_search_match(self, item_name: str, item_spec: str, discipline: str) -> Optional[Dict]:
+    def _vector_search_match(self, item_name: str, item_spec: str, discipline: str, target_unit: str = None) -> Optional[Dict]:
         """
-        ベクトル検索でKBマッチングを行う
+        ベクトル検索でKBマッチングを行う（単位リランキング付き）
 
         Args:
             item_name: 見積項目名
             item_spec: 仕様
             discipline: 工事区分
+            target_unit: 希望する単位（単位互換マッチ用）
 
         Returns:
             最良マッチのKB項目とスコア、またはNone
@@ -599,8 +646,8 @@ class AIEstimateGenerator:
         if not query:
             return None
 
-        # ベクトル検索実行
-        results = self.vector_search.search(query, discipline=discipline, top_k=3)
+        # ベクトル検索実行（単位リランキング付き）
+        results = self.vector_search.search(query, discipline=discipline, top_k=5, target_unit=target_unit)
 
         if results and results[0]["score"] >= 0.3:  # 類似度閾値緩和: 0.5 → 0.3
             best = results[0]
@@ -837,7 +884,7 @@ class AIEstimateGenerator:
         self,
         prompt: str,
         operation: str,
-        max_tokens: int = 8000,
+        max_tokens: int = 16000,
         metadata: Optional[Dict] = None
     ):
         """API呼び出しとコスト追跡を行う共通メソッド"""
@@ -990,7 +1037,7 @@ class AIEstimateGenerator:
 
         response = self.client.messages.create(
             model=self.model_name,
-            max_tokens=8000,
+            max_tokens=16000,
             temperature=0,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -1134,7 +1181,7 @@ class AIEstimateGenerator:
                 try:
                     response = self.client.messages.create(
                         model=self.model_name,
-                        max_tokens=8000,
+                        max_tokens=16000,
                         messages=[{
                             "role": "user",
                             "content": [
@@ -1408,7 +1455,7 @@ class AIEstimateGenerator:
 
         response = self.client.messages.create(
             model=self.model_name,
-            max_tokens=8000,
+            max_tokens=16000,
             temperature=0,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -1638,7 +1685,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
 
         response = self.client.messages.create(
             model=self.model_name,
-            max_tokens=8000,
+            max_tokens=16000,
             temperature=0,  # 決定的に（毎回同じ結果）
             messages=[{"role": "user", "content": prompt}]
         )
@@ -1821,7 +1868,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=8000,
+                max_tokens=16000,
                 temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -2055,7 +2102,7 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=8000,
+                max_tokens=16000,
                 temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -2217,7 +2264,8 @@ JSON配列で、階層構造を持った見積項目を出力してください�
                 vector_result = self._vector_search_match(
                     item.name,
                     item.specification or "",
-                    item.discipline.value
+                    item.discipline.value,
+                    target_unit=item.unit  # 単位リランキング用
                 )
                 if vector_result:
                     kb_item = vector_result["kb_item"]
@@ -2761,7 +2809,7 @@ JSON配列形式で出力してください：
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=8000,
+                max_tokens=16000,
                 temperature=0,  # 決定的に（毎回同じ結果）
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -3219,11 +3267,12 @@ JSON配列形式で出力してください：
             best_score = 0.0
 
             if vector_search_available:
-                # discipline=Noneで全カテゴリ検索
+                # discipline=Noneで全カテゴリ検索、単位リランキング付き
                 vector_result = self._vector_search_match(
                     item.name,
                     item.specification or "",
-                    None  # discipline制限なし
+                    None,  # discipline制限なし
+                    target_unit=item.unit  # 単位リランキング用
                 )
                 if vector_result:
                     kb_item = vector_result["kb_item"]

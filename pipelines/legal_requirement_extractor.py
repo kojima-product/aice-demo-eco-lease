@@ -181,7 +181,7 @@ class LegalRequirementExtractor:
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=8000,
+                max_tokens=16000,
                 temperature=0,
                 messages=[{"role": "user", "content": prompt}]
             )

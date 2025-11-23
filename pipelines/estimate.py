@@ -176,7 +176,7 @@ JSON配列形式で以下のように出力してください：
         try:
             response = self.client.messages.create(
                 model=self.model_name,
-                max_tokens=4000,
+                max_tokens=16000,
                 temperature=0.1,
                 system="あなたは建設見積の専門家です。必ずJSON形式で回答してください。",
                 messages=[

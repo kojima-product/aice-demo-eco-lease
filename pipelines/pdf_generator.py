@@ -33,6 +33,9 @@ class EcoleasePDFGenerator:
             # IPA明朝（Streamlit Cloud: packages.txt でインストール）
             ('/usr/share/fonts/opentype/ipafont-mincho/ipam.ttf', None),
             ('/usr/share/fonts/truetype/fonts-japanese-mincho.ttf', None),
+            # macOS ヒラギノ明朝（.ttc形式、subfontIndex指定）
+            ('/System/Library/Fonts/ヒラギノ明朝 ProN.ttc', 0),
+            ('/System/Library/Fonts/Hiragino Mincho ProN.ttc', 0),
             # IPA明朝（ローカル環境）
             ('/Library/Fonts/ipaexm.ttf', None),
             ('/usr/share/fonts/opentype/ipaexfont-mincho/ipaexm.ttf', None),
@@ -47,6 +50,9 @@ class EcoleasePDFGenerator:
             # IPAゴシック（Streamlit Cloud: packages.txt でインストール）
             ('/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf', None),
             ('/usr/share/fonts/truetype/fonts-japanese-gothic.ttf', None),
+            # macOS ヒラギノ角ゴシック（.ttc形式）
+            ('/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc', 0),
+            ('/System/Library/Fonts/Hiragino Sans GB.ttc', 0),
             # Arial Unicode（日本語を含む）
             ('/Library/Fonts/Arial Unicode.ttf', None),
             # Noto Sans JP
