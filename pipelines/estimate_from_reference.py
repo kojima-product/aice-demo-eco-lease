@@ -20,6 +20,7 @@ from pipelines.schemas import (
     CostType, OverheadCalculation
 )
 from pipelines.cost_tracker import record_cost
+from pipelines.estimate_verifier import EstimateVerifier, CalculationBasis
 
 
 class EstimateFromReference:
@@ -34,6 +35,7 @@ class EstimateFromReference:
         load_dotenv()
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.model_name = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
+        self.verifier = EstimateVerifier()  # 算出根拠検証器
 
     def extract_estimate_from_pdf(
         self,
@@ -284,6 +286,98 @@ JSON配列形式で出力してください：
 
         return estimate_items
 
+    def attach_calculation_basis(
+        self,
+        estimate_items: List[EstimateItem],
+        spec_text: str = ""
+    ) -> List[EstimateItem]:
+        """
+        各見積項目に算出根拠を付与する
+
+        Args:
+            estimate_items: 見積項目リスト
+            spec_text: 仕様書テキスト
+
+        Returns:
+            算出根拠が付与された項目リスト
+        """
+        logger.info("Attaching calculation basis to estimate items...")
+
+        # 仕様書から情報を抽出
+        spec_extraction = self.verifier.extract_spec_info(spec_text) if spec_text else None
+
+        for item in estimate_items:
+            # 各項目の算出トレースを生成
+            trace = self.verifier.trace_calculation(
+                item_name=item.name,
+                quantity=item.quantity,
+                unit=item.unit,
+                unit_price=item.unit_price,
+                amount=item.amount,
+                spec_extraction=spec_extraction
+            )
+
+            # 算出根拠をEstimateItemに設定
+            item.calculation_basis_type = trace.calculation_basis.value
+            item.calculation_formula = trace.calculation_formula
+            item.confidence = trace.confidence
+
+            # calculation_basisに詳細情報を格納
+            item.calculation_basis = {
+                "type": trace.calculation_basis.value,
+                "formula": trace.calculation_formula,
+                "kb_reference": trace.kb_reference,
+                "notes": trace.notes,
+                "confidence": trace.confidence,
+            }
+
+            # 備考にKB参照を追記
+            if trace.kb_reference and not item.remarks:
+                item.remarks = f"KB: {trace.kb_reference}"
+            elif trace.kb_reference:
+                item.remarks = f"{item.remarks} / KB: {trace.kb_reference}"
+
+        logger.info(f"Attached calculation basis to {len(estimate_items)} items")
+        return estimate_items
+
+    def generate_verification_report(
+        self,
+        fmt_doc: FMTDocument,
+        reference_items: Optional[List[Dict]] = None,
+        spec_text: str = ""
+    ) -> Dict:
+        """
+        見積書の検証レポートを生成
+
+        Args:
+            fmt_doc: 生成されたFMTDocument
+            reference_items: 参照見積の項目（オプション）
+            spec_text: 仕様書テキスト
+
+        Returns:
+            検証レポート（辞書形式）
+        """
+        # EstimateItemを辞書形式に変換
+        ai_items = [
+            {
+                "name": item.name,
+                "specification": item.specification,
+                "quantity": item.quantity,
+                "unit": item.unit,
+                "unit_price": item.unit_price,
+                "amount": item.amount,
+                "calculation_basis_type": item.calculation_basis_type,
+                "calculation_formula": item.calculation_formula,
+            }
+            for item in fmt_doc.estimate_items
+        ]
+
+        return self.verifier.generate_verification_report(
+            ai_items=ai_items,
+            human_items=reference_items,
+            spec_text=spec_text
+        )
+
     def generate_estimate_from_reference(
         self,
         spec_pdf_path: str,
@@ -329,7 +423,16 @@ JSON配列形式で出力してください：
             spec_text
         )
 
-        # 4. FMTDocumentを作成
+        # 4. 算出根拠を各項目に付与
+        estimate_items = self.attach_calculation_basis(
+            estimate_items,
+            spec_text
+        )
+
+        # 5. 仕様書情報を抽出（メタデータ用）
+        spec_extraction = self.verifier.extract_spec_info(spec_text)
+
+        # 6. FMTDocumentを作成
         fmt_doc = FMTDocument(
             created_at=datetime.now().isoformat(),
             project_info=project_info,
@@ -340,11 +443,17 @@ JSON配列形式で出力してください：
                 "payment_terms": project_info_dict.get("payment_terms", "本紙記載内容のみ有効とする。"),
                 "remarks": project_info_dict.get("remarks", "法定福利費を含む。"),
                 "source": "参照見積書ベース",
-                "reference_pdf": Path(reference_pdf_path).name
+                "reference_pdf": Path(reference_pdf_path).name,
+                "spec_extraction": {
+                    "building_area_m2": spec_extraction.building_area_m2,
+                    "building_floors": spec_extraction.building_floors,
+                    "room_count": spec_extraction.room_count,
+                    "required_equipment": spec_extraction.required_equipment,
+                }
             }
         )
 
-        logger.info(f"Generated FMTDocument with {len(estimate_items)} items")
+        logger.info(f"Generated FMTDocument with {len(estimate_items)} items (with calculation basis)")
         return fmt_doc
 
 

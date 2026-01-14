@@ -55,8 +55,13 @@ class PriceKBBuilder:
         else:
             logger.info(f"No existing KB found at {kb_path}, starting fresh")
 
-    def extract_estimate_from_pdf(self, pdf_path: str) -> List[PriceReference]:
-        """見積書PDFから価格情報を抽出してKB化（OCR対応）"""
+    def extract_estimate_from_pdf(self, pdf_path: str, project_name: str = None) -> List[PriceReference]:
+        """見積書PDFから価格情報を抽出してKB化（OCR対応）
+
+        Args:
+            pdf_path: PDFファイルパス
+            project_name: プロジェクト名（省略時はファイル名から自動生成）
+        """
         logger.info(f"Building price KB from: {pdf_path}")
 
         # PDFからテキストを抽出（全ページ対応）
@@ -80,7 +85,9 @@ class PriceKBBuilder:
 
             # KB形式に変換
             price_refs = []
-            project_name = Path(pdf_path).stem
+            # project_nameが指定されていなければファイル名から生成
+            if not project_name:
+                project_name = Path(pdf_path).stem
 
             for i, item in enumerate(items_data):
                 if item.get("unit_price") and item.get("unit_price") > 0:
@@ -236,7 +243,9 @@ JSON配列で出力してください：
 
             # PriceReferenceオブジェクトに変換
             price_refs = []
-            project_name = Path(pdf_path).stem
+            # project_nameが指定されていなければファイル名から生成
+            if not project_name:
+                project_name = Path(pdf_path).stem
 
             for i, item in enumerate(items_data):
                 if item.get("unit_price") and item.get("unit_price") > 0:

@@ -1,5 +1,6319 @@
 [
   {
+    "item_id": "見積明細(電気設備)_001",
+    "description": "高圧ｹｰﾌﾞﾙ撤去工事",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 350000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_002",
+    "description": "同上設置工事",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 165200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "基礎工事別途",
+      "aggregated_from": 5,
+      "price_range": "¥69,590 - ¥165,200",
+      "std_dev": 41891.53637669547
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_003",
+    "description": "同上運搬搬入費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 110000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾚｯｶｰ等重機代別途.",
+      "aggregated_from": 3,
+      "price_range": "¥110,000 - ¥150,000",
+      "std_dev": 23094.01076758503
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_004",
+    "description": "気中開閉器",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 349000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "7.2KV　200A　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥307,000 - ¥391,000",
+      "std_dev": 59396.969619669995
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_005",
+    "description": "架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 8200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "6KV CVT38sq",
+      "aggregated_from": 4,
+      "price_range": "¥8,200 - ¥10,300",
+      "std_dev": 1050.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_006",
+    "description": "600V　ﾋﾞﾆﾙ絶縁電線",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1260.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "IV14sq",
+      "quantity": 10.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_007",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3660.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G16",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_008",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 17490.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G70",
+      "aggregated_from": 2,
+      "price_range": "¥17,490 - ¥17,490",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_009",
+    "description": "同上支持材",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 30692.5,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 8,
+      "price_range": "¥9,608 - ¥160,260",
+      "std_dev": 51849.12305843341
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_010",
+    "description": "ｹｰﾌﾞﾙ端末処理材",
+    "discipline": "電気設備工事",
+    "unit": "組",
+    "unit_price": 37300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "6KV 38sq (屋内)",
+      "aggregated_from": 4,
+      "price_range": "¥37,300 - ¥41,400",
+      "std_dev": 2050.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_011",
+    "description": "ｹｰﾌﾞﾙ端末処理材",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 40950.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "6KV 38sq (屋外)",
+      "aggregated_from": 2,
+      "price_range": "¥39,000 - ¥42,900",
+      "std_dev": 2757.7164466275353
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_012",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 3520.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "80",
+      "aggregated_from": 3,
+      "price_range": "¥3,520 - ¥3,520",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_013",
+    "description": "ﾊﾝﾄﾞﾎｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 184000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｾﾊﾟﾚｰﾀｰ共",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_014",
+    "description": "同上施工費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 130000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_015",
+    "description": "接地工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "EA",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_016",
+    "description": "接地工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 20000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ED",
+      "aggregated_from": 3,
+      "price_range": "¥20,000 - ¥20,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_017",
+    "description": "高所作業車",
+    "discipline": "電気設備工事",
+    "unit": "日",
+    "unit_price": 49000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "～12m",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_018",
+    "description": "同上運送費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 40000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 4,
+      "price_range": "¥40,000 - ¥40,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_019",
+    "description": "掘方埋戻し費",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 3000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｱｽﾌｧﾙﾄｶｯﾀ切補修費別途",
+      "aggregated_from": 4,
+      "price_range": "¥3,000 - ¥3,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_020",
+    "description": "埋設表示ｼｰﾄ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 243.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 4,
+      "price_range": "¥243 - ¥243",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_021",
+    "description": "電力手続き申請費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 35000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_022",
+    "description": "消耗品雑材",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 42670.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 17,
+      "price_range": "¥8,100 - ¥476,435",
+      "std_dev": 118163.58285948838
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_023",
+    "description": "ｷｭｰﾋﾞｸﾙ",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 1800000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1φ3w50KVA.3φ3w150KVA",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_030",
+    "description": "ﾒｯｾﾝｼﾞｬｰﾜｲﾔｰ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1510.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "22sq",
+      "aggregated_from": 2,
+      "price_range": "¥1,180 - ¥1,840",
+      "std_dev": 466.6904755831214
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_033",
+    "description": "接地工事",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "EA",
+      "aggregated_from": 2,
+      "price_range": "¥50,000 - ¥50,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_034",
+    "description": "接地工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 35000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "EB",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_036",
+    "description": "同上建柱費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 299500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥25,000 - ¥574,000",
+      "std_dev": 388201.6228714146
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_037",
+    "description": "同上支持金物",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥50,000 - ¥50,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_038",
+    "description": "建柱車",
+    "discipline": "電気設備工事",
+    "unit": "日",
+    "unit_price": 142000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "～12m",
+      "aggregated_from": 3,
+      "price_range": "¥140,000 - ¥142,000",
+      "std_dev": 1154.7005383792514
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_039",
+    "description": "高所作業車",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 49000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "～12m",
+      "aggregated_from": 3,
+      "price_range": "¥49,000 - ¥49,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_047",
+    "description": "ﾌﾟﾙﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 190800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_048",
+    "description": "既存QB接続費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 300000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "既設QB改造工事は別途",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_051",
+    "description": "消耗品雑材",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 123755.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(空調設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 22,
+      "price_range": "¥2,000 - ¥326,870",
+      "std_dev": 104403.4350406013
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_052",
+    "description": "放送用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1840.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-10P",
+      "quantity": 155.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_053",
+    "description": "LANｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 570.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Cat.5e",
+      "quantity": 396.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_054",
+    "description": "中継BOX",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 21000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_055",
+    "description": "同上配線工事",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 570.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Cat.5e",
+      "quantity": 96.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_056",
+    "description": "同上配線工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1040.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "VVF2.0-3C",
+      "quantity": 64.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_057",
+    "description": "同軸ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1120.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "S-7CFB",
+      "quantity": 48.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_058",
+    "description": "ｲﾝﾀｰﾎﾝ用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE1.2mm-15P",
+      "quantity": 132.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_059",
+    "description": "自火報相互移報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 760.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-4C",
+      "aggregated_from": 2,
+      "price_range": "¥690 - ¥830",
+      "std_dev": 98.99494936611666
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_060",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1870.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-22",
+      "aggregated_from": 2,
+      "price_range": "¥1,870 - ¥1,870",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_061",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2090.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-22",
+      "aggregated_from": 3,
+      "price_range": "¥1,870 - ¥2,090",
+      "std_dev": 127.01705922171767
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_062",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2380.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-28",
+      "quantity": 80.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_063",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G22",
+      "aggregated_from": 2,
+      "price_range": "¥4,820 - ¥4,820",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_064",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 6030.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G28",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_066",
+    "description": "ﾒｯｾﾝｼﾞｬｰﾜｲﾔｰ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 890.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "8sq",
+      "quantity": 296.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_068",
+    "description": "ﾌﾟﾙﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 12200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "200x200x100 樹脂",
+      "aggregated_from": 2,
+      "price_range": "¥12,200 - ¥12,200",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_074",
+    "description": "導通試験費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 12000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_075",
+    "description": "既設接続費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 100000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_076",
+    "description": "運搬搬入費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 80000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾚｯｶｰ等重機代別途.",
+      "aggregated_from": 4,
+      "price_range": "¥70,000 - ¥110,000",
+      "std_dev": 19148.54215512676
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_078",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 7865.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT60sq",
+      "aggregated_from": 2,
+      "price_range": "¥6,900 - ¥8,830",
+      "std_dev": 1364.7160876900368
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_079",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 12355.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT100sq",
+      "aggregated_from": 2,
+      "price_range": "¥10,910 - ¥13,800",
+      "std_dev": 2043.5385976291223
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_080",
+    "description": "600V　ﾋﾞﾆﾙ絶縁電線",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1580.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "IV14sq",
+      "aggregated_from": 3,
+      "price_range": "¥1,260 - ¥1,580",
+      "std_dev": 184.75208614068026
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_081",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2860.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "65",
+      "aggregated_from": 2,
+      "price_range": "¥2,860 - ¥2,860",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_082",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3520.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "80",
+      "quantity": 48.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_083",
+    "description": "引込み開閉器盤",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 174000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "3φ200A,225Ax2",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_084",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 114700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)50A  20Ax30　 　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_085",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 90900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)60A  20Ax20　 　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_086",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 96900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)60A  20Ax18　 　ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_087",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 52000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)125A　30Ax6     ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_088",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 40000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)100A　30Ax4     ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥40,000 - ¥40,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_089",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 52000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)100A　30Ax6     ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥52,000 - ¥52,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_090",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 72000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)125A　30Ax7     ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_091",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 40000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)75A　 30Ax4     ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_092",
+    "description": "手元開閉器",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 8000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)30A             ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_093",
+    "description": "600V　ﾋﾞﾆﾙｼｰｽｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1040.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "VVF2.0mm-3C",
+      "quantity": 22.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_094",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1370.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CV5.5sq-3C",
+      "quantity": 29.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_095",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1690.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CV5.5sq-4C",
+      "quantity": 270.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_096",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2445.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT14sq",
+      "aggregated_from": 2,
+      "price_range": "¥2,180 - ¥2,710",
+      "std_dev": 374.7665940288702
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_097",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3070.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT22sq",
+      "quantity": 117.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_098",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 5315.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT38sq",
+      "aggregated_from": 2,
+      "price_range": "¥4,700 - ¥5,930",
+      "std_dev": 869.7413408594534
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_099",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 6900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT60sq",
+      "quantity": 98.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_100",
+    "description": "600V　ﾋﾞﾆﾙ絶縁電線",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 510.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "IV2.0mm",
+      "aggregated_from": 2,
+      "price_range": "¥490 - ¥530",
+      "std_dev": 28.284271247461902
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_101",
+    "description": "600V　ﾋﾞﾆﾙ絶縁電線",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 775.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "IV5.5sq",
+      "aggregated_from": 2,
+      "price_range": "¥700 - ¥850",
+      "std_dev": 106.06601717798213
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_102",
+    "description": "600V　ﾋﾞﾆﾙ絶縁電線",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 860.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "IV8sq",
+      "quantity": 98.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_104",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 7800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G36",
+      "quantity": 15.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_105",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 10020.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G42",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_106",
+    "description": "電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 13860.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "G54",
+      "quantity": 24.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_108",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1780.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "30",
+      "quantity": 221.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_112",
+    "description": "運搬搬入費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 110000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(空調設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾚｯｶｰ等重機代別途.",
+      "aggregated_from": 9,
+      "price_range": "¥70,000 - ¥450,000",
+      "std_dev": 123535.86973470949
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_114",
+    "description": "照明器具(LED)",
+    "discipline": "電気設備工事",
+    "unit": "灯",
+    "unit_price": 19100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Dｽﾀｲﾙ 40型　W230",
+      "aggregated_from": 3,
+      "price_range": "¥19,100 - ¥19,100",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_115",
+    "description": "照明器具(LED)",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 14700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Dｽﾀｲﾙ 40型　W150",
+      "aggregated_from": 2,
+      "price_range": "¥14,700 - ¥14,700",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_116",
+    "description": "照明器具(LED)",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 25800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "黒板灯",
+      "aggregated_from": 3,
+      "price_range": "¥25,800 - ¥25,800",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_117",
+    "description": "照明器具",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 17900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "露出型　　 非常灯  ﾘｰｽ品",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_118",
+    "description": "照明器具(LED)",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 20700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｳｫｰﾙﾗｲﾄ",
+      "aggregated_from": 2,
+      "price_range": "¥20,700 - ¥20,700",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_119",
+    "description": "器具配線工事",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 3600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 3,
+      "price_range": "¥3,600 - ¥4,100",
+      "std_dev": 288.67513459481285
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_120",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4290.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax2E   ﾓｰﾙ",
+      "aggregated_from": 2,
+      "price_range": "¥4,290 - ¥4,290",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_121",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3690.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax2　　ﾓｰﾙ",
+      "aggregated_from": 3,
+      "price_range": "¥3,690 - ¥3,690",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_122",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4490.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax2EET ﾓｰﾙ",
+      "aggregated_from": 2,
+      "price_range": "¥4,490 - ¥4,490",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_123",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 14180.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax2E   床",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_124",
+    "description": "OAﾀｯﾌﾟ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "4個口E付",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_125",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax1",
+      "aggregated_from": 2,
+      "price_range": "¥3,200 - ¥3,200",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_126",
+    "description": "天井扇用電源工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_127",
+    "description": "自火報用電源工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥3,300 - ¥3,300",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_128",
+    "description": "ﾊﾟｯｹｰｼﾞ消火用電源工事",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 3300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_129",
+    "description": "機器用電源工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_130",
+    "description": "ｽｲｯﾁ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3480.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1P15Ax1    ﾓｰﾙ",
+      "aggregated_from": 3,
+      "price_range": "¥3,480 - ¥3,480",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_131",
+    "description": "ｽｲｯﾁ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4430.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PLSx1      ﾓｰﾙ",
+      "aggregated_from": 2,
+      "price_range": "¥4,430 - ¥4,430",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_132",
+    "description": "ｽｲｯﾁ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "3W15Ax1　　ﾓｰﾙ",
+      "aggregated_from": 2,
+      "price_range": "¥4,800 - ¥4,800",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_133",
+    "description": "ｽｲｯﾁ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 5010.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "4W15Ax1  　ﾓｰﾙ",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_134",
+    "description": "ﾒﾀﾙﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 4820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "B型",
+      "quantity": 435.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_135",
+    "description": "ｽｲｯﾁﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 2210.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1ヶ用",
+      "aggregated_from": 10,
+      "price_range": "¥2,210 - ¥2,320",
+      "std_dev": 56.803755744375444
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_136",
+    "description": "ｱｳﾄﾚｯﾄﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "個",
+    "unit_price": 2200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "中型四角",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_137",
+    "description": "新金製ﾌﾟﾚｰﾄ",
+    "discipline": "電気設備工事",
+    "unit": "枚",
+    "unit_price": 610.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1ヶ用BOX用",
+      "aggregated_from": 7,
+      "price_range": "¥610 - ¥610",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_141",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1840.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-10P",
+      "quantity": 34.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_142",
+    "description": "端子盤工事",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 18000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥18,000 - ¥18,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_143",
+    "description": "ｽﾋﾟｰｶｰ.AT無",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 7250.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "天井露出型　L級　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥7,250 - ¥7,250",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_144",
+    "description": "ｽﾋﾟｰｶｰ.AT付",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 8200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "天井露出型　L級 　 ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥8,200 - ¥8,200",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_145",
+    "description": "ｱｯﾃﾈｰﾀｰ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 3,
+      "price_range": "¥3,800 - ¥3,800",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_146",
+    "description": "接続調整費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 101500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥91,000 - ¥112,000",
+      "std_dev": 14849.242404917499
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_147",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 685.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-3C",
+      "aggregated_from": 2,
+      "price_range": "¥630 - ¥740",
+      "std_dev": 77.78174593052023
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_148",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1350.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-5P",
+      "aggregated_from": 2,
+      "price_range": "¥1,240 - ¥1,460",
+      "std_dev": 155.56349186104046
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_149",
+    "description": "ﾒﾀﾙﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "A型",
+      "aggregated_from": 4,
+      "price_range": "¥2,800 - ¥2,800",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_153",
+    "description": "LANｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 570.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Cat.5e",
+      "aggregated_from": 3,
+      "price_range": "¥570 - ¥570",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_154",
+    "description": "HUB",
+    "discipline": "電気設備工事",
+    "unit": "個",
+    "unit_price": 6000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "5ﾎﾟｰﾄ　　　　　　　ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_155",
+    "description": "HUB",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 13000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "12ﾎﾟｰﾄ　　　　　　 ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_156",
+    "description": "LANｺﾝｾﾝﾄ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5750.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Cat.5e対応",
+      "aggregated_from": 2,
+      "price_range": "¥5,750 - ¥5,750",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_157",
+    "description": "LANｺﾝｾﾝﾄ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4260.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Cat.5e対応",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_162",
+    "description": "導通試験費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 46000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_164",
+    "description": "同軸ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1120.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "S-7CFB",
+      "quantity": 34.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_165",
+    "description": "ﾌﾞｰｽﾀ.分配器",
+    "discipline": "電気設備工事",
+    "unit": "組",
+    "unit_price": 85300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_166",
+    "description": "同上結線調整費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 25000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_167",
+    "description": "TVｺﾝｾﾝﾄ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5160.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "送り用",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_168",
+    "description": "TVｺﾝｾﾝﾄ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 5060.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "端末用",
+      "quantity": 7.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_169",
+    "description": "同軸ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 690.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "S-5CFB",
+      "aggregated_from": 2,
+      "price_range": "¥690 - ¥690",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_170",
+    "description": "ﾒﾀﾙﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "B型",
+      "aggregated_from": 2,
+      "price_range": "¥4,820 - ¥4,820",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_174",
+    "description": "ｲﾝﾀｰﾎﾝ",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 154400.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｶｳﾝﾀｰ式　親機　20局",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_175",
+    "description": "ｲﾝﾀｰﾎﾝ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 93100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｶｳﾝﾀｰ式　増設選局部 20局",
+      "aggregated_from": 2,
+      "price_range": "¥93,100 - ¥93,100",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_176",
+    "description": "ｲﾝﾀｰﾎﾝ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 154400.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｶｳﾝﾀｰ式　親機　20局",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_178",
+    "description": "ｲﾝﾀｰﾎﾝ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 14100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｶｳﾝﾀｰ式　子機",
+      "quantity": 18.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_179",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 610.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-4C",
+      "aggregated_from": 2,
+      "price_range": "¥560 - ¥660",
+      "std_dev": 70.71067811865476
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_180",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1670.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-15P",
+      "quantity": 16.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_181",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-30P",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_183",
+    "description": "機器接続調整費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 26000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥8,000 - ¥44,000",
+      "std_dev": 25455.84412271571
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_185",
+    "description": "ﾄｲﾚ呼出し装置",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 102000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1窓　　　　 　　　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_186",
+    "description": "ﾄｲﾚ呼出しﾎﾞﾀﾝ",
+    "discipline": "電気設備工事",
+    "unit": "個",
+    "unit_price": 6500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "NBR-7W　　　　  　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_187",
+    "description": "復旧ﾎﾞﾀﾝ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "NBR-2A-C　　　　　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_188",
+    "description": "廊下灯",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "NBR-4A-C　　　　　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_189",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 430.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-2C",
+      "aggregated_from": 2,
+      "price_range": "¥430 - ¥430",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_190",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 510.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-3C",
+      "quantity": 8.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_191",
+    "description": "警報用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 560.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-4C",
+      "aggregated_from": 2,
+      "price_range": "¥560 - ¥560",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_197",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 690.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-4C",
+      "quantity": 35.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_198",
+    "description": "複合受信機",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 774000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "P型1級15回線",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_199",
+    "description": "総合盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 34800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "P型1級　　　　　　 ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥33,700 - ¥35,900",
+      "std_dev": 1555.6349186104046
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_200",
+    "description": "差動式感知器",
+    "discipline": "電気設備工事",
+    "unit": "個",
+    "unit_price": 1610.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2種　　　　　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥1,610 - ¥1,610",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_201",
+    "description": "煙感知器",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 9600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2種　　　　　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥9,600 - ¥9,600",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_202",
+    "description": "感知器点検ﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "組",
+    "unit_price": 18500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_203",
+    "description": "防火戸用ｷｬｯﾁﾛｯｸ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 26180.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_204",
+    "description": "同上結線調整費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 140800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥110,000 - ¥171,600",
+      "std_dev": 43557.77772109133
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_207",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 975.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP0.9mm-5P",
+      "aggregated_from": 2,
+      "price_range": "¥900 - ¥1,050",
+      "std_dev": 106.06601717798213
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_208",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1380.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP0.9mm-10P",
+      "aggregated_from": 2,
+      "price_range": "¥1,270 - ¥1,490",
+      "std_dev": 155.56349186104046
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_209",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 550.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-2C",
+      "aggregated_from": 2,
+      "price_range": "¥510 - ¥590",
+      "std_dev": 56.568542494923804
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_210",
+    "description": "耐熱ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 760.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-4C",
+      "aggregated_from": 2,
+      "price_range": "¥690 - ¥830",
+      "std_dev": 98.99494936611666
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_211",
+    "description": "誘導標識",
+    "discipline": "電気設備工事",
+    "unit": "枚",
+    "unit_price": 3000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥3,000 - ¥3,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_212",
+    "description": "手続き申請費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 150000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 3,
+      "price_range": "¥150,000 - ¥150,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_218",
+    "description": "換気扇工事",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 17800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "20cm 風圧式　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥17,800 - ¥17,800",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_219",
+    "description": "換気扇工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 19600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "25cm 風圧式　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥19,600 - ¥19,600",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_220",
+    "description": "換気扇工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 21800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "30cm 風圧式　　　　ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_221",
+    "description": "換気扇工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 22700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "10cm 天井扇　　　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_222",
+    "description": "換気扇工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 29800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "18cm 天井扇　　　　ﾘｰｽ品",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_223",
+    "description": "給気ｶﾞﾗﾘ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 12000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "150φ　ﾌｨﾙﾀｰ付　　 ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥12,000 - ¥12,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_224",
+    "description": "給気ｶﾞﾗﾘ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 19100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "200φ　ﾌｨﾙﾀｰ付　　 ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥19,100 - ¥19,100",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_225",
+    "description": "ﾌﾚｷｼﾌﾞﾙﾀﾞｸﾄ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 2150.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "100φ",
+      "quantity": 11.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_226",
+    "description": "ﾌﾚｷｼﾌﾞﾙﾀﾞｸﾄ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3230.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "150φ",
+      "quantity": 16.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_228",
+    "description": "区画貫通処理",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 6000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "壁貫通",
+      "quantity": 116.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_230",
+    "description": "照明器具撤去再取付け",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 7500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_231",
+    "description": "照明器具移設",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 11200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "現状撤去,配線工事共",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_237",
+    "description": "ｽｲｯﾁ撤去再取り付け",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_238",
+    "description": "ｽｲｯﾁ移設",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "現状撤去,配線工事共",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_240",
+    "description": "ｽﾋﾟｰｶｰ撤去再取付け",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 4700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_243",
+    "description": "同上接続調整費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 17500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_244",
+    "description": "同上用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 630.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-3C",
+      "quantity": 49.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_247",
+    "description": "同上導通試験費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 4000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_248",
+    "description": "TVｺﾝｾﾝﾄ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5060.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "端末用",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_250",
+    "description": "ｲﾝﾀｰﾎﾝ",
+    "discipline": "電気設備工事",
+    "unit": "台",
+    "unit_price": 14100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｶｳﾝﾀｰ式　子機",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_251",
+    "description": "同上用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 560.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "AE0.9mm-4C",
+      "quantity": 33.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_252",
+    "description": "同上機器接続調整費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 4000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_253",
+    "description": "ﾒﾀﾙﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 2800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "A型",
+      "quantity": 10.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_255",
+    "description": "ｽｲｯﾁﾎﾞｯｸｽ撤去再取付け",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 1700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_256",
+    "description": "ｽｲｯﾁﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2210.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1ヶ用",
+      "quantity": 20.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_258",
+    "description": "諸経費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 150000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_261",
+    "description": "解体費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 2000000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "解体後整地別途",
+      "aggregated_from": 3,
+      "price_range": "¥1,700,000 - ¥4,000,000",
+      "std_dev": 1250333.2889007367
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_262",
+    "description": "法定福利費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 883046.5,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備), 見積明細(空調設備), 見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "Ax16.07％",
+      "aggregated_from": 6,
+      "price_range": "¥223,373 - ¥1,889,832",
+      "std_dev": 616608.2244287697
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_001",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 2430.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 20A",
+      "aggregated_from": 2,
+      "price_range": "¥2,160 - ¥2,700",
+      "std_dev": 381.8376618407357
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_002",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3040.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 25A",
+      "aggregated_from": 2,
+      "price_range": "¥2,640 - ¥3,440",
+      "std_dev": 565.685424949238
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_003",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2875.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 20A",
+      "aggregated_from": 2,
+      "price_range": "¥2,570 - ¥3,180",
+      "std_dev": 431.335136523794
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_004",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3605.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 25A",
+      "aggregated_from": 2,
+      "price_range": "¥3,150 - ¥4,060",
+      "std_dev": 643.4671708797582
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_005",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 30A",
+      "aggregated_from": 2,
+      "price_range": "¥3,420 - ¥4,580",
+      "std_dev": 820.2438661763952
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_006",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4440.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 40A",
+      "quantity": 17.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_007",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2735.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 25A",
+      "aggregated_from": 2,
+      "price_range": "¥2,260 - ¥3,210",
+      "std_dev": 671.7514421272201
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_008",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 40A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_009",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 1700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 20A",
+      "aggregated_from": 2,
+      "price_range": "¥1,430 - ¥1,970",
+      "std_dev": 381.8376618407357
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_010",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2165.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 25A",
+      "aggregated_from": 2,
+      "price_range": "¥1,770 - ¥2,560",
+      "std_dev": 558.6143571373725
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_011",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2400.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 30A",
+      "aggregated_from": 2,
+      "price_range": "¥1,910 - ¥2,890",
+      "std_dev": 692.9646455628166
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_012",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2520.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 40A",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_013",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4095.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 50A",
+      "aggregated_from": 2,
+      "price_range": "¥3,260 - ¥4,930",
+      "std_dev": 1180.8683245815344
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_014",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 4150.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 65A",
+      "quantity": 84.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_015",
+    "description": "仕切り弁",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 26500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "20mm",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_016",
+    "description": "仕切り弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 32700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "25mm",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_017",
+    "description": "仕切り弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 45000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "32mm",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_018",
+    "description": "仕切り弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 58900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "40mm",
+      "quantity": 5.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_019",
+    "description": "仕切り弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 155300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "65mm",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_020",
+    "description": "既存接続分岐",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 63750.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥30,000 - ¥97,500",
+      "std_dev": 47729.707730091955
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_021",
+    "description": "貫通工事",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2250.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 4,
+      "price_range": "¥1,800 - ¥5,200",
+      "std_dev": 1607.0158679988197
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_023",
+    "description": "区画貫通処理費",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_024",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 1300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 25A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_025",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 1600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 40A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_026",
+    "description": "ｽﾘｰﾌﾞ開口費",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 3500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "補強筋別途.",
+      "aggregated_from": 2,
+      "price_range": "¥3,500 - ¥3,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_027",
+    "description": "掘方埋め戻し",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 3000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｱｽﾌｧﾙﾄｶｯﾀｰ切り補修費別途",
+      "aggregated_from": 2,
+      "price_range": "¥3,000 - ¥3,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_028",
+    "description": "埋設表示ｼｰﾄ",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 450.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "150mm",
+      "aggregated_from": 3,
+      "price_range": "¥450 - ¥450",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_029",
+    "description": "埋設表示杭",
+    "discipline": "衛生設備工事",
+    "unit": "本",
+    "unit_price": 4500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 3,
+      "price_range": "¥4,500 - ¥4,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_031",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 5090.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 50A",
+      "aggregated_from": 2,
+      "price_range": "¥4,470 - ¥5,710",
+      "std_dev": 876.812408671319
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_032",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6475.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 65A",
+      "aggregated_from": 2,
+      "price_range": "¥5,680 - ¥7,270",
+      "std_dev": 1124.2997820866105
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_033",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 8030.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 75A",
+      "aggregated_from": 2,
+      "price_range": "¥6,860 - ¥9,200",
+      "std_dev": 1654.6298679765212
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_034",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6090.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 50A",
+      "aggregated_from": 2,
+      "price_range": "¥5,370 - ¥6,810",
+      "std_dev": 1018.2337649086285
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_035",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 7745.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所 65A",
+      "aggregated_from": 2,
+      "price_range": "¥6,820 - ¥8,670",
+      "std_dev": 1308.147545195113
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_036",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 9585.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所75A",
+      "aggregated_from": 2,
+      "price_range": "¥8,220 - ¥10,950",
+      "std_dev": 1930.4015126392746
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_037",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 12790.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "機械室・便所100A",
+      "aggregated_from": 2,
+      "price_range": "¥10,820 - ¥14,760",
+      "std_dev": 2786.0007178749975
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_038",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4505.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 50A",
+      "aggregated_from": 2,
+      "price_range": "¥3,770 - ¥5,240",
+      "std_dev": 1039.4469683442248
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_039",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 5750.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 65A",
+      "aggregated_from": 2,
+      "price_range": "¥4,810 - ¥6,690",
+      "std_dev": 1329.3607486307094
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_040",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 7160.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 75A",
+      "aggregated_from": 2,
+      "price_range": "¥5,820 - ¥8,500",
+      "std_dev": 1895.0461735799474
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_041",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 9605.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 100A",
+      "aggregated_from": 2,
+      "price_range": "¥7,710 - ¥11,500",
+      "std_dev": 2679.934700697015
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_042",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2911.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 50A",
+      "aggregated_from": 2,
+      "price_range": "¥2,842 - ¥2,980",
+      "std_dev": 97.58073580374356
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_043",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4194.5,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 65A",
+      "aggregated_from": 2,
+      "price_range": "¥3,699 - ¥4,690",
+      "std_dev": 700.7428201558686
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_044",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 4407.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 75A",
+      "aggregated_from": 3,
+      "price_range": "¥4,407 - ¥5,630",
+      "std_dev": 706.0993792189123
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_045",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6501.5,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 100A",
+      "aggregated_from": 4,
+      "price_range": "¥5,853 - ¥7,150",
+      "std_dev": 748.8232991389447
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_046",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 7620.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 125A",
+      "aggregated_from": 2,
+      "price_range": "¥7,620 - ¥7,620",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_048",
+    "description": "床上掃除口",
+    "discipline": "衛生設備工事",
+    "unit": "個",
+    "unit_price": 13840.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "COA65",
+      "aggregated_from": 2,
+      "price_range": "¥9,880 - ¥17,800",
+      "std_dev": 5600.285706997456
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_049",
+    "description": "床上掃除口",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 16120.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "COA80",
+      "aggregated_from": 2,
+      "price_range": "¥11,140 - ¥21,100",
+      "std_dev": 7042.783540618013
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_050",
+    "description": "床上掃除口",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 20135.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "COA100",
+      "aggregated_from": 2,
+      "price_range": "¥12,970 - ¥27,300",
+      "std_dev": 10132.840174403225
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_051",
+    "description": "ﾄﾞﾙｺﾞ通気",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 16850.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "50A",
+      "aggregated_from": 2,
+      "price_range": "¥16,000 - ¥17,700",
+      "std_dev": 1202.0815280171307
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_052",
+    "description": "貫通工事",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 2600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥2,600 - ¥2,600",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_054",
+    "description": "区画貫通処理",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_055",
+    "description": "ｽﾘｰﾌﾞ開口費",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "補強筋別途.",
+      "aggregated_from": 2,
+      "price_range": "¥3,500 - ¥3,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_056",
+    "description": "3槽ｼﾝｸ配管接続費",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 27000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_057",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 10620.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径100-150φL",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_058",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 11160.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径100-150φST",
+      "aggregated_from": 2,
+      "price_range": "¥10,620 - ¥11,700",
+      "std_dev": 763.6753236814714
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_059",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 12360.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径100-150φY",
+      "aggregated_from": 2,
+      "price_range": "¥11,720 - ¥13,000",
+      "std_dev": 905.0966799187809
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_060",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 15350.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径125-150φY",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_061",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 16820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径125-200φL",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_062",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 18470.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径125-200φY",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_066",
+    "description": "満水警報器",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 57000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ARM-4N",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_067",
+    "description": "同上配管配線工事",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 24000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "汚水槽～外部盤迄",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_068",
+    "description": "汚水槽",
+    "discipline": "衛生設備工事",
+    "unit": "基",
+    "unit_price": 1577000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "3000L　ﾎﾟﾝﾌﾟ共",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_069",
+    "description": "同上施工費",
+    "discipline": "衛生設備工事",
+    "unit": "式",
+    "unit_price": 600000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "基礎工事別途.",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_071",
+    "description": "既存汚水桝接続",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 45000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥45,000 - ¥45,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_076",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 9464.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 150A",
+      "quantity": 26.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_077",
+    "description": "雨水樋接続",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 4500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥4,500 - ¥4,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_078",
+    "description": "雨水桝(樹脂製)",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 12930.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "300φ",
+      "aggregated_from": 2,
+      "price_range": "¥12,930 - ¥12,930",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_079",
+    "description": "側溝放流",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 25000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "貫通ﾓﾙﾀﾙ補修",
+      "aggregated_from": 2,
+      "price_range": "¥25,000 - ¥25,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_080",
+    "description": "掘方埋め戻し",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 3000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 4,
+      "price_range": "¥3,000 - ¥3,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_084",
+    "description": "電源装置",
+    "discipline": "衛生設備工事",
+    "unit": "台",
+    "unit_price": 40000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥40,000 - ¥40,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_085",
+    "description": "ﾊﾟｯｹｰｼﾞ型消火設備",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 210000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥210,000 - ¥210,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_086",
+    "description": "同上工事費",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 35000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥35,000 - ¥35,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_087",
+    "description": "消火器",
+    "discipline": "衛生設備工事",
+    "unit": "本",
+    "unit_price": 7500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ABC10型　　　　　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥7,500 - ¥7,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_088",
+    "description": "避難梯子",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 55000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥55,000 - ¥55,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_092",
+    "description": "洋風大便器",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 54500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｳｫｼｭﾚｯﾄ無.手洗無　 ﾘｰｽ品",
+      "quantity": 28.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_093",
+    "description": "洋風身障者用大便器",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 143000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｳｫｼｭﾚｯﾄ付　　　　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_094",
+    "description": "小便器",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 41000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｽﾄｰﾙ型.ﾌﾗｯｼｭﾊﾞﾙﾌﾞ　ﾘｰｽ品",
+      "quantity": 20.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_095",
+    "description": "紙巻き器",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3100.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥3,100 - ¥3,100",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_096",
+    "description": "掃除用流し",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥50,000 - ¥50,000",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_097",
+    "description": "洗面器(中)",
+    "discipline": "衛生設備工事",
+    "unit": "ヶ所",
+    "unit_price": 72000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "L-132G.  自動水栓　ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_098",
+    "description": "車椅子対応洗面器",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 56200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "L-365.　 ﾚﾊﾞｰ水栓  ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_099",
+    "description": "水石鹸入れ",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 4500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_100",
+    "description": "化粧鏡",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 10900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "360x450mm",
+      "aggregated_from": 2,
+      "price_range": "¥10,900 - ¥10,900",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_101",
+    "description": "化粧鏡",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 15800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "450x600mm",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_102",
+    "description": "手摺",
+    "discipline": "衛生設備工事",
+    "unit": "台",
+    "unit_price": 25500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "L型　　　　　　　　ﾘｰｽ品",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_103",
+    "description": "手摺",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 36500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小便器用 　　　　　ﾘｰｽ品",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_104",
+    "description": "手摺",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 73500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "可動式　 　　　　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_105",
+    "description": "全槽ｼﾝｸ",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 58500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "L-1500(SUS製)      ﾘｰｽ品",
+      "quantity": 20.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(給排水設備)_106",
+    "description": "自在水栓",
+    "discipline": "衛生設備工事",
+    "unit": "個",
+    "unit_price": 3500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "13φ　　　　　　　 ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥3,500 - ¥3,500",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_107",
+    "description": "自在水栓",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 5300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "13φ　　　　　　　 ﾘｰｽ品",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_108",
+    "description": "水栓柱",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 9000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "水栓共　　　　　　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(空調設備)_001",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 213200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "3.0HP    天吊型　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥181,200 - ¥245,200",
+      "std_dev": 45254.83399593904
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(空調設備)_002",
+    "description": "工事費",
+    "discipline": "空調設備工事",
+    "unit": "ヶ所",
+    "unit_price": 73000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 8,
+      "price_range": "¥28,000 - ¥75,000",
+      "std_dev": 16132.819255878903
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(空調設備)_003",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 243400.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "4.0HP    天吊型　　ﾘｰｽ品",
+      "aggregated_from": 2,
+      "price_range": "¥206,900 - ¥279,900",
+      "std_dev": 51618.79502661797
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_005",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 356900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "6.0HP    天吊型　　ﾘｰｽ品",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_007",
+    "description": "冷媒管延長費",
+    "discipline": "空調設備工事",
+    "unit": "式",
+    "unit_price": 159600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_008",
+    "description": "運搬搬入費",
+    "discipline": "空調設備工事",
+    "unit": "〃",
+    "unit_price": 440000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(空調設備)_010",
+    "description": "解体費",
+    "discipline": "空調設備工事",
+    "unit": "式",
+    "unit_price": 1095000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "産廃処分別途.",
+      "aggregated_from": 2,
+      "price_range": "¥1,000,000 - ¥1,190,000",
+      "std_dev": 134350.28842544404
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_001",
+    "description": "ｷｭｰﾋﾞｸﾙ",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 1200000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1φ3w50KVA.3φ3w100KVA",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_007",
+    "description": "硬質ﾋﾞﾆﾙ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2430.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "VE-16",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_008",
+    "description": "硬質ﾋﾞﾆﾙ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 10380.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "VE-70",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_010",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 3520.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "FEP80",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_016",
+    "description": "接地工事",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 35000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "EB",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_018",
+    "description": "電柱(ｺﾝｸﾘｰﾄ柱)",
+    "discipline": "電気設備工事",
+    "unit": "本",
+    "unit_price": 182000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "10-19-3.5",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_019",
+    "description": "同上建柱費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 21000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_020",
+    "description": "同上支持金物",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_021",
+    "description": "同上支線材",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_025",
+    "description": "電力手続き申請費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 35000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "臨時工事費別途．",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_027",
+    "description": "非常放送用ｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1460.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "HP1.2mm-5P",
+      "quantity": 43.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_030",
+    "description": "既設接続費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_035",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2860.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "FEP65",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_036",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3520.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "FEP80",
+      "quantity": 18.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_037",
+    "description": "引込み開閉器盤",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 137000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "3φ150A,175A",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_038",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 93300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)75A 20Ax22　　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_039",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 90900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)60A 20Ax20　　　ﾘｰｽ品",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_040",
+    "description": "電灯盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 82900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)60A 20Ax16　　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_041",
+    "description": "動力盤",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 40000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)60A　 30Ax4     ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_044",
+    "description": "手元開閉器",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 8000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "(M)30A             ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_045",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 2120.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CV5.5sq-4C",
+      "quantity": 190.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_047",
+    "description": "600V　架橋ﾎﾟﾘｴﾁﾚﾝｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 3860.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "CVT22sq",
+      "quantity": 145.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_052",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3970.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-36",
+      "quantity": 12.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_053",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 5000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-42",
+      "quantity": 12.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_054",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1780.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "FEP30",
+      "quantity": 11.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_055",
+    "description": "波付硬質ﾎﾟﾘｴﾁﾚﾝ管",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 2390.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "FEP50",
+      "quantity": 18.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_056",
+    "description": "掘方埋戻し費",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｱｽﾌｧﾙﾄｶｯﾀ切補修費別途",
+      "quantity": 25.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_065",
+    "description": "ｺﾝｾﾝﾄ工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 4390.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2P15Ax1EET ﾓｰﾙ",
+      "quantity": 16.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_069",
+    "description": "ﾊﾟｯｹｰｼﾞ消火用電源工事",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 3300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_073",
+    "description": "ｽｲｯﾁ工事",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5010.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "4W15Ax1  　ﾓｰﾙ",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_074",
+    "description": "ｴﾌﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2号",
+      "quantity": 323.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_076",
+    "description": "監視ｶﾒﾗ用ｱﾀﾞﾌﾟﾀｹｰﾌﾞﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 23300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_077",
+    "description": "ﾌﾟﾙﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 20700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "100x100x100",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_081",
+    "description": "ｽﾋﾟｰｶｰ.AT付",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5340.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "壁掛型　L級 ﾓｰﾙ　  ﾘｰｽ品",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_082",
+    "description": "ｽﾋﾟｰｶｰ.AT無",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 7250.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "天井露出型　L級　　ﾘｰｽ品",
+      "quantity": 17.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_088",
+    "description": "ｴﾌﾓｰﾙ",
+    "discipline": "電気設備工事",
+    "unit": "〃",
+    "unit_price": 1730.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1号",
+      "aggregated_from": 2,
+      "price_range": "¥1,730 - ¥1,730",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_091",
+    "description": "合成樹脂可ﾄｳ電線管",
+    "discipline": "電気設備工事",
+    "unit": "ｍ",
+    "unit_price": 1570.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "PF-16",
+      "aggregated_from": 2,
+      "price_range": "¥1,570 - ¥1,570",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_093",
+    "description": "ﾉｽﾞﾙﾌﾟﾚｰﾄ",
+    "discipline": "電気設備工事",
+    "unit": "個",
+    "unit_price": 450.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "aggregated_from": 2,
+      "price_range": "¥450 - ¥450",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "AGG_見積明細(電気設備)_094",
+    "description": "ﾌﾟﾙﾎﾞｯｸｽ",
+    "discipline": "電気設備工事",
+    "unit": "ヶ所",
+    "unit_price": 40200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "200x200x200 SUS",
+      "aggregated_from": 2,
+      "price_range": "¥40,200 - ¥40,200",
+      "std_dev": 0.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_102",
+    "description": "受信機",
+    "discipline": "電気設備工事",
+    "unit": "面",
+    "unit_price": 202000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "P型1級15回線　　　 ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_120",
+    "description": "電源撤去工事",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 50000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "想定",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(電気設備)_122",
+    "description": "解体費",
+    "discipline": "電気設備工事",
+    "unit": "式",
+    "unit_price": 1900000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(電気設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "解体後整地別途．",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_003",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3880.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 30A",
+      "quantity": 13.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_007",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 20A",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_009",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 3620.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 30A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_010",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 6130.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋外 50A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_014",
+    "description": "水道用耐衝撃性硬質塩ﾋﾞ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 3820.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 40A",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_016",
+    "description": "仕切弁",
+    "discipline": "衛生設備工事",
+    "unit": "個",
+    "unit_price": 34200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "20A 10K",
+      "quantity": 2.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_017",
+    "description": "仕切弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 44000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "25A 10K",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_018",
+    "description": "仕切弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 61700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "30A 10K",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_019",
+    "description": "仕切弁",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 110500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "50A 10K",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_022",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 1600.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 20A",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_023",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 1800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 25A",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_024",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 1900.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 30A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_025",
+    "description": "保温工事",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 2300.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "簡易ﾜﾝﾀｯﾁ保温 50A",
+      "quantity": 6.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_028",
+    "description": "受水槽",
+    "discipline": "衛生設備工事",
+    "unit": "基",
+    "unit_price": 1516000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "12.0t              ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_030",
+    "description": "加圧ﾎﾟﾝﾌﾟ",
+    "discipline": "衛生設備工事",
+    "unit": "基",
+    "unit_price": 650000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "40A　　　　　　　  ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_037",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 12410.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "屋内一般 100A",
+      "quantity": 9.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_046",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "ｍ",
+    "unit_price": 3570.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 50A",
+      "quantity": 10.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_048",
+    "description": "硬質塩化ﾋﾞﾆﾙ管",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 5630.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "地中 75A",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_052",
+    "description": "汚水桝",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 11700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "小口径100-150φL",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_075",
+    "description": "手続き申請費",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 150000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_077",
+    "description": "洋風大便器",
+    "discipline": "衛生設備工事",
+    "unit": "組",
+    "unit_price": 94000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｳｫｼｭﾚｯﾄ付.手洗無　 ﾘｰｽ品",
+      "quantity": 16.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_078",
+    "description": "小便器",
+    "discipline": "衛生設備工事",
+    "unit": "〃",
+    "unit_price": 109000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "ｽﾄｰﾙ型.ｾﾝｻｰ付　　　ﾘｰｽ品",
+      "quantity": 10.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(給排水設備)_082",
+    "description": "全槽ｼﾝｸ",
+    "discipline": "衛生設備工事",
+    "unit": "台",
+    "unit_price": 58500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(給排水設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "L-1500(SUS製)      ﾘｰｽ品",
+      "quantity": 16.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_001",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 127500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "1.5HP    壁掛型　　ﾘｰｽ品",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_003",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 167700.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "2.5HP    天吊型　　ﾘｰｽ品",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_009",
+    "description": "ｴｱｺﾝﾘｰｽ",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 243800.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "5.0HP    天吊型　　ﾘｰｽ品",
+      "quantity": 4.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_011",
+    "description": "冷媒管延長費",
+    "discipline": "空調設備工事",
+    "unit": "ｍ",
+    "unit_price": 7200.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 3.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_012",
+    "description": "室外機用架台",
+    "discipline": "空調設備工事",
+    "unit": "台",
+    "unit_price": 34500.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "H=500",
+      "quantity": 23.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_013",
+    "description": "同上施工費",
+    "discipline": "空調設備工事",
+    "unit": "ヶ所",
+    "unit_price": 5000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 23.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_017",
+    "description": "ｴｱｺﾝ撤去",
+    "discipline": "空調設備工事",
+    "unit": "式",
+    "unit_price": 80000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
+    "item_id": "見積明細(空調設備)_018",
+    "description": "諸経費",
+    "discipline": "空調設備工事",
+    "unit": "〃",
+    "unit_price": 25000.0,
+    "vendor": null,
+    "valid_from": "2025-12-18",
+    "valid_to": null,
+    "source_project": "見積明細(空調設備)",
+    "context_tags": [],
+    "features": {
+      "specification": "含む.",
+      "quantity": 1.0
+    },
+    "similarity_score": 0.0
+  },
+  {
     "item_id": "tmputrp3abf_015",
     "description": "キュービクル",
     "discipline": "電気設備工事",
@@ -13,25 +6327,6 @@
     "features": {
       "specification": "1φ3W50KVA、3φ3W150KVA リース品",
       "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_016",
-    "description": "同上設置工事",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 155600.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "基礎工事別途",
-      "quantity": 1,
-      "aggregated_from": 11,
-      "price_range": "¥69,590 - ¥165,200"
     },
     "similarity_score": 0.0
   },
@@ -146,25 +6441,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_023",
-    "description": "同上支持材",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 12855.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 25,
-      "price_range": "¥788 - ¥331,300"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_024",
     "description": "波付硬質ポリエチレン管",
     "discipline": "機械設備工事",
@@ -218,44 +6494,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_027",
-    "description": "接地工事",
-    "discipline": "電気設備工事",
-    "unit": "式",
-    "unit_price": 50000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "EA",
-      "quantity": 2,
-      "aggregated_from": 4,
-      "price_range": "¥50,000 - ¥50,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_028",
-    "description": "接地工事",
-    "discipline": "電気設備工事",
-    "unit": "式",
-    "unit_price": 35000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "EB",
-      "quantity": 1,
-      "aggregated_from": 4,
-      "price_range": "¥35,000 - ¥35,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_029",
     "description": "接地工事",
     "discipline": "電気設備工事",
@@ -288,42 +6526,6 @@
     "features": {
       "specification": "10-19-3.5",
       "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_031",
-    "description": "同上建柱費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 21000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_032",
-    "description": "同上支持金物",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 50000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 3,
-      "price_range": "¥50,000 - ¥50,000"
     },
     "similarity_score": 0.0
   },
@@ -366,44 +6568,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_035",
-    "description": "高所作業車",
-    "discipline": "機械設備工事",
-    "unit": "日",
-    "unit_price": 49000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "～12m",
-      "quantity": 1,
-      "aggregated_from": 7,
-      "price_range": "¥49,000 - ¥49,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_036",
-    "description": "同上運送費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 40000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 7,
-      "price_range": "¥40,000 - ¥40,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_038",
     "description": "電力手続き申請費",
     "discipline": "機械設備工事",
@@ -419,25 +6583,6 @@
       "quantity": 1,
       "aggregated_from": 3,
       "price_range": "¥35,000 - ¥35,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_039",
-    "description": "消耗品雑材",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 43160.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 151,
-      "price_range": "¥2,000 - ¥512,510"
     },
     "similarity_score": 0.0
   },
@@ -1384,25 +7529,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_106",
-    "description": "消耗品雑材",
-    "discipline": "機械設備工事",
-    "unit": "〃",
-    "unit_price": 22240.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 13,
-      "price_range": "¥3,500 - ¥377,660"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_108",
     "description": "端子盤工事",
     "discipline": "機械設備工事",
@@ -1469,25 +7595,6 @@
     "features": {
       "specification": "リース品",
       "quantity": 15
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_112",
-    "description": "接続調整費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 94500.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 5,
-      "price_range": "¥73,500 - ¥140,000"
     },
     "similarity_score": 0.0
   },
@@ -1617,25 +7724,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_126",
-    "description": "導通試験費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 33000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 4,
-      "price_range": "¥2,000 - ¥48,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_129",
     "description": "インターホン",
     "discipline": "電気設備工事",
@@ -1668,25 +7756,6 @@
       "quantity": 52,
       "aggregated_from": 2,
       "price_range": "¥890 - ¥1,010"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_133",
-    "description": "機器接続調整費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 9000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 4,
-      "price_range": "¥4,000 - ¥24,000"
     },
     "similarity_score": 0.0
   },
@@ -1784,25 +7853,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_141",
-    "description": "同上結線調整費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 35000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 12,
-      "price_range": "¥25,000 - ¥154,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_142",
     "description": "警報用ケーブル",
     "discipline": "電気設備工事",
@@ -1888,25 +7938,6 @@
       "quantity": 20,
       "aggregated_from": 3,
       "price_range": "¥3,000 - ¥3,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_147",
-    "description": "手続き申請費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 135000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 16,
-      "price_range": "¥60,000 - ¥150,000"
     },
     "similarity_score": 0.0
   },
@@ -2383,25 +8414,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_194",
-    "description": "既存接続分岐",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 30000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 8,
-      "price_range": "¥30,000 - ¥75,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_195",
     "description": "受水槽",
     "discipline": "衛生設備工事",
@@ -2432,25 +8444,6 @@
     "features": {
       "specification": "40A リース品",
       "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_199",
-    "description": "貫通工事",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 1800.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 98,
-      "aggregated_from": 26,
-      "price_range": "¥1,800 - ¥5,200"
     },
     "similarity_score": 0.0
   },
@@ -2873,25 +8866,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_224",
-    "description": "床上掃除口",
-    "discipline": "機械設備工事",
-    "unit": "個",
-    "unit_price": 17800.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "COA65",
-      "quantity": 6,
-      "aggregated_from": 6,
-      "price_range": "¥9,880 - ¥17,800"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_225",
     "description": "床上掃除口",
     "discipline": "機械設備工事",
@@ -3025,25 +8999,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_232",
-    "description": "既存汚水桝接続",
-    "discipline": "衛生設備工事",
-    "unit": "ヶ所",
-    "unit_price": 45000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 4,
-      "price_range": "¥45,000 - ¥45,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_235",
     "description": "スリーブ明口費",
     "discipline": "機械設備工事",
@@ -3108,25 +9063,6 @@
     "features": {
       "specification": "2000L ボックス PC板共 リーズ品",
       "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_240",
-    "description": "同上施工費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 65000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 8,
-      "price_range": "¥30,000 - ¥350,000"
     },
     "similarity_score": 0.0
   },
@@ -3271,25 +9207,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmputrp3abf_256",
-    "description": "同上工事費",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 35000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 4,
-      "aggregated_from": 3,
-      "price_range": "¥35,000 - ¥35,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmputrp3abf_257",
     "description": "消火器",
     "discipline": "消防設備工事",
@@ -3305,25 +9222,6 @@
       "quantity": 9,
       "aggregated_from": 2,
       "price_range": "¥7,500 - ¥7,500"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmputrp3abf_258",
-    "description": "避難梯子",
-    "discipline": "消防設備工事",
-    "unit": "ヶ所",
-    "unit_price": 55000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmputrp3abf",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 2,
-      "aggregated_from": 3,
-      "price_range": "¥55,000 - ¥55,000"
     },
     "similarity_score": 0.0
   },
@@ -5989,23 +11887,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmp16ixcsjt_309",
-    "description": "満水警報器",
-    "discipline": "消防設備工事",
-    "unit": "式",
-    "unit_price": 57000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp16ixcsjt",
-    "context_tags": [],
-    "features": {
-      "specification": "ARM-4N",
-      "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmp16ixcsjt_310",
     "description": "同上配管配線工事",
     "discipline": "電気設備工事",
@@ -6547,23 +12428,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmp16ixcsjt_359",
-    "description": "化粧鏡",
-    "discipline": "機械設備工事",
-    "unit": "〃",
-    "unit_price": 10900.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp16ixcsjt",
-    "context_tags": [],
-    "features": {
-      "specification": "360x450mm",
-      "quantity": 19
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmp16ixcsjt_360",
     "description": "全槽シンク",
     "discipline": "衛生設備工事",
@@ -6789,25 +12653,6 @@
       "quantity": 1,
       "aggregated_from": 2,
       "price_range": "¥73,800 - ¥138,800"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp16ixcsjt_384",
-    "description": "工事費",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 71000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp16ixcsjt",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 26,
-      "price_range": "¥23,000 - ¥75,000"
     },
     "similarity_score": 0.0
   },
@@ -8733,25 +14578,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmp_euc9iyf_248",
-    "description": "雨水桝(樹脂製)",
-    "discipline": "機械設備工事",
-    "unit": "組",
-    "unit_price": 16430.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp_euc9iyf",
-    "context_tags": [],
-    "features": {
-      "specification": "300φ",
-      "quantity": 11,
-      "aggregated_from": 2,
-      "price_range": "¥12,930 - ¥19,930"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmp_euc9iyf_249",
     "description": "側溝放流",
     "discipline": "機械設備工事",
@@ -9612,23 +15438,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmp7fs8ehwy_036",
-    "description": "建柱車",
-    "discipline": "機械設備工事",
-    "unit": "日",
-    "unit_price": 140000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp7fs8ehwy",
-    "context_tags": [],
-    "features": {
-      "specification": "～12m",
-      "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmp7fs8ehwy_040",
     "description": "電力手続き申請費",
     "discipline": "機械設備工事",
@@ -9699,25 +15508,6 @@
       "quantity": 15,
       "aggregated_from": 2,
       "price_range": "¥2,090 - ¥2,090"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp7fs8ehwy_046",
-    "description": "既設接続費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 75000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp7fs8ehwy",
-    "context_tags": [],
-    "features": {
-      "specification": "想定",
-      "quantity": 1,
-      "aggregated_from": 2,
-      "price_range": "¥50,000 - ¥100,000"
     },
     "similarity_score": 0.0
   },
@@ -10276,23 +16066,6 @@
     "features": {
       "specification": "リーズ品",
       "quantity": 16
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp7fs8ehwy_149",
-    "description": "電源撤去工事",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 50000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp7fs8ehwy",
-    "context_tags": [],
-    "features": {
-      "specification": "想定",
-      "quantity": 1
     },
     "similarity_score": 0.0
   },
@@ -11209,40 +16982,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmp7fs8ehwy_276",
-    "description": "室外機用架台",
-    "discipline": "空調設備工事",
-    "unit": "台",
-    "unit_price": 34500.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp7fs8ehwy",
-    "context_tags": [],
-    "features": {
-      "specification": "H=500",
-      "quantity": 23
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp7fs8ehwy_277",
-    "description": "同上施工費",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 5000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp7fs8ehwy",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 23
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmp7fs8ehwy_278",
     "description": "運搬機入費",
     "discipline": "機械設備工事",
@@ -11685,25 +17424,6 @@
     "features": {
       "specification": "HF32Wx1灯相当 3200lm 黒板灯",
       "quantity": 20
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp2m5indix_079",
-    "description": "器具配線工事",
-    "discipline": "電気設備工事",
-    "unit": "ヶ所",
-    "unit_price": 4100.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp2m5indix",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 185,
-      "aggregated_from": 3,
-      "price_range": "¥4,100 - ¥4,100"
     },
     "similarity_score": 0.0
   },
@@ -12252,23 +17972,6 @@
     "features": {
       "specification": "レッカー重機代別途。",
       "quantity": 1
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp2m5indix_164",
-    "description": "区画貫通処理",
-    "discipline": "機械設備工事",
-    "unit": "ヶ所",
-    "unit_price": 6000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp2m5indix",
-    "context_tags": [],
-    "features": {
-      "specification": "壁貫通",
-      "quantity": 74
     },
     "similarity_score": 0.0
   },
@@ -13262,25 +18965,6 @@
     "similarity_score": 0.0
   },
   {
-    "item_id": "tmpusp9fprt_030",
-    "description": "諸経費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 40000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmpusp9fprt",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 7,
-      "price_range": "¥40,000 - ¥60,000"
-    },
-    "similarity_score": 0.0
-  },
-  {
     "item_id": "tmpusp9fprt_037",
     "description": "コンセント工事",
     "discipline": "電気設備工事",
@@ -13457,25 +19141,6 @@
       "quantity": 1,
       "aggregated_from": 2,
       "price_range": "¥85,300 - ¥85,300"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmpusp9fprt_054",
-    "description": "同上結線調整費",
-    "discipline": "機械設備工事",
-    "unit": "〃",
-    "unit_price": 25000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmpusp9fprt",
-    "context_tags": [],
-    "features": {
-      "specification": "",
-      "quantity": 1,
-      "aggregated_from": 2,
-      "price_range": "¥25,000 - ¥25,000"
     },
     "similarity_score": 0.0
   },
@@ -14780,25 +20445,6 @@
       "quantity": 2,
       "aggregated_from": 3,
       "price_range": "¥39,000 - ¥46,800"
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmpog3t2z76_131",
-    "description": "解体費",
-    "discipline": "機械設備工事",
-    "unit": "式",
-    "unit_price": 300000.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmpog3t2z76",
-    "context_tags": [],
-    "features": {
-      "specification": "解体後整地別途",
-      "quantity": 1,
-      "aggregated_from": 5,
-      "price_range": "¥50,000 - ¥620,000"
     },
     "similarity_score": 0.0
   },
@@ -18324,23 +23970,6 @@
     "features": {
       "specification": "給水HIVP 埋設 20A 樹脂被覆",
       "quantity": 17
-    },
-    "similarity_score": 0.0
-  },
-  {
-    "item_id": "tmp805cxciw_134",
-    "description": "仕切り弁",
-    "discipline": "機械設備工事",
-    "unit": "組",
-    "unit_price": 24500.0,
-    "vendor": null,
-    "valid_from": "2025-12-18",
-    "valid_to": null,
-    "source_project": "tmp805cxciw",
-    "context_tags": [],
-    "features": {
-      "specification": "20mm",
-      "quantity": 2
     },
     "similarity_score": 0.0
   },

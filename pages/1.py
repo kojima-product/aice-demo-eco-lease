@@ -28,6 +28,7 @@ from pipelines.estimate_generator_ai import AIEstimateGenerator
 from pipelines.export import EstimateExporter
 from pipelines.cost_tracker import start_session, end_session, get_tracker
 from pipelines.inquiry_extractor import InquiryExtractor
+from pipelines.estimate_verifier import EstimateVerifier
 
 
 # カスタムCSS（ページ固有）
@@ -87,6 +88,7 @@ def init_session_state():
         'pending_files': None,  # 処理待ちファイル
         'pending_include_legal': None,
         'pending_legal_standards': None,
+        'verification_report': None,  # 算出根拠・整合性チェック結果
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -159,7 +161,7 @@ def main():
             st.caption("「生成結果」タブで確認")
 
     # タブで機能を分割
-    tab1, tab2, tab3, tab4 = st.tabs(["仕様書アップロード", "生成結果", "要点シート", "ダウンロード"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["仕様書アップロード", "生成結果", "要点シート", "算出根拠・整合性", "ダウンロード"])
 
     # ===== タブ1: アップロード =====
     with tab1:
@@ -536,8 +538,149 @@ def main():
         else:
             st.info("見積書を生成すると、ここに抽出データが表示されます。")
 
-    # ===== タブ4: ダウンロード =====
+    # ===== タブ4: 算出根拠・整合性チェック =====
     with tab4:
+        if st.session_state.fmt_doc:
+            fmt_doc = st.session_state.fmt_doc
+            items = fmt_doc.estimate_items
+
+            st.markdown("### 算出根拠の可視化")
+            st.caption("各項目の金額がどのように計算されたかを確認できます")
+
+            # 仕様書から抽出した情報を表示
+            spec_info = fmt_doc.metadata.get("spec_extraction", {})
+            if spec_info:
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    area = spec_info.get("building_area_m2")
+                    st.metric("延床面積", f"{area:,.0f}㎡" if area else "-")
+                with col2:
+                    floors = spec_info.get("building_floors")
+                    st.metric("階数", f"{floors}階" if floors else "-")
+                with col3:
+                    rooms = spec_info.get("room_count")
+                    st.metric("推定部屋数", f"{rooms}室" if rooms else "-")
+                with col4:
+                    equip = spec_info.get("required_equipment", [])
+                    st.metric("検出設備", f"{len(equip)}種")
+
+            st.divider()
+
+            # 算出根拠タイプ別の集計
+            basis_counts = {}
+            for item in items:
+                basis = item.calculation_basis_type or "未分類"
+                basis_counts[basis] = basis_counts.get(basis, 0) + 1
+
+            st.markdown("**算出根拠タイプ別件数**")
+            cols = st.columns(min(len(basis_counts), 5))
+            for i, (basis, count) in enumerate(sorted(basis_counts.items(), key=lambda x: -x[1])):
+                with cols[i % len(cols)]:
+                    st.metric(basis, f"{count}件")
+
+            st.divider()
+
+            # 項目別の算出根拠一覧
+            st.markdown("**項目別算出根拠**")
+
+            # フィルタオプション
+            filter_basis = st.selectbox(
+                "算出根拠でフィルタ",
+                ["すべて"] + list(basis_counts.keys()),
+                key="basis_filter"
+            )
+
+            display_items = []
+            for item in items:
+                basis = item.calculation_basis_type or "未分類"
+                if filter_basis != "すべて" and basis != filter_basis:
+                    continue
+
+                # 信頼度バッジ
+                confidence = item.confidence or 0
+                if confidence >= 0.8:
+                    conf_badge = "🟢"
+                elif confidence >= 0.5:
+                    conf_badge = "🟡"
+                else:
+                    conf_badge = "🔴"
+
+                display_items.append({
+                    "項目名": item.name,
+                    "仕様": item.specification or "-",
+                    "数量": f"{item.quantity:,.1f}" if item.quantity else "-",
+                    "単位": item.unit or "-",
+                    "単価": f"¥{item.unit_price:,.0f}" if item.unit_price else "-",
+                    "金額": f"¥{item.amount:,.0f}" if item.amount else "-",
+                    "算出根拠": basis,
+                    "計算式": item.calculation_formula or "-",
+                    "信頼度": f"{conf_badge} {confidence:.0%}",
+                })
+
+            if display_items:
+                st.dataframe(display_items, use_container_width=True, hide_index=True, height=400)
+                st.caption(f"表示: {len(display_items)}件 / 全{len(items)}件")
+            else:
+                st.info("該当する項目がありません")
+
+            st.divider()
+
+            # 整合性チェックセクション
+            st.markdown("### 整合性チェック")
+            st.caption("AI生成見積と参照見積の比較分析")
+
+            # 検証結果がある場合は表示
+            if st.session_state.get('verification_report'):
+                report = st.session_state.verification_report
+                summary = report.get("summary", {})
+
+                # サマリー表示
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    match_rate = summary.get("match_rate", 0)
+                    st.metric("マッチ率", f"{match_rate:.1%}")
+                with col2:
+                    ai_total = summary.get("ai_total", 0)
+                    st.metric("AI生成合計", f"¥{ai_total:,.0f}")
+                with col3:
+                    human_total = summary.get("human_total", 0)
+                    st.metric("参照見積合計", f"¥{human_total:,.0f}" if human_total else "-")
+                with col4:
+                    diff_ratio = summary.get("total_difference_ratio", 0)
+                    if diff_ratio:
+                        st.metric("差異率", f"{diff_ratio:+.1%}")
+                    else:
+                        st.metric("差異率", "-")
+
+                # 要確認項目
+                issues = report.get("issues_summary", [])
+                if issues:
+                    st.markdown("**⚠️ 要確認項目**")
+                    for issue in issues[:10]:
+                        st.warning(f"**{issue['item']}**: {', '.join(issue['issues'])}")
+
+                # 詳細テーブル
+                with st.expander("項目別比較詳細", expanded=False):
+                    items_data = report.get("items", [])
+                    comparison_data = []
+                    for item in items_data:
+                        comparison_data.append({
+                            "項目名": item["item_name"],
+                            "AI金額": f"¥{item['ai_amount']:,.0f}",
+                            "参照金額": f"¥{item['human_amount']:,.0f}" if item.get("human_amount") else "-",
+                            "差額": f"¥{item['difference']:+,.0f}" if item.get("difference") else "-",
+                            "状態": item["match_status"],
+                            "算出根拠": item["calculation_basis"],
+                        })
+                    if comparison_data:
+                        st.dataframe(comparison_data, use_container_width=True, hide_index=True)
+            else:
+                st.info("見積生成時に参照見積書と比較すると、整合性チェック結果がここに表示されます。")
+        else:
+            st.info("見積書を生成すると、算出根拠と整合性チェック結果が表示されます。")
+
+    # ===== タブ5: ダウンロード =====
+    with tab5:
         if st.session_state.generated_files:
             all_files = st.session_state.generated_files
 
@@ -897,6 +1040,32 @@ def generate_estimate_unified(
             })
 
             st.session_state.fmt_doc = fmt_doc
+
+            # 算出根拠・整合性チェックレポートを生成
+            try:
+                verifier = EstimateVerifier()
+                ai_items_dict = [
+                    {
+                        "name": item.name,
+                        "specification": item.specification,
+                        "quantity": item.quantity,
+                        "unit": item.unit,
+                        "unit_price": item.unit_price,
+                        "amount": item.amount,
+                    }
+                    for item in items
+                ]
+                # 仕様書テキストを取得（あれば）
+                spec_text = fmt_doc.raw_text or ""
+                verification_report = verifier.generate_verification_report(
+                    ai_items=ai_items_dict,
+                    human_items=None,  # 参照見積との比較は後で実装可能
+                    spec_text=spec_text
+                )
+                st.session_state.verification_report = verification_report
+            except Exception as e:
+                logger.warning(f"Verification report generation failed: {e}")
+                st.session_state.verification_report = None
 
         # ===== 完了表示 =====
         elapsed = (datetime.now() - start_time).total_seconds()

@@ -99,6 +99,7 @@ class EstimateItem(BaseModel):
     # 計算ロジック
     calculation_formula: Optional[str] = Field(default=None, description="計算式（例: 単価×数量、工事費×16.07%）")
     calculation_basis: Optional[Dict[str, Any]] = Field(default_factory=dict, description="計算根拠（単価、人数、日数等）")
+    calculation_basis_type: Optional[str] = Field(default=None, description="算出根拠タイプ（m単価×延長、材料費×数量、率計算等）")
 
     # 労務費の場合
     labor_unit_price: Optional[float] = Field(default=None, description="労務単価（円/人日）")
