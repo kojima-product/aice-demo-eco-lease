@@ -21,54 +21,58 @@ from pipelines.logging_config import setup_logging
 setup_logging()
 
 from pipelines.schemas import DisciplineType
-from pipelines.estimate_generator_with_legal import EstimateGeneratorWithLegal
-from pipelines.estimate_validator import EstimateValidator
-from pipelines.estimate_from_reference import EstimateFromReference
 from pipelines.estimate_generator_ai import AIEstimateGenerator
 from pipelines.export import EstimateExporter
-from pipelines.cost_tracker import start_session, end_session, get_tracker
+from pipelines.cost_tracker import start_session, end_session
 from pipelines.inquiry_extractor import InquiryExtractor
-from pipelines.estimate_verifier import EstimateVerifier
 
 
-# カスタムCSS（ページ固有）
+# カスタムCSS（シンプルデザイン）
 st.markdown("""
 <style>
+    /* メインコンテンツのパディング調整 */
+    .main .block-container {
+        padding-top: 2rem;
+        max-width: 1000px;
+    }
     /* メトリクスカード */
     [data-testid="stMetricValue"] {
-        font-size: 1.4rem;
-        font-weight: 600;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1e40af;
     }
     [data-testid="stMetricLabel"] {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
+        color: #64748b;
     }
     /* タブスタイル */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0;
+    }
     .stTabs [data-baseweb="tab"] {
-        padding: 12px 24px;
-        font-weight: 500;
-        font-size: 0.95rem;
-    }
-    /* セクションヘッダー */
-    .sidebar-section-header {
-        font-size: 0.9rem;
+        padding: 16px 32px;
         font-weight: 600;
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.3rem;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        font-size: 1rem;
     }
-    /* サイドバー要素の横幅統一 */
-    [data-testid="stSidebar"] [data-testid="stAlert"],
-    [data-testid="stSidebar"] [data-testid="stMetric"],
-    [data-testid="stSidebar"] .stProgress {
-        width: 100% !important;
-        box-sizing: border-box;
+    /* カード風ボックス */
+    .result-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 16px 0;
     }
-    [data-testid="stSidebar"] [data-testid="stAlert"] > div {
-        width: 100%;
+    /* 金額ハイライト */
+    .amount-highlight {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1e40af;
+        text-align: center;
+        padding: 20px;
     }
-    /* ステータスカードを全幅に */
-    [data-testid="stMarkdownContainer"] > div {
-        width: 100%;
+    /* テーブルヘッダー */
+    .dataframe th {
+        background: #f1f5f9 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -78,95 +82,100 @@ def init_session_state():
     """セッション状態を初期化"""
     defaults = {
         'fmt_doc': None,
-        'validation_results': None,
         'processing_time': None,
-        'legal_refs': [],
         'generated_files': [],
         'email_info': None,
         'is_processing': False,
-        'generation_completed': False,  # 生成完了フラグ
-        'pending_files': None,  # 処理待ちファイル
-        'pending_include_legal': None,
-        'pending_legal_standards': None,
-        'verification_report': None,  # 算出根拠・整合性チェック結果
+        'generation_completed': False,
+        'pending_files': None,
     }
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
 
 
-def extract_email_info_auto(uploaded_email):
-    """メール情報を自動抽出"""
-    from pipelines.email_extractor import EmailExtractor
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_email:
-        tmp_email.write(uploaded_email.read())
-        tmp_email_path = tmp_email.name
-
-    extractor = EmailExtractor()
-    email_info = extractor.extract_email_info(tmp_email_path)
-    return email_info
-
-
 def main():
     init_session_state()
 
-    # ヘッダー
-    st.title("見積書作成")
-    st.caption("仕様書PDFから見積書を自動生成")
-
-    # サイドバー
+    # ===== サイドバー =====
     with st.sidebar:
-        # 単価DB状態
-        st.markdown('<p class="sidebar-section-header">単価データベース</p>', unsafe_allow_html=True)
+        st.markdown("### 単価KB状況")
+
+        # KB情報を読み込み
         try:
-            with open('kb/price_kb.json', 'r') as f:
-                kb_data = json.load(f)
-            kb_count = len(kb_data)
-            st.caption(f"登録項目: {kb_count:,}件")
-        except:
-            st.caption("未構築")
+            import json
+            kb_path = Path("kb/price_kb.json")
+            if kb_path.exists():
+                with open(kb_path, 'r', encoding='utf-8') as f:
+                    kb_items = json.load(f)
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("登録項目数", f"{len(kb_items):,}")
+                with col2:
+                    disciplines = set(item.get('discipline', '') for item in kb_items)
+                    st.metric("工事区分", f"{len(disciplines)}種類")
+
+                # 工事区分別内訳
+                st.markdown('<p style="font-size: 0.85rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 0.3rem;">工事区分別</p>', unsafe_allow_html=True)
+                discipline_counts = {}
+                for item in kb_items:
+                    d = item.get('discipline', '不明')
+                    discipline_counts[d] = discipline_counts.get(d, 0) + 1
+
+                for discipline, count in sorted(discipline_counts.items(), key=lambda x: -x[1])[:5]:
+                    st.text(f"• {discipline}: {count}件")
+            else:
+                st.warning("KBが空です")
+        except Exception as e:
+            st.error(f"KB読込エラー: {e}")
 
         st.markdown("---")
 
-        # 法令設定
-        st.markdown('<p class="sidebar-section-header">法令参照設定</p>', unsafe_allow_html=True)
-        include_legal = st.checkbox("法令情報を含める", value=True)
-        if include_legal:
-            legal_standards = st.multiselect(
-                "参照法令",
-                ["建築基準法", "電気設備技術基準", "ガス事業法", "消防法", "JEAC8001"],
-                default=["建築基準法", "電気設備技術基準", "ガス事業法", "消防法", "JEAC8001"],
-                label_visibility="collapsed"
-            )
-        else:
-            legal_standards = []
+        # 生成オプション
+        st.markdown('<p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">生成オプション</p>', unsafe_allow_html=True)
+
+        st.checkbox(
+            "カテゴリ階層を適用",
+            value=True,
+            key="use_category_hierarchy",
+            help="見積項目をカテゴリ別に整理します"
+        )
+
+        st.checkbox(
+            "類似案件と比較",
+            value=True,
+            key="compare_similar",
+            help="過去の類似プロジェクトと比較します"
+        )
 
         st.markdown("---")
 
         # 処理状況
-        if st.session_state.is_processing:
-            st.info("⏳ 処理中...")
-            st.progress(0.5)  # 不定のプログレス表示
-        elif st.session_state.generation_completed and st.session_state.fmt_doc:
-            st.success("✅ 生成完了")
-            items = st.session_state.fmt_doc.estimate_items
-            total_amount = sum(item.amount or 0 for item in items if item.level == 0)
-            st.metric("推定総額", f"¥{total_amount:,.0f}")
-            st.caption("👆「生成結果」タブで詳細を確認できます")
-            # フラグをリセット（次回のために）
-            st.session_state.generation_completed = False
-        elif st.session_state.fmt_doc:
-            st.success("✅ 生成完了")
-            st.caption("「生成結果」タブで確認")
+        st.markdown('<p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">処理状況</p>', unsafe_allow_html=True)
 
-    # タブで機能を分割
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["仕様書アップロード", "生成結果", "要点シート", "算出根拠・整合性", "ダウンロード"])
+        if st.session_state.fmt_doc:
+            items = st.session_state.fmt_doc.estimate_items
+            total = sum((i.amount or 0) for i in items if i.level == 0)
+            st.metric("生成項目数", len(items))
+            st.metric("推定総額", f"¥{total:,.0f}")
+        else:
+            st.caption("まだ見積書は生成されていません")
+
+        st.markdown("---")
+        st.caption("v2.0 - AI見積システム (Opus 4.5)")
+
+    # ヘッダー
+    st.title("見積書作成")
+    st.caption("仕様書PDFをアップロードすると、AIが自動で見積書を作成します")
+
+    # タブ構成（3つにシンプル化）
+    tab1, tab2, tab3 = st.tabs(["📤 アップロード", "📊 見積結果", "📥 ダウンロード"])
 
     # ===== タブ1: アップロード =====
     with tab1:
-        # 仕様書アップロードセクション
-        st.markdown("**仕様書PDF**")
+        st.markdown("### 仕様書をアップロード")
+
         uploaded_files = st.file_uploader(
             "仕様書PDF",
             type=['pdf'],
@@ -176,110 +185,111 @@ def main():
             help="複数ファイルのアップロードが可能です"
         )
 
-        # アップロード済みファイル表示
         if uploaded_files:
-            file_names = ", ".join([f.name for f in uploaded_files])
-            st.caption(f"📄 {len(uploaded_files)}ファイル選択済み: {file_names}")
+            st.success(f"✓ {len(uploaded_files)}件のファイルを選択しました")
+            for f in uploaded_files:
+                st.caption(f"　📄 {f.name}")
 
-        st.divider()
+        st.markdown("---")
 
-        # メール情報セクション（折りたたみ）
-        with st.expander("メール本文から情報を抽出（任意）", expanded=False):
+        # メール情報セクション（オプション）
+        with st.expander("メール本文から顧客情報を抽出（任意）", expanded=False):
             uploaded_email = st.file_uploader(
                 "メール本文PDF",
                 type=['pdf'],
-                help="顧客名・工期を自動抽出",
+                help="顧客名・工期を自動抽出します",
                 label_visibility="collapsed",
                 key="email_upload"
             )
 
-            # メールPDFがアップロードされたら自動で解析
             if uploaded_email and st.session_state.email_info is None:
                 with st.spinner("解析中..."):
                     try:
-                        email_info = extract_email_info_auto(uploaded_email)
-                        st.session_state.email_info = email_info
+                        from pipelines.email_extractor import EmailExtractor
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                            tmp.write(uploaded_email.read())
+                            tmp_path = tmp.name
+                        extractor = EmailExtractor()
+                        st.session_state.email_info = extractor.extract_email_info(tmp_path)
                         st.rerun()
                     except Exception as e:
                         st.error(f"解析エラー: {e}")
 
-            # メール情報表示
             if st.session_state.email_info:
                 email = st.session_state.email_info
-                st.success("メール情報を抽出しました")
+                st.success("✓ メール情報を取得しました")
+                st.text(f"顧客: {email.client_company or '-'}")
+                st.text(f"工期: {email.construction_start or '-'} ～ {email.construction_end or '-'}")
 
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.text(f"顧客: {email.client_company or '-'} {email.client_branch or ''}")
-                    st.text(f"担当: {email.client_contact or '-'}")
-                    st.text(f"期限: {email.quote_deadline or '-'}")
-
-                with col2:
-                    st.text(f"工期: {email.construction_start or '-'} ～ {email.construction_end or '-'}")
-                    st.text(f"レンタル: {email.rental_start or '-'} ～ {email.rental_end or '-'}")
-                    st.text(f"面積: {email.building_area_tsubo or '-'}坪")
-
-                if st.button("クリア", type="secondary", key="clear_email"):
+                if st.button("クリア", key="clear_email"):
                     st.session_state.email_info = None
                     st.rerun()
 
-        st.divider()
+        st.markdown("---")
 
-        # 生成ボタン
-        col1, col2, col3 = st.columns([1, 1, 1])
+        # 生成ボタン / 完了ステータス
+        col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             generate_clicked = False
-            if uploaded_files:
-                generate_clicked = st.button("見積書を生成", type="primary", disabled=st.session_state.is_processing, use_container_width=True)
+
+            # 生成完了後は完了ステータスを表示
+            if st.session_state.generation_completed and st.session_state.generated_files:
+                st.markdown("""
+                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 12px;">
+                    <p style="color: white; font-size: 1.2rem; font-weight: 600; margin: 0;">✓ 見積書の生成が完了しました</p>
+                    <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 8px;">「見積結果」「ダウンロード」タブで確認できます</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+                # 新規作成ボタン
+                if st.button("新しい見積書を作成", use_container_width=True):
+                    st.session_state.generation_completed = False
+                    st.session_state.fmt_doc = None
+                    st.session_state.generated_files = []
+                    st.rerun()
+
+            elif uploaded_files:
+                generate_clicked = st.button(
+                    "見積書を生成",
+                    type="primary",
+                    disabled=st.session_state.is_processing,
+                    use_container_width=True
+                )
             else:
                 st.button("見積書を生成", type="primary", disabled=True, use_container_width=True)
-                st.caption("仕様書をアップロードしてください")
+                st.caption("↑ 仕様書をアップロードしてください")
 
-        # ステータス表示エリア（ボタンの下、全幅で表示）
+        # ステータス表示
         status_placeholder = st.empty()
 
-        # ボタンクリック時：ファイルを保存して処理開始フラグを立てて再実行
+        # 生成処理
         if generate_clicked and not st.session_state.is_processing:
-            # ファイルをバイトデータとして保存（再実行後も使えるように）
             st.session_state.pending_files = [(f.name, f.read()) for f in uploaded_files]
-            st.session_state.pending_include_legal = include_legal
-            st.session_state.pending_legal_standards = legal_standards
             st.session_state.is_processing = True
             st.rerun()
 
-        # 処理中の場合：実際の処理を実行
         if st.session_state.is_processing and st.session_state.pending_files:
-            generate_estimate_unified(
-                st.session_state.pending_files,
-                st.session_state.pending_include_legal,
-                st.session_state.pending_legal_standards,
-                status_placeholder
-            )
+            generate_estimate(st.session_state.pending_files, status_placeholder)
 
-    # ===== タブ2: 生成結果 =====
+    # ===== タブ2: 見積結果 =====
     with tab2:
         if st.session_state.fmt_doc and st.session_state.generated_files:
             fmt_doc = st.session_state.fmt_doc
             items = fmt_doc.estimates if hasattr(fmt_doc, 'estimates') else fmt_doc.estimate_items
-            total_items = len(items)
-            with_price = sum(1 for item in items if item.unit_price and item.unit_price > 0)
-            # Level 0（工事区分の親項目）の合計のみを使用（PDFと一致させる）
+
+            # Level 0の合計
             total_amount = sum(item.amount or 0 for item in items if item.level == 0)
 
-            # メトリクス（3カラムに変更）
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("生成項目数", f"{total_items}件")
-            with col2:
-                rate = with_price/total_items*100 if total_items > 0 else 0
-                st.metric("単価マッチング率", f"{rate:.0f}%", f"{with_price}/{total_items}件")
-            with col3:
-                st.metric("推定総額", f"¥{total_amount:,.0f}")
-
-            st.divider()
+            # 推定総額（大きく表示）
+            st.markdown(f"""
+            <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; margin-bottom: 24px;">
+                <p style="color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 8px;">推定総額</p>
+                <p style="color: white; font-size: 3rem; font-weight: 700; margin: 0;">¥{total_amount:,.0f}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
             # 工事区分別内訳
-            st.markdown("**工事区分別内訳**")
+            st.markdown("### 工事区分別内訳")
 
             disc_stats = {}
             for item in items:
@@ -287,448 +297,380 @@ def main():
                 if disc not in disc_stats:
                     disc_stats[disc] = {'count': 0, 'amount': 0}
                 disc_stats[disc]['count'] += 1
-                # Level 0（工事区分の親項目）の金額のみを合計（重複計算を防止）
-                # Level 1以上は親項目の金額に含まれているため加算しない
                 if item.level == 0:
                     disc_stats[disc]['amount'] += item.amount or 0
 
-            # 横並びで表示
-            cols = st.columns(len(disc_stats)) if disc_stats else []
-            for col, (disc, stats) in zip(cols, sorted(disc_stats.items())):
-                with col:
-                    st.metric(disc, f"¥{stats['amount']:,.0f}", f"{stats['count']}項目")
+            if disc_stats:
+                cols = st.columns(len(disc_stats))
+                for col, (disc, stats) in zip(cols, sorted(disc_stats.items())):
+                    with col:
+                        # 短い工事区分名に変換
+                        short_name = disc.replace("設備工事", "")
+                        st.metric(short_name, f"¥{stats['amount']:,.0f}")
 
-            st.divider()
+            st.markdown("---")
 
-            # 項目一覧
-            st.markdown("**生成項目一覧**")
+            # 項目一覧（シンプル版）
+            st.markdown("### 見積項目一覧")
 
-            # データフレーム用にデータ整形
             display_data = []
-            for item in items[:100]:  # 最大100件表示
-                # 階層に応じたインデント
-                indent = "　" * item.level
-                display_data.append({
-                    "No.": item.item_no if item.item_no else "",
-                    "項目名": f"{indent}{item.name}",
-                    "仕様": item.specification or "",
-                    "数量": item.quantity if item.quantity else "",
-                    "単位": item.unit or "",
-                    "単価": f"¥{item.unit_price:,.0f}" if item.unit_price else "",
-                    "金額": f"¥{item.amount:,.0f}" if item.amount else "",
-                })
+            for item in items:
+                if item.level <= 1:  # 大項目・中項目のみ表示
+                    indent = "　　" if item.level == 1 else ""
+                    display_data.append({
+                        "項目": f"{indent}{item.name}",
+                        "金額": f"¥{item.amount:,.0f}" if item.amount else "-",
+                    })
 
-            st.dataframe(display_data, use_container_width=True, hide_index=True, height=400)
+            if display_data:
+                st.dataframe(
+                    display_data,
+                    use_container_width=True,
+                    hide_index=True,
+                    height=min(400, len(display_data) * 40 + 40)
+                )
 
-            if len(items) > 100:
-                st.caption(f"※ 全{len(items)}件中、100件を表示")
+            # 詳細表示（折りたたみ）
+            with st.expander("詳細項目を表示", expanded=False):
+                detail_data = []
+                for item in items:
+                    indent = "　" * item.level
+                    detail_data.append({
+                        "項目名": f"{indent}{item.name}",
+                        "仕様": item.specification or "",
+                        "数量": f"{item.quantity:,.0f}" if item.quantity else "",
+                        "単位": item.unit or "",
+                        "単価": f"¥{item.unit_price:,.0f}" if item.unit_price else "",
+                        "金額": f"¥{item.amount:,.0f}" if item.amount else "",
+                    })
+                st.dataframe(detail_data, use_container_width=True, hide_index=True, height=400)
+
+            # ===== 📊 見積の作り方（役員・営業向けサマリー）=====
+            st.markdown("---")
+            st.markdown("### 📊 この見積はどのように作られたか")
+
+            # 処理フローの説明
+            st.markdown("""
+            <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 12px; padding: 20px; margin: 16px 0;">
+                <h4 style="color: #0369a1; margin-bottom: 16px;">🔄 AIの見積作成プロセス</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="text-align: center; flex: 1; min-width: 120px;">
+                        <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem;">📄</div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">仕様書</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">PDFを解析</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #0284c7;">→</div>
+                    <div style="text-align: center; flex: 1; min-width: 120px;">
+                        <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem;">🏗️</div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">建物情報抽出</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">面積・用途を特定</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #0284c7;">→</div>
+                    <div style="text-align: center; flex: 1; min-width: 120px;">
+                        <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem;">📋</div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">項目生成</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">テンプレート適用</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #0284c7;">→</div>
+                    <div style="text-align: center; flex: 1; min-width: 120px;">
+                        <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem;">💰</div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">単価マッチング</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">過去実績から検索</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #0284c7;">→</div>
+                    <div style="text-align: center; flex: 1; min-width: 120px;">
+                        <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem;">✅</div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">見積完成</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">PDF/Excel出力</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # データソースのサマリー
+            st.markdown("#### 📁 使用したデータソース")
+
+            # 統計を計算
+            kb_matched = sum(1 for i in items if getattr(i, 'source_reference', None) and 'KB:' in str(getattr(i, 'source_reference', '')))
+            template_items = sum(1 for i in items if getattr(i, 'source_type', '') == 'template')
+            total_detail_items = sum(1 for i in items if i.level >= 2)
+            match_rate = (kb_matched / total_detail_items * 100) if total_detail_items > 0 else 0
+
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.markdown(f"""
+                <div style="background: #f0fdf4; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #16a34a;">{match_rate:.0f}%</div>
+                    <div style="font-size: 0.9rem; color: #15803d;">単価マッチング率</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">過去見積KBから取得</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with col2:
+                st.markdown(f"""
+                <div style="background: #eff6ff; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #2563eb;">{template_items}</div>
+                    <div style="font-size: 0.9rem; color: #1d4ed8;">テンプレート項目</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">建物タイプ別テンプレート</div>
+                </div>
+                """, unsafe_allow_html=True)
+            with col3:
+                st.markdown(f"""
+                <div style="background: #faf5ff; border-radius: 8px; padding: 16px; text-align: center;">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #7c3aed;">{len(items)}</div>
+                    <div style="font-size: 0.9rem; color: #6d28d9;">総項目数</div>
+                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">親項目含む</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+            # 数量算出根拠の説明
+            st.markdown("#### 📐 数量の算出方法")
+            st.markdown("""
+            <div style="background: #f8fafc; border-radius: 8px; padding: 16px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <th style="text-align: left; padding: 8px; color: #64748b;">算出方法</th>
+                        <th style="text-align: left; padding: 8px; color: #64748b;">説明</th>
+                        <th style="text-align: left; padding: 8px; color: #64748b;">例</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px;"><strong>床面積ベース</strong></td>
+                        <td style="padding: 8px;">建物の床面積から配管長等を推定</td>
+                        <td style="padding: 8px; color: #64748b;">82㎡ × 0.15/㎡ = 12m</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 8px;"><strong>固定数量</strong></td>
+                        <td style="padding: 8px;">設備として必要な最低数</td>
+                        <td style="padding: 8px; color: #64748b;">給水バルブ = 3ヶ所</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>仕様書記載</strong></td>
+                        <td style="padding: 8px;">仕様書に明記された数量</td>
+                        <td style="padding: 8px; color: #64748b;">照明器具 = 10台</td>
+                    </tr>
+                </table>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # 単価取得元の説明
+            st.markdown("#### 💴 単価の取得元")
+
+            # KB内のユニークなプロジェクト
+            source_projects = set()
+            for item in items:
+                ref = getattr(item, 'source_reference', '') or ''
+                if 'KB:' in ref:
+                    source_projects.add(ref.split('[')[0].replace('KB:', ''))
+
+            st.markdown(f"""
+            <div style="background: #f8fafc; border-radius: 8px; padding: 16px;">
+                <p style="margin-bottom: 12px;"><strong>過去見積データベース（KB）に登録された実績単価を使用しています。</strong></p>
+                <p style="color: #64748b; font-size: 0.9rem;">参照した過去案件（一部）:</p>
+                <ul style="margin: 8px 0; color: #64748b;">
+            """, unsafe_allow_html=True)
+
+            for proj in list(source_projects)[:5]:
+                st.markdown(f"<li>{proj}</li>", unsafe_allow_html=True)
+
+            st.markdown("</ul></div>", unsafe_allow_html=True)
+
+            # 詳細項目別の根拠（折りたたみ）
+            with st.expander("🔍 項目別の詳細根拠を表示", expanded=False):
+                detail_basis = []
+                for item in items:
+                    if item.level >= 2 and item.unit_price:
+                        qty_basis = getattr(item, 'estimation_basis', None) or "仕様書から推定"
+                        source_ref = getattr(item, 'source_reference', None) or "未マッチ"
+                        detail_basis.append({
+                            "項目名": item.name,
+                            "仕様": item.specification or "",
+                            "数量": f"{item.quantity:,.0f} {item.unit or ''}" if item.quantity else "-",
+                            "数量根拠": qty_basis,
+                            "単価": f"¥{item.unit_price:,.0f}" if item.unit_price else "-",
+                            "単価元": source_ref.replace('KB:', '').split('[')[0] if source_ref else "-"
+                        })
+                if detail_basis:
+                    st.dataframe(detail_basis, use_container_width=True, hide_index=True, height=300)
+
+            # ===== 人間見積との比較 =====
+            st.markdown("---")
+            st.markdown("### 📈 人間見積との比較")
+
+            # KBから同じプロジェクト名の人間見積を検索
+            try:
+                kb_path = Path("kb/price_kb.json")
+                if kb_path.exists():
+                    with open(kb_path, 'r', encoding='utf-8') as f:
+                        kb_items = json.load(f)
+
+                    # プロジェクト名で検索
+                    project_name = fmt_doc.project_info.project_name if fmt_doc.project_info else ""
+                    search_keywords = []
+                    if project_name:
+                        # キーワード抽出
+                        for keyword in ["バイオ", "発電", "学校", "高校", "中学", "小学", "プラント"]:
+                            if keyword in project_name:
+                                search_keywords.append(keyword)
+
+                    # マッチするKB項目を検索
+                    human_items = []
+                    for item in kb_items:
+                        source = item.get('source_project', '')
+                        if any(kw in source for kw in search_keywords) or any(kw in source for kw in project_name.split()[:3]):
+                            human_items.append(item)
+
+                    if human_items:
+                        # 人間見積の集計
+                        human_by_disc = {}
+                        for item in human_items:
+                            d = item.get('discipline', 'その他')
+                            if d not in human_by_disc:
+                                human_by_disc[d] = {'count': 0, 'total': 0}
+                            human_by_disc[d]['count'] += 1
+                            price = item.get('unit_price', 0) or 0
+                            qty = item.get('features', {}).get('quantity', 0) or 0
+                            human_by_disc[d]['total'] += price * qty
+
+                        human_total = sum(v['total'] for v in human_by_disc.values())
+                        human_count = sum(v['count'] for v in human_by_disc.values())
+
+                        # AI見積との比較
+                        ai_total = total_amount
+                        ai_count = len(items)
+                        diff_amount = ai_total - human_total
+                        diff_pct = ((ai_total / human_total) - 1) * 100 if human_total > 0 else 0
+
+                        # 比較表示
+                        st.markdown(f"""
+                        <div style="background: {'#fef2f2' if abs(diff_pct) > 20 else '#f0fdf4' if abs(diff_pct) < 10 else '#fffbeb'}; border-radius: 12px; padding: 20px; margin: 16px 0;">
+                            <h4 style="color: {'#dc2626' if abs(diff_pct) > 20 else '#16a34a' if abs(diff_pct) < 10 else '#d97706'}; margin-bottom: 16px;">
+                                {'⚠️ 乖離あり' if abs(diff_pct) > 20 else '✅ 良好' if abs(diff_pct) < 10 else '⚡ 要確認'}
+                                （差異: {diff_pct:+.1f}%）
+                            </h4>
+                            <div style="display: flex; justify-content: space-around; gap: 20px; flex-wrap: wrap;">
+                                <div style="text-align: center; flex: 1; min-width: 150px;">
+                                    <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 4px;">AI見積</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #1e40af;">¥{ai_total:,.0f}</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">{ai_count}項目</div>
+                                </div>
+                                <div style="text-align: center; flex: 1; min-width: 150px;">
+                                    <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 4px;">人間見積</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #059669;">¥{human_total:,.0f}</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">{human_count}項目</div>
+                                </div>
+                                <div style="text-align: center; flex: 1; min-width: 150px;">
+                                    <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 4px;">差額</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: {'#dc2626' if diff_amount > 0 else '#059669'};">¥{diff_amount:+,.0f}</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">({diff_pct:+.1f}%)</div>
+                                </div>
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                        # 工事区分別比較
+                        with st.expander("工事区分別の比較を表示", expanded=False):
+                            comparison_data = []
+                            for disc in set(list(human_by_disc.keys()) + list(disc_stats.keys())):
+                                h_data = human_by_disc.get(disc, {'count': 0, 'total': 0})
+                                a_data = disc_stats.get(disc, {'count': 0, 'amount': 0})
+                                diff = a_data['amount'] - h_data['total']
+                                diff_p = ((a_data['amount'] / h_data['total']) - 1) * 100 if h_data['total'] > 0 else 0
+                                comparison_data.append({
+                                    "工事区分": disc,
+                                    "人間見積": f"¥{h_data['total']:,.0f}",
+                                    "AI見積": f"¥{a_data['amount']:,.0f}",
+                                    "差額": f"¥{diff:+,.0f}",
+                                    "差異率": f"{diff_p:+.1f}%"
+                                })
+                            st.dataframe(comparison_data, use_container_width=True, hide_index=True)
+
+                    else:
+                        st.info("📊 KBに同じプロジェクトの人間見積データがありません。比較できませんが、参考として他の類似案件と比較しています。")
+
+            except Exception as e:
+                st.warning(f"人間見積との比較でエラー: {e}")
+
+            # 類似案件比較セクション
+            if fmt_doc.metadata and fmt_doc.metadata.get("similar_projects"):
+                similar_info = fmt_doc.metadata["similar_projects"]
+                with st.expander("🔍 類似案件との比較", expanded=False):
+                    similar_projects = similar_info.get("similar_projects", [])
+                    if similar_projects:
+                        st.markdown("#### 類似プロジェクト")
+                        for idx, proj in enumerate(similar_projects[:3], 1):
+                            score = proj.get("similarity_score", 0)
+                            score_color = "#22c55e" if score > 0.5 else "#f59e0b" if score > 0.3 else "#ef4444"
+                            st.markdown(f"""
+                            <div style="background: #f8fafc; border-left: 3px solid {score_color}; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>{idx}. {proj.get('project_name', '不明')}</strong><br/>
+                                <span style="color: {score_color};">類似度: {score*100:.0f}%</span> |
+                                項目数: {proj.get('item_count', 0)} |
+                                {', '.join(proj.get('match_reasons', [])[:2])}
+                            </div>
+                            """, unsafe_allow_html=True)
+
+                    # 比較結果
+                    comparison = similar_info.get("comparison", {})
+                    if comparison and not comparison.get("error"):
+                        st.markdown("#### 見積比較")
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("現在の項目数", comparison.get("current_item_count", 0))
+                        with col2:
+                            st.metric("参照の項目数", comparison.get("reference_item_count", 0))
+                        with col3:
+                            diff_pct = comparison.get("total_diff_percent", 0)
+                            st.metric("金額差", f"{diff_pct:+.1f}%", delta_color="inverse" if diff_pct > 10 else "normal")
+
+                        # 不足項目
+                        missing = comparison.get("missing_from_current", [])
+                        if missing:
+                            st.markdown("**参照見積にあるが現在の見積にない項目:**")
+                            st.code(", ".join(missing[:5]) + ("..." if len(missing) > 5 else ""))
 
             # 処理時間
             if st.session_state.processing_time:
                 st.caption(f"処理時間: {st.session_state.processing_time:.1f}秒")
 
-            # 整合性チェック
-            st.divider()
-            st.markdown("**整合性チェック**")
-            try:
-                from pipelines.estimate_validator import EstimateValidator
-                validator = EstimateValidator()
-                validation_results = validator.validate_estimate(fmt_doc)
-
-                # サマリー表示
-                summary = validation_results.get("summary", {})
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.metric("単価/㎡", f"¥{summary.get('amount_per_sqm', 0):,.0f}")
-                with col2:
-                    status = "✓ 妥当" if validation_results.get("is_valid") else "⚠ 要確認"
-                    st.metric("判定", status)
-
-                # 工事区分別チェック
-                with st.expander("工事区分別チェック結果", expanded=False):
-                    for disc_name, check in validation_results.get("discipline_checks", {}).items():
-                        if check["status"] == "ok":
-                            st.success(check["message"])
-                        elif check["status"] == "warning":
-                            st.warning(check["message"])
-                        else:
-                            st.error(check["message"])
-
-                # 異常項目
-                anomalies = validation_results.get("anomaly_items", [])
-                if anomalies:
-                    with st.expander(f"⚠ 異常項目 ({len(anomalies)}件)", expanded=True):
-                        for anomaly in anomalies:
-                            st.warning(f"{anomaly['item']}: {anomaly['message']}")
-
-            except Exception as e:
-                st.warning(f"整合性チェックエラー: {e}")
-
-            # チェックリスト網羅性
-            st.divider()
-            st.markdown("**チェックリスト網羅性**")
-            checklist_coverage = fmt_doc.metadata.get("checklist_coverage", {})
-            if checklist_coverage:
-                if isinstance(checklist_coverage, dict):
-                    # 複数工事区分の場合
-                    if "coverage_rate" in checklist_coverage:
-                        # 単一工事区分
-                        rate = checklist_coverage.get("coverage_rate", 0) * 100
-                        covered = checklist_coverage.get("covered_count", 0)
-                        total = checklist_coverage.get("total_check_items", 0)
-                        st.metric("カバー率", f"{rate:.0f}%", f"{covered}/{total}項目")
-                        missing = checklist_coverage.get("missing_items", [])
-                        if missing:
-                            with st.expander(f"不足項目 ({len(missing)}件)", expanded=False):
-                                for item in missing[:20]:
-                                    st.caption(f"・{item}")
-                    else:
-                        # 複数工事区分
-                        cols = st.columns(len(checklist_coverage))
-                        for col, (disc, cov) in zip(cols, checklist_coverage.items()):
-                            with col:
-                                rate = cov.get("coverage_rate", 0) * 100
-                                st.metric(disc, f"{rate:.0f}%")
-
-            # ㎡単価検証
-            unit_price_checks = fmt_doc.metadata.get("unit_price_checks", {}) or fmt_doc.metadata.get("unit_price_check", {})
-            if unit_price_checks:
-                st.divider()
-                st.markdown("**㎡単価検証**")
-                if "is_valid" in unit_price_checks:
-                    # 単一
-                    msg = unit_price_checks.get("message", "")
-                    if unit_price_checks.get("is_valid"):
-                        st.success(msg)
-                    else:
-                        st.warning(msg)
-                else:
-                    # 複数工事区分
-                    for disc, check in unit_price_checks.items():
-                        msg = check.get("message", "")
-                        if check.get("is_valid"):
-                            st.success(f"{disc}: {msg}")
-                        else:
-                            st.warning(f"{disc}: {msg}")
-
         else:
-            st.info("見積書を生成すると、ここに結果が表示されます。")
+            st.info("「アップロード」タブで仕様書をアップロードし、「見積書を生成」ボタンを押してください。")
 
-    # ===== タブ3: 要点シート（抽出データプレビュー） =====
+    # ===== タブ3: ダウンロード =====
     with tab3:
-        if st.session_state.fmt_doc:
-            fmt_doc = st.session_state.fmt_doc
-
-            # プロジェクト情報
-            st.markdown("**📋 プロジェクト情報**")
-            proj = fmt_doc.project_info
-
-            col1, col2 = st.columns(2)
-            with col1:
-                st.text(f"工事名: {proj.project_name or '-'}")
-                st.text(f"場所: {proj.location or '-'}")
-                st.text(f"顧客: {proj.client_name or '-'}")
-            with col2:
-                st.text(f"期間: {proj.contract_period or '-'}")
-                st.text(f"面積: {proj.floor_area_m2 or '-'}㎡")
-                st.text(f"決済: {proj.payment_terms or '-'}")
-
-            st.divider()
-
-            # 信頼度サマリー
-            st.markdown("**📊 信頼度サマリー**")
-            items = fmt_doc.estimates if hasattr(fmt_doc, 'estimates') else fmt_doc.estimate_items
-
-            high_conf = sum(1 for item in items if (item.confidence or 0) >= 0.8)
-            mid_conf = sum(1 for item in items if 0.5 <= (item.confidence or 0) < 0.8)
-            low_conf = sum(1 for item in items if (item.confidence or 0) < 0.5 and item.confidence is not None)
-            no_conf = sum(1 for item in items if item.confidence is None)
-
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                st.metric("高信頼度 (≥0.8)", f"{high_conf}件", help="仕様書に明記されている項目")
-            with col2:
-                st.metric("中信頼度 (0.5-0.8)", f"{mid_conf}件", delta="要確認", delta_color="off", help="推定値を含む項目")
-            with col3:
-                st.metric("低信頼度 (<0.5)", f"{low_conf}件", delta="要注意" if low_conf > 0 else None, delta_color="inverse" if low_conf > 0 else "off", help="確認が必要な項目")
-            with col4:
-                st.metric("未評価", f"{no_conf}件")
-
-            st.divider()
-
-            # 要点シート（項目詳細）
-            st.markdown("**📝 抽出項目詳細（信頼度・根拠情報付き）**")
-
-            # フィルタ
-            filter_option = st.selectbox(
-                "表示フィルタ",
-                ["すべて表示", "低信頼度のみ (< 0.8)", "根拠情報あり"],
-                label_visibility="collapsed"
-            )
-
-            # データ整形
-            display_items = []
-            for item in items:
-                conf = item.confidence or 0
-
-                # フィルタ適用
-                if filter_option == "低信頼度のみ (< 0.8)" and conf >= 0.8:
-                    continue
-                if filter_option == "根拠情報あり" and not item.source_reference:
-                    continue
-
-                # 信頼度に応じた表示
-                if conf >= 0.8:
-                    conf_display = f"✅ {conf:.0%}"
-                elif conf >= 0.5:
-                    conf_display = f"⚠️ {conf:.0%}"
-                elif conf > 0:
-                    conf_display = f"🔴 {conf:.0%}"
-                else:
-                    conf_display = "-"
-
-                # 根拠情報
-                source = item.source_reference or ""
-                if item.price_references:
-                    source += f" [KB: {', '.join(item.price_references[:3])}]"
-
-                indent = "　" * item.level
-                display_items.append({
-                    "項目名": f"{indent}{item.name}",
-                    "仕様": item.specification or "",
-                    "数量": item.quantity if item.quantity else "",
-                    "単位": item.unit or "",
-                    "信頼度": conf_display,
-                    "根拠/出典": source[:50] + "..." if len(source) > 50 else source,
-                })
-
-            if display_items:
-                st.dataframe(display_items, use_container_width=True, hide_index=True, height=400)
-                st.caption(f"表示: {len(display_items)}件 / 全{len(items)}件")
-            else:
-                st.info("該当する項目がありません")
-
-            # RAGヒット詳細（折りたたみ）
-            st.divider()
-            st.markdown("**🔍 RAGヒット根拠詳細**")
-
-            with st.expander("単価マッチング詳細を表示", expanded=False):
-                rag_items = [item for item in items if item.price_references or item.source_reference]
-
-                if rag_items:
-                    for item in rag_items[:20]:  # 最大20件表示
-                        st.markdown(f"**{item.name}** ({item.specification or '-'})")
-
-                        if item.source_reference:
-                            st.caption(f"📌 根拠: {item.source_reference}")
-
-                        if item.price_references:
-                            st.caption(f"💰 KB参照: {', '.join(item.price_references)}")
-
-                        if item.unit_price:
-                            st.caption(f"単価: ¥{item.unit_price:,.0f}")
-
-                        st.markdown("---")
-                else:
-                    st.info("RAGヒット情報がありません")
-
-            # JSON表示（折りたたみ）
-            with st.expander("生データ（JSON）を表示", expanded=False):
-                st.json(fmt_doc.model_dump(mode='json'), expanded=False)
-        else:
-            st.info("見積書を生成すると、ここに抽出データが表示されます。")
-
-    # ===== タブ4: 算出根拠・整合性チェック =====
-    with tab4:
-        if st.session_state.fmt_doc:
-            fmt_doc = st.session_state.fmt_doc
-            items = fmt_doc.estimate_items
-
-            st.markdown("### 算出根拠の可視化")
-            st.caption("各項目の金額がどのように計算されたかを確認できます")
-
-            # 仕様書から抽出した情報を表示
-            spec_info = fmt_doc.metadata.get("spec_extraction", {})
-            if spec_info:
-                col1, col2, col3, col4 = st.columns(4)
-                with col1:
-                    area = spec_info.get("building_area_m2")
-                    st.metric("延床面積", f"{area:,.0f}㎡" if area else "-")
-                with col2:
-                    floors = spec_info.get("building_floors")
-                    st.metric("階数", f"{floors}階" if floors else "-")
-                with col3:
-                    rooms = spec_info.get("room_count")
-                    st.metric("推定部屋数", f"{rooms}室" if rooms else "-")
-                with col4:
-                    equip = spec_info.get("required_equipment", [])
-                    st.metric("検出設備", f"{len(equip)}種")
-
-            st.divider()
-
-            # 算出根拠タイプ別の集計
-            basis_counts = {}
-            for item in items:
-                basis = item.calculation_basis_type or "未分類"
-                basis_counts[basis] = basis_counts.get(basis, 0) + 1
-
-            st.markdown("**算出根拠タイプ別件数**")
-            cols = st.columns(min(len(basis_counts), 5))
-            for i, (basis, count) in enumerate(sorted(basis_counts.items(), key=lambda x: -x[1])):
-                with cols[i % len(cols)]:
-                    st.metric(basis, f"{count}件")
-
-            st.divider()
-
-            # 項目別の算出根拠一覧
-            st.markdown("**項目別算出根拠**")
-
-            # フィルタオプション
-            filter_basis = st.selectbox(
-                "算出根拠でフィルタ",
-                ["すべて"] + list(basis_counts.keys()),
-                key="basis_filter"
-            )
-
-            display_items = []
-            for item in items:
-                basis = item.calculation_basis_type or "未分類"
-                if filter_basis != "すべて" and basis != filter_basis:
-                    continue
-
-                # 信頼度バッジ
-                confidence = item.confidence or 0
-                if confidence >= 0.8:
-                    conf_badge = "🟢"
-                elif confidence >= 0.5:
-                    conf_badge = "🟡"
-                else:
-                    conf_badge = "🔴"
-
-                display_items.append({
-                    "項目名": item.name,
-                    "仕様": item.specification or "-",
-                    "数量": f"{item.quantity:,.1f}" if item.quantity else "-",
-                    "単位": item.unit or "-",
-                    "単価": f"¥{item.unit_price:,.0f}" if item.unit_price else "-",
-                    "金額": f"¥{item.amount:,.0f}" if item.amount else "-",
-                    "算出根拠": basis,
-                    "計算式": item.calculation_formula or "-",
-                    "信頼度": f"{conf_badge} {confidence:.0%}",
-                })
-
-            if display_items:
-                st.dataframe(display_items, use_container_width=True, hide_index=True, height=400)
-                st.caption(f"表示: {len(display_items)}件 / 全{len(items)}件")
-            else:
-                st.info("該当する項目がありません")
-
-            st.divider()
-
-            # 整合性チェックセクション
-            st.markdown("### 整合性チェック")
-            st.caption("AI生成見積と参照見積の比較分析")
-
-            # 検証結果がある場合は表示
-            if st.session_state.get('verification_report'):
-                report = st.session_state.verification_report
-                summary = report.get("summary", {})
-
-                # サマリー表示
-                col1, col2, col3, col4 = st.columns(4)
-                with col1:
-                    match_rate = summary.get("match_rate", 0)
-                    st.metric("マッチ率", f"{match_rate:.1%}")
-                with col2:
-                    ai_total = summary.get("ai_total", 0)
-                    st.metric("AI生成合計", f"¥{ai_total:,.0f}")
-                with col3:
-                    human_total = summary.get("human_total", 0)
-                    st.metric("参照見積合計", f"¥{human_total:,.0f}" if human_total else "-")
-                with col4:
-                    diff_ratio = summary.get("total_difference_ratio", 0)
-                    if diff_ratio:
-                        st.metric("差異率", f"{diff_ratio:+.1%}")
-                    else:
-                        st.metric("差異率", "-")
-
-                # 要確認項目
-                issues = report.get("issues_summary", [])
-                if issues:
-                    st.markdown("**⚠️ 要確認項目**")
-                    for issue in issues[:10]:
-                        st.warning(f"**{issue['item']}**: {', '.join(issue['issues'])}")
-
-                # 詳細テーブル
-                with st.expander("項目別比較詳細", expanded=False):
-                    items_data = report.get("items", [])
-                    comparison_data = []
-                    for item in items_data:
-                        comparison_data.append({
-                            "項目名": item["item_name"],
-                            "AI金額": f"¥{item['ai_amount']:,.0f}",
-                            "参照金額": f"¥{item['human_amount']:,.0f}" if item.get("human_amount") else "-",
-                            "差額": f"¥{item['difference']:+,.0f}" if item.get("difference") else "-",
-                            "状態": item["match_status"],
-                            "算出根拠": item["calculation_basis"],
-                        })
-                    if comparison_data:
-                        st.dataframe(comparison_data, use_container_width=True, hide_index=True)
-            else:
-                st.info("見積生成時に参照見積書と比較すると、整合性チェック結果がここに表示されます。")
-        else:
-            st.info("見積書を生成すると、算出根拠と整合性チェック結果が表示されます。")
-
-    # ===== タブ5: ダウンロード =====
-    with tab5:
         if st.session_state.generated_files:
-            all_files = st.session_state.generated_files
+            st.markdown("### 生成されたファイル")
 
-            # ZIP一括ダウンロード
+            # 一括ダウンロード
             zip_buffer = BytesIO()
             with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
-                for file_info in all_files:
+                for file_info in st.session_state.generated_files:
                     spec_name = file_info['spec_name']
 
-                    # JSON
-                    if file_info.get('fmt_json') and Path(file_info['fmt_json']).exists():
-                        zf.write(file_info['fmt_json'], f"{spec_name}/{Path(file_info['fmt_json']).name}")
+                    for key in ['fmt_json', 'excel', 'inquiry', 'summary']:
+                        path = file_info.get(key)
+                        if path and Path(path).exists():
+                            zf.write(path, f"{spec_name}/{Path(path).name}")
 
-                    # PDF
                     for pdf_path in file_info.get('pdfs', []):
                         if Path(pdf_path).exists():
                             zf.write(pdf_path, f"{spec_name}/{Path(pdf_path).name}")
 
-                    # Excel
-                    if file_info.get('excel') and Path(file_info['excel']).exists():
-                        zf.write(file_info['excel'], f"{spec_name}/{Path(file_info['excel']).name}")
-
-                    # 質疑ドラフト
-                    if file_info.get('inquiry') and Path(file_info['inquiry']).exists():
-                        zf.write(file_info['inquiry'], f"{spec_name}/{Path(file_info['inquiry']).name}")
-
-                    # 法令根拠リスト
-                    if file_info.get('legal') and Path(file_info['legal']).exists():
-                        zf.write(file_info['legal'], f"{spec_name}/{Path(file_info['legal']).name}")
-
-                    # Summary
-                    if file_info.get('summary') and Path(file_info['summary']).exists():
-                        zf.write(file_info['summary'], f"{spec_name}/{Path(file_info['summary']).name}")
-
             zip_buffer.seek(0)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-            total_file_count = sum(
-                1 + len(f.get('pdfs', [])) + (1 if f.get('excel') else 0) +
-                (1 if f.get('inquiry') else 0) + (1 if f.get('legal') else 0) +
-                (1 if f.get('summary') else 0)
-                for f in all_files
-            )
-
-            col1, col2, col3 = st.columns([1, 1, 1])
+            col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
                 st.download_button(
-                    f"全ファイルをZIPでダウンロード（{total_file_count}件）",
+                    "📦 すべてダウンロード（ZIP）",
                     data=zip_buffer,
                     file_name=f"見積書_{timestamp}.zip",
                     mime="application/zip",
@@ -736,16 +678,14 @@ def main():
                     use_container_width=True
                 )
 
-            st.divider()
+            st.markdown("---")
 
             # 個別ダウンロード
-            st.markdown("**個別ダウンロード**")
+            st.markdown("### 個別ダウンロード")
 
-            for file_info in all_files:
+            for file_info in st.session_state.generated_files:
                 st.markdown(f"**{file_info['spec_name']}**")
 
-                # 見積関連（1行目）
-                st.caption("📋 見積書")
                 col1, col2, col3 = st.columns(3)
 
                 with col1:
@@ -753,7 +693,7 @@ def main():
                         if Path(pdf_path).exists():
                             with open(pdf_path, 'rb') as f:
                                 st.download_button(
-                                    "📄 PDF見積書",
+                                    "📄 見積書PDF",
                                     data=f,
                                     file_name=Path(pdf_path).name,
                                     mime="application/pdf",
@@ -762,195 +702,97 @@ def main():
                                 )
 
                 with col2:
-                    if file_info.get('excel') and Path(file_info['excel']).exists():
-                        with open(file_info['excel'], 'rb') as f:
+                    excel_path = file_info.get('excel')
+                    if excel_path and Path(excel_path).exists():
+                        with open(excel_path, 'rb') as f:
                             st.download_button(
-                                "📊 Excel見積書",
+                                "📊 Excel",
                                 data=f,
-                                file_name=Path(file_info['excel']).name,
+                                file_name=Path(excel_path).name,
                                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                 use_container_width=True,
                                 key=f"excel_{file_info['spec_name']}"
                             )
 
                 with col3:
-                    if file_info.get('fmt_json') and Path(file_info['fmt_json']).exists():
-                        with open(file_info['fmt_json'], 'rb') as f:
-                            st.download_button(
-                                "💾 JSONデータ",
-                                data=f,
-                                file_name=Path(file_info['fmt_json']).name,
-                                mime="application/json",
-                                use_container_width=True,
-                                key=f"json_{file_info['spec_name']}"
-                            )
-
-                # 補足資料（2行目）
-                st.caption("📑 補足資料")
-                col4, col5, col6 = st.columns(3)
-
-                with col4:
-                    if file_info.get('inquiry') and Path(file_info['inquiry']).exists():
-                        with open(file_info['inquiry'], 'rb') as f:
+                    inquiry_path = file_info.get('inquiry')
+                    if inquiry_path and Path(inquiry_path).exists():
+                        with open(inquiry_path, 'rb') as f:
                             st.download_button(
                                 "❓ 質疑ドラフト",
                                 data=f,
-                                file_name=Path(file_info['inquiry']).name,
+                                file_name=Path(inquiry_path).name,
                                 mime="text/plain",
                                 use_container_width=True,
                                 key=f"inquiry_{file_info['spec_name']}"
                             )
 
-                with col5:
-                    if file_info.get('legal') and Path(file_info['legal']).exists():
-                        with open(file_info['legal'], 'rb') as f:
-                            st.download_button(
-                                "⚖️ 法令根拠リスト",
-                                data=f,
-                                file_name=Path(file_info['legal']).name,
-                                mime="text/plain",
-                                use_container_width=True,
-                                key=f"legal_{file_info['spec_name']}"
-                            )
-
-                with col6:
-                    if file_info.get('summary') and Path(file_info['summary']).exists():
-                        with open(file_info['summary'], 'rb') as f:
-                            st.download_button(
-                                "📝 サマリー",
-                                data=f,
-                                file_name=Path(file_info['summary']).name,
-                                mime="text/plain",
-                                use_container_width=True,
-                                key=f"summary_{file_info['spec_name']}"
-                            )
-
-                if file_info != all_files[-1]:
-                    st.divider()
+                st.markdown("")
 
         else:
             st.info("見積書を生成すると、ここからダウンロードできます。")
 
 
-def generate_estimate_unified(
-    file_data_list: list,  # [(filename, bytes), ...]
-    include_legal: bool,
-    legal_standards: list,
-    status_card
-):
-    """統合見積生成"""
+def generate_estimate(file_data_list: list, status_card):
+    """見積生成処理"""
 
     st.session_state.generated_files = []
     start_time = datetime.now()
 
-    # コスト追跡
-    session_id = start_session("見積作成（AI統合生成）")
+    session_id = start_session("見積作成")
 
-    def show_status(step: int, total: int, title: str, detail: str, status: str = "processing"):
-        """ステータスカードを更新表示"""
+    def show_status(step: int, total: int, message: str, status: str = "processing"):
+        """シンプルなステータス表示"""
         if status == "processing":
-            border_color = "#2563eb"
-            bg_color = "#f8fafc"
             icon = "⏳"
-            status_text = "処理中"
+            color = "#3b82f6"
         elif status == "success":
-            border_color = "#16a34a"
-            bg_color = "#f0fdf4"
             icon = "✓"
-            status_text = "完了"
-        elif status == "error":
-            border_color = "#dc2626"
-            bg_color = "#fef2f2"
-            icon = "✕"
-            status_text = "エラー"
+            color = "#22c55e"
         else:
-            border_color = "#6b7280"
-            bg_color = "#f9fafb"
-            icon = "○"
-            status_text = ""
+            icon = "✕"
+            color = "#ef4444"
 
-        # プログレスバーの幅を計算
-        progress_percent = (step / total) * 100
-
+        progress = (step / total) * 100
         status_card.markdown(f"""
-        <div style="border: 1px solid #e5e7eb; border-left: 4px solid {border_color};
-                    background: {bg_color}; padding: 16px 20px; border-radius: 4px; margin: 8px 0;
-                    width: 100%; max-width: 100%; box-sizing: border-box;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <span style="font-size: 15px; font-weight: 600; color: #1f2937;">{icon} {title}</span>
-                <span style="font-size: 13px; color: #6b7280;">ステップ {step}/{total}</span>
+        <div style="border: 1px solid #e5e7eb; border-left: 4px solid {color};
+                    padding: 20px; border-radius: 8px; margin: 16px 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span style="font-size: 16px; font-weight: 600;">{icon} {message}</span>
+                <span style="color: #6b7280;">ステップ {step}/{total}</span>
             </div>
-            <div style="font-size: 13px; color: #4b5563; margin-bottom: 12px;">{detail}</div>
-            <div style="background: #e5e7eb; border-radius: 2px; height: 4px; overflow: hidden;">
-                <div style="background: {border_color}; height: 100%; width: {progress_percent}%; transition: width 0.3s;"></div>
+            <div style="background: #e5e7eb; border-radius: 4px; height: 6px;">
+                <div style="background: {color}; height: 100%; width: {progress}%; border-radius: 4px;"></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     try:
-        total_files = len(file_data_list)
-
         for file_idx, (file_name, file_bytes) in enumerate(file_data_list):
-            file_start_time = datetime.now()
-
-            # 一時ファイル保存
+            # 一時ファイル作成
             with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
                 tmp_file.write(file_bytes)
                 tmp_path = tmp_file.name
 
-            # ===== ステップ1: 仕様書解析 =====
-            show_status(1, 6, "仕様書を解析中", f"ファイル: {file_name}", "processing")
-
+            # ステップ1: 仕様書解析
+            show_status(1, 4, "仕様書を解析しています...", "processing")
             ai_generator = AIEstimateGenerator(kb_path="kb/price_kb.json")
 
-            # ===== ステップ2: 建物情報抽出 =====
-            show_status(2, 6, "建物情報を抽出中", "面積・階数・部屋数を特定しています", "processing")
-            time.sleep(0.3)
-
-            # ===== ステップ3: 設備項目生成 =====
-            show_status(3, 6, "設備項目を生成中", "AIが見積項目を分析・生成しています", "processing")
-
-            fmt_doc = ai_generator.generate_estimate_unified(
-                tmp_path,
-                legal_standards=legal_standards if include_legal else []
-            )
-
+            # ステップ2: 見積生成
+            show_status(2, 4, "見積項目を生成しています...", "processing")
+            fmt_doc = ai_generator.generate_estimate_unified(tmp_path, legal_standards=[])
             items = fmt_doc.estimates if hasattr(fmt_doc, 'estimates') else fmt_doc.estimate_items
-
-            # ===== ステップ4: 単価マッチング =====
-            show_status(4, 6, "単価をマッチング中", f"{len(items)}項目の単価を検索しています", "processing")
 
             # メール情報統合
             if st.session_state.email_info:
-                email_info = st.session_state.email_info
+                email = st.session_state.email_info
+                if email.client_company:
+                    fmt_doc.project_info.client_name = email.client_company
+                if email.construction_start and email.construction_end:
+                    fmt_doc.project_info.contract_period = f"工期: {email.construction_start} ～ {email.construction_end}"
 
-                if email_info.client_company:
-                    fmt_doc.project_info.client_name = f"{email_info.client_company}"
-                    if email_info.client_branch:
-                        fmt_doc.project_info.client_name += f" {email_info.client_branch}"
-
-                if email_info.construction_start and email_info.construction_end:
-                    fmt_doc.project_info.contract_period = f"工期: {email_info.construction_start} ～ {email_info.construction_end}"
-
-                if email_info.rental_start and email_info.rental_end:
-                    rental_info = f"レンタル期間: {email_info.rental_start} ～ {email_info.rental_end}"
-                    if email_info.rental_months:
-                        rental_info += f" ({email_info.rental_months}ヶ月)"
-                    if fmt_doc.project_info.contract_period:
-                        fmt_doc.project_info.contract_period += f" / {rental_info}"
-                    else:
-                        fmt_doc.project_info.contract_period = rental_info
-
-                if email_info.quote_deadline:
-                    if fmt_doc.project_info.remarks:
-                        fmt_doc.project_info.remarks += f"\n見積提出期限: {email_info.quote_deadline}"
-                    else:
-                        fmt_doc.project_info.remarks = f"見積提出期限: {email_info.quote_deadline}"
-
-            with_price = sum(1 for item in items if item.unit_price and item.unit_price > 0)
-
-            # ===== ステップ5: ファイル生成 =====
-            show_status(5, 6, "ファイルを生成中", "PDF・Excel・質疑ドラフトを作成しています", "processing")
+            # ステップ3: ファイル生成
+            show_status(3, 4, "ファイルを作成しています...", "processing")
 
             output_dir = Path("output")
             output_dir.mkdir(exist_ok=True)
@@ -982,119 +824,49 @@ def generate_estimate_unified(
             with open(inquiry_path, 'w', encoding='utf-8') as f:
                 f.write(inquiry_draft)
 
-            # ===== ステップ6: 法令・サマリー生成 =====
-            show_status(6, 6, "最終処理中", "法令根拠リスト・サマリーを生成しています", "processing")
-
-            # 法令根拠リスト生成
-            legal_refs = fmt_doc.metadata.get('legal_references', []) or []
-            legal_path = None
-            if legal_refs or include_legal:
-                legal_path = output_dir / f"法令根拠リスト_{spec_name}_{timestamp}.txt"
-                with open(legal_path, 'w', encoding='utf-8') as f:
-                    f.write("=" * 80 + "\n")
-                    f.write("法令根拠リスト\n")
-                    f.write("=" * 80 + "\n\n")
-                    f.write(f"工事名: {fmt_doc.project_info.project_name}\n")
-                    f.write(f"生成日時: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-                    f.write("-" * 80 + "\n")
-                    if legal_refs:
-                        for i, ref in enumerate(legal_refs, 1):
-                            if isinstance(ref, dict):
-                                f.write(f"\n【{i}】{ref.get('law_name', '不明')}\n")
-                                f.write(f"  条項: {ref.get('article', '-')}\n")
-                                f.write(f"  内容: {ref.get('description', '-')}\n")
-                            else:
-                                f.write(f"\n【{i}】{ref}\n")
-                    else:
-                        f.write("\n適用法令（参照設定）:\n")
-                        for std in legal_standards:
-                            f.write(f"  ・{std}\n")
-                    f.write("\n" + "-" * 80 + "\n")
-                    f.write("※ 本リストはAIにより自動生成されました。\n")
-
-            # サマリー生成
+            # サマリー
             total_items = len(items)
-            # Level 0（工事区分の親項目）の合計のみを使用（PDFと一致させる）
             total_amount = sum(item.amount or 0 for item in items if item.level == 0)
-
             summary_path = output_dir / f"サマリー_{spec_name}_{timestamp}.txt"
             with open(summary_path, 'w', encoding='utf-8') as f:
-                f.write(f"見積生成サマリー\n")
-                f.write(f"=" * 50 + "\n\n")
+                f.write(f"見積サマリー\n{'='*40}\n\n")
                 f.write(f"仕様書: {file_name}\n")
                 f.write(f"生成日時: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
                 f.write(f"生成項目数: {total_items}件\n")
-                f.write(f"単価付与数: {with_price}件\n")
-                f.write(f"マッチング率: {with_price/total_items*100:.1f}%\n" if total_items > 0 else "")
                 f.write(f"推定総額: ¥{total_amount:,.0f}\n")
 
             # 結果保存
             st.session_state.generated_files.append({
                 'spec_name': spec_name,
-                'fmt_json': fmt_json_path,
-                'pdfs': [pdf_path] if pdf_path else [],
-                'excel': excel_path,
-                'inquiry': inquiry_path,
-                'legal': legal_path,
-                'summary': summary_path,
+                'fmt_json': str(fmt_json_path),
+                'pdfs': [str(pdf_path)] if pdf_path else [],
+                'excel': str(excel_path),
+                'inquiry': str(inquiry_path),
+                'summary': str(summary_path),
             })
 
             st.session_state.fmt_doc = fmt_doc
 
-            # 算出根拠・整合性チェックレポートを生成
-            try:
-                verifier = EstimateVerifier()
-                ai_items_dict = [
-                    {
-                        "name": item.name,
-                        "specification": item.specification,
-                        "quantity": item.quantity,
-                        "unit": item.unit,
-                        "unit_price": item.unit_price,
-                        "amount": item.amount,
-                    }
-                    for item in items
-                ]
-                # 仕様書テキストを取得（あれば）
-                spec_text = fmt_doc.raw_text or ""
-                verification_report = verifier.generate_verification_report(
-                    ai_items=ai_items_dict,
-                    human_items=None,  # 参照見積との比較は後で実装可能
-                    spec_text=spec_text
-                )
-                st.session_state.verification_report = verification_report
-            except Exception as e:
-                logger.warning(f"Verification report generation failed: {e}")
-                st.session_state.verification_report = None
-
-        # ===== 完了表示 =====
+        # ステップ4: 完了
         elapsed = (datetime.now() - start_time).total_seconds()
         st.session_state.processing_time = elapsed
 
-        # 完了ステータス
         total_amount = sum(item.amount or 0 for item in items if item.level == 0)
-        show_status(6, 6, "生成完了", f"推定総額: ¥{total_amount:,.0f}　処理時間: {elapsed:.1f}秒", "success")
+        show_status(4, 4, f"完了しました（推定総額: ¥{total_amount:,.0f}）", "success")
 
-        # コスト追跡終了
-        session_cost = end_session()
-
-        # 完了通知
+        end_session()
         st.toast("見積書の生成が完了しました", icon="✅")
-
-        # 完了フラグを設定
         st.session_state.generation_completed = True
 
     except Exception as e:
         logger.error(f"Generation error: {e}")
-        show_status(0, 6, "エラー", str(e), "error")
+        show_status(0, 4, f"エラー: {str(e)[:50]}", "error")
         import traceback
         traceback.print_exc()
 
     finally:
         st.session_state.is_processing = False
         st.session_state.pending_files = None
-        st.session_state.pending_include_legal = None
-        st.session_state.pending_legal_standards = None
         st.rerun()
 
 

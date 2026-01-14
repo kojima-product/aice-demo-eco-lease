@@ -7,6 +7,14 @@
 
 | ID | Time | T | Title | Read |
 |----|------|---|-------|------|
+| #8793 | 11:32 PM | 🟣 | Added Detailed Calculation Basis Display in Results Tab | ~511 |
+| #8792 | " | 🔵 | Existing Tab 2 Results Display with Custom HTML Gradient Card | ~499 |
+| #8761 | 10:36 PM | 🔵 | Current pages/1.py Structure Before UI Simplification | ~523 |
+| #8756 | 10:34 PM | 🔵 | Reference Estimate Comparison Feature Status | ~497 |
+| #8719 | 9:36 PM | 🔵 | Root cause of discipline mismatch - hardcoded generation ignores specification content | ~749 |
+| #8718 | 9:35 PM | 🔵 | Examined Download Tab and Generation Function Structure | ~816 |
+| #8715 | " | 🔵 | Current pages/1.py Structure Before Redesign | ~495 |
+| #8703 | 9:25 PM | 🟣 | KB Quality Improvement and Matching Accuracy Enhancement Committed | ~530 |
 | #8693 | 9:23 PM | 🔵 | Application launch confirmation - complex UI operational | ~449 |
 | #8689 | 9:18 PM | ✅ | Reverted pages/1.py to Original State | ~217 |
 | #8685 | 9:06 PM | 🔄 | UI Consolidation - 5 Tabs Reduced to 3 with Simplified Processing | ~663 |
@@ -17,4 +25,11 @@
 | #8663 | 8:45 PM | 🔵 | Comprehensive visualization capabilities audit for client demonstrations | ~1193 |
 | #8662 | " | 🟣 | Streamlit web UI with comprehensive estimate generation workflow and visualization | ~1100 |
 | #8621 | 3:17 PM | 🔵 | AI見積システムのUI実装を発見 | ~265 |
+
+### Jan 15, 2026
+
+| ID | Time | T | Title | Read |
+|----|------|---|-------|------|
+| #8807 | 12:13 AM | 🔴 | KeyError 'url_pathname' in st.page_link for removed navigation pages | ~325 |
+| #8802 | 12:04 AM | 🔵 | No st.sidebar References Found in pages/1.py | ~306 |
 </claude-mem-context>

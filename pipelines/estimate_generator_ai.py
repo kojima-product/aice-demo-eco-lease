@@ -48,8 +48,14 @@ from pipelines.schemas import (
     EstimateItem, DisciplineType, FMTDocument, ProjectInfo, FacilityType,
     CostType
 )
+from pipelines.building_type_templates import (
+    detect_building_type, get_template_items, BUILDING_TEMPLATES
+)
 from pipelines.cost_tracker import record_cost
 from pipelines.estimation_rules import EstimationChecker, get_checklist_summary
+from pipelines.pattern_learner import PatternLearner
+from pipelines.item_categorizer import add_category_hierarchy
+from pipelines.similar_project_search import SimilarProjectSearch
 
 
 def repair_json_array(json_str: str) -> str:
@@ -678,7 +684,7 @@ class AIEstimateGenerator:
     def __init__(self, kb_path: str = "kb/price_kb.json", use_vector_search: bool = True, use_cache: bool = True):
         load_dotenv()
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.model_name = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
+        self.model_name = os.getenv("CLAUDE_MODEL", "claude-opus-4-5-20251101")
         self.kb_path = kb_path
         self.price_kb = self._load_price_kb()
 
@@ -760,6 +766,301 @@ class AIEstimateGenerator:
         else:
             logger.warning("Vector search model not loaded - using fallback")
             self.vector_search = None
+
+    def generate_items_from_template(
+        self,
+        building_info: Dict[str, Any],
+        discipline: DisciplineType
+    ) -> List[EstimateItem]:
+        """
+        建物タイプテンプレートから詳細な見積項目を生成
+
+        仕様書から判定した建物タイプに基づき、テンプレートから
+        具体的な項目（ケーブル種類・サイズ別など）を生成します。
+        仕様書から抽出した数量があれば、テンプレートの推定値を上書きします。
+
+        Args:
+            building_info: 建物情報（spec_text_excerpt, building_info等）
+            discipline: 工事区分
+
+        Returns:
+            EstimateItemのリスト
+        """
+        # 仕様書テキストから建物タイプを判定
+        spec_text = building_info.get("spec_text_excerpt", "")
+        building_type = detect_building_type(spec_text)
+        logger.info(f"Detected building type: {building_type}")
+
+        # 建物情報から面積・階数を取得
+        bldg = building_info.get("building_info", {})
+        floor_area = bldg.get("total_floor_area") or 100  # Default 100㎡
+        num_floors = bldg.get("num_floors") or 1
+
+        # floor_area が 0 や負の場合のフォールバック
+        if floor_area <= 0:
+            floor_area = 100
+        if num_floors <= 0:
+            num_floors = 1
+
+        # 仕様書から抽出した数量を取得
+        extracted_quantities = building_info.get("extracted_quantities", {})
+        facility_reqs = building_info.get("facility_requirements", {})
+
+        logger.info(f"Using floor_area={floor_area}㎡, num_floors={num_floors}")
+
+        # Discipline を template key にマッピング
+        discipline_map = {
+            DisciplineType.ELECTRICAL: "electrical",
+            DisciplineType.PLUMBING: "plumbing",
+            DisciplineType.MECHANICAL: "mechanical",
+            DisciplineType.HVAC: "mechanical",  # HVAC は mechanical テンプレートを使用
+        }
+
+        template_key = discipline_map.get(discipline)
+        if not template_key:
+            logger.warning(f"No template for discipline: {discipline}")
+            return []
+
+        # テンプレートから項目を取得
+        template_items = get_template_items(
+            building_type,
+            template_key,
+            floor_area,
+            num_floors
+        )
+
+        logger.info(f"Generated {len(template_items)} items from template for {discipline.value}")
+
+        # 仕様書から抽出した数量でオーバーライドするためのマッピング
+        quantity_overrides = self._build_quantity_override_map(
+            extracted_quantities, facility_reqs, template_key
+        )
+
+        # EstimateItem に変換
+        estimate_items = []
+        for idx, item in enumerate(template_items):
+            item_no = f"T{idx+1:03d}"  # テンプレート項目番号
+            item_name = item["name"]
+            quantity = item.get("quantity", 1)
+            qty_basis = item.get("qty_basis", "")
+            confidence = 0.85  # テンプレート由来は信頼度 0.85
+
+            # 仕様書から抽出した数量で上書き
+            override_info = self._find_quantity_override(item_name, quantity_overrides)
+            if override_info:
+                quantity = override_info["count"]
+                qty_basis = f"仕様書記載: {override_info.get('source', '仕様書より')}"
+                confidence = 0.95  # 仕様書から抽出した場合は高い信頼度
+                logger.info(f"Quantity override applied: {item_name} -> {quantity} ({qty_basis})")
+
+            estimate_item = EstimateItem(
+                item_no=item_no,
+                name=item_name,
+                specification=item.get("specification", ""),
+                quantity=quantity,
+                unit=item.get("unit", "式"),
+                level=1,  # 親項目(level=0)の直下として level 1
+                discipline=discipline,
+                confidence=confidence,
+                source_type="template" if not override_info else "spec_extracted",
+                source_reference=f"TEMPLATE:{building_type}_{template_key}",
+                estimation_basis=qty_basis,
+            )
+            estimate_items.append(estimate_item)
+
+        return estimate_items
+
+    def _build_quantity_override_map(
+        self,
+        extracted_quantities: Dict[str, Any],
+        facility_reqs: Dict[str, Any],
+        template_key: str
+    ) -> Dict[str, Dict[str, Any]]:
+        """
+        仕様書から抽出した数量をテンプレート項目名にマッピング
+
+        Args:
+            extracted_quantities: LLMで抽出した数量情報
+            facility_reqs: facility_requirements から抽出した数量
+            template_key: electrical, plumbing, mechanical
+
+        Returns:
+            項目名 -> {count: 数値, source: 出典} のマッピング
+        """
+        override_map = {}
+
+        # electrical の場合
+        if template_key == "electrical":
+            elec = extracted_quantities.get("electrical", {})
+            # コンセント
+            if elec.get("outlets", {}).get("count"):
+                override_map["コンセント"] = elec["outlets"]
+            elif facility_reqs.get("electrical", {}).get("outlet_count"):
+                override_map["コンセント"] = {"count": facility_reqs["electrical"]["outlet_count"], "source": "諸元表より"}
+            # スイッチ
+            if elec.get("switches", {}).get("count"):
+                override_map["スイッチ"] = elec["switches"]
+            elif facility_reqs.get("electrical", {}).get("switch_count"):
+                override_map["スイッチ"] = {"count": facility_reqs["electrical"]["switch_count"], "source": "諸元表より"}
+            # 照明器具
+            if elec.get("lighting_fixtures", {}).get("count"):
+                override_map["照明器具"] = elec["lighting_fixtures"]
+                override_map["LED一体型"] = elec["lighting_fixtures"]
+            elif facility_reqs.get("electrical", {}).get("lighting_count"):
+                override_map["照明器具"] = {"count": facility_reqs["electrical"]["lighting_count"], "source": "諸元表より"}
+            # 分電盤
+            if elec.get("distribution_boards", {}).get("count"):
+                override_map["分電盤"] = elec["distribution_boards"]
+                override_map["電灯盤"] = elec["distribution_boards"]
+
+        # plumbing の場合
+        elif template_key == "plumbing":
+            plumb = extracted_quantities.get("plumbing", {})
+            # 便器
+            if plumb.get("toilets", {}).get("count"):
+                override_map["便器"] = plumb["toilets"]
+                override_map["洋風便器"] = plumb["toilets"]
+            elif facility_reqs.get("plumbing", {}).get("toilet_count"):
+                override_map["便器"] = {"count": facility_reqs["plumbing"]["toilet_count"], "source": "諸元表より"}
+            # 洗面器・シンク
+            if plumb.get("sinks", {}).get("count"):
+                override_map["流し台"] = plumb["sinks"]
+                override_map["洗面器"] = plumb["sinks"]
+            elif facility_reqs.get("plumbing", {}).get("sink_count"):
+                override_map["流し台"] = {"count": facility_reqs["plumbing"]["sink_count"], "source": "諸元表より"}
+
+        # mechanical の場合
+        elif template_key == "mechanical":
+            mech = extracted_quantities.get("mechanical", {})
+            elec = extracted_quantities.get("electrical", {})
+            # エアコン
+            if mech.get("air_conditioners", {}).get("count"):
+                override_map["エアコン"] = mech["air_conditioners"]
+                override_map["ルームエアコン"] = mech["air_conditioners"]
+            elif elec.get("air_conditioners", {}).get("count"):
+                override_map["エアコン"] = elec["air_conditioners"]
+            elif facility_reqs.get("mechanical", {}).get("aircon_count"):
+                override_map["エアコン"] = {"count": facility_reqs["mechanical"]["aircon_count"], "source": "諸元表より"}
+            # 換気扇
+            if mech.get("exhaust_fans", {}).get("count"):
+                override_map["換気扇"] = mech["exhaust_fans"]
+
+        # raw_mentions からも抽出（汎用マッチング）
+        for mention in extracted_quantities.get("raw_mentions", []):
+            item_name = mention.get("item", "")
+            if item_name and mention.get("quantity"):
+                override_map[item_name] = {
+                    "count": mention["quantity"],
+                    "source": mention.get("source", "仕様書より")
+                }
+
+        return override_map
+
+    def _find_quantity_override(
+        self,
+        item_name: str,
+        override_map: Dict[str, Dict[str, Any]]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        項目名に対応する数量オーバーライドを検索
+
+        Args:
+            item_name: テンプレートの項目名
+            override_map: オーバーライドマッピング
+
+        Returns:
+            マッチした場合は {count, source}、なければ None
+        """
+        # 完全一致
+        if item_name in override_map:
+            return override_map[item_name]
+
+        # 部分一致（項目名がキーを含む、またはキーが項目名を含む）
+        for key, value in override_map.items():
+            if key in item_name or item_name in key:
+                return value
+
+        return None
+
+    def supplement_with_learned_patterns(
+        self,
+        template_items: List[EstimateItem],
+        building_type: str,
+        discipline: DisciplineType
+    ) -> List[EstimateItem]:
+        """
+        テンプレート項目を人間見積のパターンで補完
+
+        人間見積に存在するがテンプレートにない項目を追加します。
+
+        Args:
+            template_items: テンプレートから生成された項目
+            building_type: 建物タイプ
+            discipline: 工事区分
+
+        Returns:
+            補完された項目リスト
+        """
+        try:
+            learner = PatternLearner()
+            learned_template = learner.generate_improved_template(building_type)
+        except Exception as e:
+            logger.warning(f"Pattern learning failed: {e}")
+            return template_items
+
+        # discipline を英語キーにマッピング
+        disc_key = {
+            DisciplineType.ELECTRICAL: "electrical",
+            DisciplineType.PLUMBING: "plumbing",
+            DisciplineType.MECHANICAL: "mechanical",
+            DisciplineType.GAS: "gas"
+        }.get(discipline)
+
+        if not disc_key or disc_key not in learned_template:
+            return template_items
+
+        learned_items = learned_template[disc_key]
+        template_names = {item.name for item in template_items}
+
+        # 新規項目を追加
+        supplemented_items = list(template_items)
+        added_count = 0
+
+        for learned in learned_items:
+            learned_name = learned.get("name", "")
+            if not learned_name or learned_name in template_names:
+                continue
+
+            # 部分一致もチェック
+            is_similar = any(
+                learned_name in t_name or t_name in learned_name
+                for t_name in template_names
+            )
+            if is_similar:
+                continue
+
+            # 新規項目として追加
+            new_item = EstimateItem(
+                item_no=f"L{len(supplemented_items)+1:03d}",
+                name=learned_name,
+                specification=learned.get("spec", ""),
+                quantity=learned.get("learned_quantity", 1),
+                unit=learned.get("unit", "式"),
+                level=1,
+                discipline=discipline,
+                confidence=0.80,  # 学習データからの項目
+                source_type="learned_pattern",
+                source_reference=f"LEARNED:{building_type}_{disc_key}",
+                estimation_basis="人間見積パターンより追加",
+            )
+            supplemented_items.append(new_item)
+            added_count += 1
+            template_names.add(learned_name)
+
+        if added_count > 0:
+            logger.info(f"Added {added_count} items from learned patterns for {discipline.value}")
+
+        return supplemented_items
 
     def _vector_search_match(self, item_name: str, item_spec: str, discipline: str, target_unit: str = None) -> Optional[Dict]:
         """
@@ -1110,7 +1411,7 @@ class AIEstimateGenerator:
         return response
 
     def extract_text_from_pdf(self, pdf_path: str, max_pages: int = None) -> str:
-        """PDFからテキストを抽出（ページ番号マーカー付き）"""
+        """PDFからテキストを抽出（ページ番号マーカー付き）。スキャンPDFの場合はOCRを使用"""
         logger.info(f"Extracting text from PDF: {pdf_path}")
 
         try:
@@ -1125,9 +1426,87 @@ class AIEstimateGenerator:
                     text += page_text + "\n"
 
             logger.info(f"Extracted {len(text)} characters from {total_pages} pages")
+
+            # スキャンPDF検出: ページあたり100文字未満の場合はOCRを試行
+            chars_per_page = len(text) / max(total_pages, 1)
+            if chars_per_page < 100 and HAS_PYMUPDF:
+                logger.warning(f"Low text content ({chars_per_page:.0f} chars/page). Trying OCR extraction...")
+                ocr_text = self._extract_text_with_ocr(pdf_path, max_pages or 10)
+                if len(ocr_text) > len(text):
+                    logger.info(f"OCR extracted {len(ocr_text)} characters (better than PyPDF2)")
+                    return ocr_text
+
             return text
         except Exception as e:
             logger.error(f"Error extracting text from PDF: {e}")
+            return ""
+
+    def _extract_text_with_ocr(self, pdf_path: str, max_pages: int = 10) -> str:
+        """Vision APIを使用してスキャンPDFからテキストを抽出"""
+        logger.info(f"Extracting text with OCR (Vision API) from first {max_pages} pages")
+
+        try:
+            import fitz  # PyMuPDF
+            doc = fitz.open(pdf_path)
+            all_text = ""
+
+            pages_to_process = min(len(doc), max_pages)
+            for page_num in range(pages_to_process):
+                page = doc[page_num]
+
+                # ページを画像に変換
+                mat = fitz.Matrix(150/72, 150/72)  # 150 DPI
+                pix = page.get_pixmap(matrix=mat)
+                img_data = pix.tobytes("png")
+
+                # Base64エンコード
+                import base64
+                img_base64 = base64.b64encode(img_data).decode('utf-8')
+
+                # Vision APIでテキスト抽出
+                response = self.client.messages.create(
+                    model=self.model_name,
+                    max_tokens=8000,
+                    messages=[{
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": img_base64
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "text": "この画像のテキストを全て読み取ってください。表形式のデータも含めて、できるだけ正確に文字起こししてください。装飾や書式は不要です。"
+                            }
+                        ]
+                    }]
+                )
+
+                page_text = response.content[0].text
+                all_text += f"\n[PAGE {page_num + 1}/{pages_to_process}]\n"
+                all_text += page_text + "\n"
+
+                # コスト記録
+                record_cost(
+                    operation=f"OCRテキスト抽出(page {page_num + 1})",
+                    model_name=self.model_name,
+                    input_tokens=response.usage.input_tokens,
+                    output_tokens=response.usage.output_tokens,
+                    metadata={"source": "ocr_text_extraction", "page": page_num + 1}
+                )
+
+                logger.info(f"OCR page {page_num + 1}: {len(page_text)} chars")
+
+            doc.close()
+            logger.info(f"OCR extraction complete: {len(all_text)} characters from {pages_to_process} pages")
+            return all_text
+
+        except Exception as e:
+            logger.error(f"OCR extraction failed: {e}")
             return ""
 
     def extract_text_from_pages(self, pdf_path: str, start_page: int, end_page: int) -> str:
@@ -1697,6 +2076,173 @@ class AIEstimateGenerator:
         logger.info(f"Extracted building info: {building_info.get('project_name', 'N/A')}")
         return building_info
 
+    def extract_equipment_quantities(self, spec_text: str) -> Dict[str, Any]:
+        """
+        仕様書から具体的な設備数量を抽出
+
+        仕様書に記載された「コンセント 15箇所」「エアコン 5台」などの
+        具体的な数量情報を抽出し、テンプレートの数量を上書きするために使用します。
+        """
+        logger.info("Extracting specific equipment quantities from specification")
+
+        prompt = f"""あなたは建築設備の専門家です。以下の仕様書から、具体的な設備数量の記載を抽出してください。
+
+仕様書:
+{spec_text[:40000]}
+
+【抽出する情報】
+仕様書に明記されている設備の数量のみを抽出してください。推測は不要です。
+記載がない項目は含めないでください。
+
+JSON形式で回答:
+```json
+{{
+    "electrical": {{
+        "outlets": {{"count": 数値, "source": "仕様書の記載箇所"}},
+        "switches": {{"count": 数値, "source": "記載箇所"}},
+        "lighting_fixtures": {{"count": 数値, "source": "記載箇所"}},
+        "distribution_boards": {{"count": 数値, "source": "記載箇所"}},
+        "air_conditioners": {{"count": 数値, "source": "記載箇所"}}
+    }},
+    "plumbing": {{
+        "toilets": {{"count": 数値, "source": "記載箇所"}},
+        "sinks": {{"count": 数値, "source": "記載箇所"}},
+        "water_heaters": {{"count": 数値, "source": "記載箇所"}}
+    }},
+    "mechanical": {{
+        "exhaust_fans": {{"count": 数値, "source": "記載箇所"}},
+        "air_conditioners": {{"count": 数値, "source": "記載箇所"}}
+    }},
+    "raw_mentions": [
+        {{"item": "項目名", "quantity": 数値, "unit": "単位", "source": "原文引用"}}
+    ]
+}}
+```
+
+注意:
+- 仕様書に明記されている数量のみを抽出
+- 推測や計算は行わない
+- 記載がない項目は省略
+"""
+
+        try:
+            response = self.client.messages.create(
+                model=self.model_name,
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}]
+            )
+
+            response_text = response.content[0].text
+            record_cost("設備数量抽出", self.model_name, response.usage.input_tokens, response.usage.output_tokens)
+
+            # JSON抽出
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+
+            if json_start == -1 or json_end <= json_start:
+                logger.warning("Could not find JSON in equipment quantities response")
+                return {}
+
+            json_str = response_text[json_start:json_end]
+            json_str = re.sub(r'//.*', '', json_str)
+
+            quantities = json.loads(json_str)
+            logger.info(f"Extracted equipment quantities: {len(quantities.get('raw_mentions', []))} specific items found")
+
+            return quantities
+
+        except Exception as e:
+            logger.error(f"Error extracting equipment quantities: {e}")
+            return {}
+
+    def detect_required_disciplines(
+        self,
+        spec_text: str,
+        building_info: Dict[str, Any]
+    ) -> List[DisciplineType]:
+        """
+        仕様書から必要な工事区分を自動検出
+
+        仕様書のテキストと建物情報から、実際に必要な工事区分のみを検出します。
+        これにより、不要な工事区分の見積生成を防止します。
+
+        Args:
+            spec_text: 仕様書のテキスト
+            building_info: 抽出された建物情報
+
+        Returns:
+            検出された工事区分のリスト
+        """
+        logger.info("Detecting required disciplines from specification")
+
+        required = []
+
+        # キーワードベース検出（優先度順）
+        discipline_keywords = {
+            DisciplineType.ELECTRICAL: [
+                "電気設備", "電気工事", "照明", "コンセント", "分電盤",
+                "配線", "幹線", "受変電", "キュービクル", "弱電"
+            ],
+            DisciplineType.PLUMBING: [
+                "給排水", "給水", "排水", "衛生設備", "衛生工事",
+                "水栓", "給湯", "温水器", "流し台", "配管工事",
+                "HIVP", "VU管", "量水器"
+            ],
+            DisciplineType.GAS: [
+                "ガス設備", "ガス工事", "都市ガス", "LPG", "ガス配管",
+                "ガス栓", "ガスコンセント", "白ガス管"
+            ],
+            DisciplineType.MECHANICAL: [
+                "機械設備", "空調", "換気", "エアコン", "空調機",
+                "ダクト", "ファン", "冷暖房"
+            ],
+            DisciplineType.FIRE_PROTECTION: [
+                "消防設備", "消火", "火災報知", "スプリンクラー",
+                "消火器", "避難", "誘導灯"
+            ],
+            DisciplineType.HVAC: [
+                "HVAC", "空調衛生", "環境設備"
+            ],
+        }
+
+        # 仕様書テキストから検出
+        spec_text_lower = spec_text.lower() if spec_text else ""
+
+        for discipline, keywords in discipline_keywords.items():
+            for keyword in keywords:
+                if keyword in spec_text or keyword.lower() in spec_text_lower:
+                    if discipline not in required:
+                        required.append(discipline)
+                        logger.info(f"Detected discipline: {discipline.value} (keyword: '{keyword}')")
+                    break
+
+        # building_infoのfacility_requirementsからも検出
+        facility_req = building_info.get("facility_requirements", {})
+
+        if facility_req.get("electrical", {}).get("required"):
+            if DisciplineType.ELECTRICAL not in required:
+                required.append(DisciplineType.ELECTRICAL)
+                logger.info("Detected discipline: 電気設備工事 (from facility_requirements)")
+
+        if facility_req.get("gas", {}).get("required"):
+            if DisciplineType.GAS not in required:
+                required.append(DisciplineType.GAS)
+                logger.info("Detected discipline: ガス設備工事 (from facility_requirements)")
+
+        if facility_req.get("mechanical", {}).get("required"):
+            if facility_req.get("mechanical", {}).get("plumbing"):
+                if DisciplineType.PLUMBING not in required:
+                    required.append(DisciplineType.PLUMBING)
+                    logger.info("Detected discipline: 衛生設備工事 (from facility_requirements.mechanical.plumbing)")
+
+        # 電気設備は基本的に必須（建物には必ず電気が必要）
+        if DisciplineType.ELECTRICAL not in required:
+            required.append(DisciplineType.ELECTRICAL)
+            logger.info("Added discipline: 電気設備工事 (default required)")
+
+        logger.info(f"Total detected disciplines: {[d.value for d in required]}")
+        return required
+
     def generate_detailed_items_for_gas(
         self,
         building_info: Dict[str, Any]
@@ -1957,6 +2503,308 @@ JSON配列で、階層構造を持った見積項目を出力してください�
 
         return estimate_items
 
+    def generate_detailed_items_for_plumbing(
+        self,
+        building_info: Dict[str, Any]
+    ) -> List[EstimateItem]:
+        """
+        給排水設備（衛生設備）の詳細見積項目をAI生成
+
+        建物情報から、給排水配管・衛生器具・給湯設備を設計レベルで推定します。
+        """
+        logger.info("Generating detailed plumbing equipment items")
+
+        # 建物情報を文字列化
+        building_summary = json.dumps(building_info, ensure_ascii=False, indent=2)
+
+        # 諸元表データがあれば追加情報として活用
+        spec_table_info = ""
+        if "spec_table" in building_info:
+            spec_table = building_info["spec_table"]
+            rooms = spec_table.get("rooms", [])
+            summary = spec_table.get("equipment_summary", {})
+            if rooms:
+                spec_table_info = f"""
+【諸元表からの実データ】
+- 総部屋数: {summary.get('total_rooms', len(rooms))}室
+- 総面積: {summary.get('total_area_m2', 'N/A')}㎡
+- 水栓数: {summary.get('total_faucets', 'N/A')}箇所
+
+部屋別詳細（抜粋）:
+"""
+                for room in rooms[:10]:  # 最大10室分を表示
+                    water_info = f"水栓{room.get('faucets', 0)}個" if room.get('faucets') else ""
+                    spec_table_info += f"- {room.get('room_name', '不明')}: {room.get('area_m2', '?')}㎡ {water_info}\n"
+
+        # 仕様書テキストを取得
+        spec_text = building_info.get("spec_text_excerpt", "")
+
+        prompt = f"""あなたは熟練の給排水設備（衛生設備）積算技術者です。以下の仕様書から給排水設備工事の見積項目を抽出してください。
+
+【重要な制約】
+1. **仕様書に明記されている項目**を中心に抽出してください
+2. 数量が明記されていない場合は、下記の【数量推定ルール】に従って推定してください
+3. 数量の推定根拠を estimation_basis フィールドに記載してください
+4. 一式工事は quantity=1, unit="式" としてください
+5. 項目名は以下の【KB登録項目名】を優先的に使用してください（マッチング精度向上のため）
+
+【KB登録項目名（給排水設備）】※これらの名称を優先使用
+- 給水管（HIVP）
+- 排水管（VU）
+- 通気管
+- 量水器
+- 給水バルブ
+- 混合水栓
+- 流し台
+- 電気温水器
+- 掃除口
+- 配管撤去
+- 配管支持金具
+- 穴補修
+- 保温工事
+- 諸経費
+
+【数量推定ルール】（事務所・学校施設の標準値）
+■ 給水設備
+  - 給水管(HIVP): 水栓数 × 平均配管長（5〜10m/栓）
+  - 管径選定: 主管25A→分岐20A→末端13A
+  - 給水バルブ: 系統数 × 2〜4個
+  - 量水器: 1組/建物
+
+■ 排水設備
+  - 排水管(VU): 排水口数 × 平均配管長（8〜15m/口）
+  - 管径選定: 便器75〜100A、洗面40〜50A、流し50〜65A
+  - 掃除口: 配管長20mごとに1箇所
+  - 通気管: 排水管延長の30%程度
+
+■ 衛生器具
+  - 流し台: 給湯室・事務室等の水回り箇所
+  - 混合水栓: 水栓数
+  - 電気温水器: 給湯箇所数（給湯室ごと）
+
+■ 信頼度スコアの基準
+  - 1.0: 仕様書に数量・仕様が明記
+  - 0.8-0.9: 図面から読取り可能
+  - 0.6-0.7: 上記ルールで推定
+  - 0.5以下: 概算（要確認）
+
+【仕様書の内容】
+{spec_text[:15000] if spec_text else '仕様書テキストなし'}
+
+【建物情報（参考）】
+{building_summary}
+{spec_table_info}
+
+【抽出対象カテゴリ】
+- 給水設備（給水管、バルブ、量水器等）
+- 排水設備（排水管、掃除口、通気管等）
+- 衛生器具（流し台、水栓、温水器等）
+- 付帯工事（撤去、保温、穴補修等）
+- 経費（諸経費、解体費、法定福利費等）
+
+【出力形式】
+JSON配列で、階層構造を持った見積項目を出力してください：
+
+```json
+[
+  {{
+    "item_no": "1",
+    "level": 0,
+    "name": "給排水設備工事",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "一式",
+    "remarks": "",
+    "confidence": 1.0
+  }},
+  {{
+    "item_no": "",
+    "level": 1,
+    "name": "給水設備",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "材料費",
+    "remarks": "",
+    "confidence": 0.9
+  }},
+  {{
+    "item_no": "",
+    "level": 2,
+    "name": "給水管（HIVP）",
+    "specification": "20A",
+    "quantity": 50,
+    "unit": "m",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "材料費",
+    "remarks": "",
+    "confidence": 0.7,
+    "estimation_basis": "水栓5箇所 × 平均10m/箇所 で推定"
+  }},
+  {{
+    "item_no": "",
+    "level": 2,
+    "name": "混合水栓",
+    "specification": "",
+    "quantity": 5,
+    "unit": "箇所",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "材料費",
+    "remarks": "",
+    "confidence": 0.8,
+    "estimation_basis": "仕様書記載の水回り箇所数"
+  }},
+  {{
+    "item_no": "",
+    "level": 1,
+    "name": "排水設備",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "材料費",
+    "remarks": "",
+    "confidence": 0.9
+  }},
+  {{
+    "item_no": "",
+    "level": 2,
+    "name": "排水管（VU）",
+    "specification": "50A",
+    "quantity": 60,
+    "unit": "m",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "材料費",
+    "remarks": "",
+    "confidence": 0.7,
+    "estimation_basis": "排水口5箇所 × 平均12m/箇所 で推定"
+  }},
+  {{
+    "item_no": "",
+    "level": 1,
+    "name": "機器設備",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "機器費",
+    "remarks": "",
+    "confidence": 0.9
+  }},
+  {{
+    "item_no": "",
+    "level": 2,
+    "name": "電気温水器",
+    "specification": "貯湯式",
+    "quantity": 1,
+    "unit": "台",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "機器費",
+    "remarks": "給湯室用",
+    "confidence": 0.8,
+    "estimation_basis": "仕様書記載の給湯設備"
+  }},
+  {{
+    "item_no": "",
+    "level": 1,
+    "name": "解体費",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "解体費",
+    "remarks": "既設撤去・処分",
+    "confidence": 0.8
+  }},
+  {{
+    "item_no": "",
+    "level": 1,
+    "name": "法定福利費",
+    "specification": "",
+    "quantity": 1,
+    "unit": "式",
+    "unit_price": null,
+    "amount": null,
+    "cost_type": "諸経費",
+    "remarks": "労務費×16.07%",
+    "confidence": 1.0
+  }}
+]
+```
+
+【重要】
+- 数量は必ず数値で指定してください（nullではなく、推定値でも可）
+- 単価はnullのままで構いません（後でKBから取得します）
+- 仕様書に給排水設備の記載がない場合は空配列 [] を返してください"""
+
+        response = self.client.messages.create(
+            model=self.model_name,
+            max_tokens=16000,
+            temperature=0,  # 決定的に（毎回同じ結果）
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        # コスト記録
+        record_cost(
+            operation="給排水設備見積生成",
+            model_name=self.model_name,
+            input_tokens=response.usage.input_tokens,
+            output_tokens=response.usage.output_tokens,
+            metadata={"source": "generate_detailed_estimate_items", "discipline": "給排水設備工事"}
+        )
+
+        response_text = response.content[0].text
+        logger.debug(f"LLM Response for plumbing: {response_text[:500]}...")
+
+        # 堅牢なJSON抽出を使用
+        items_data = extract_json_array_robust(response_text)
+        logger.info(f"Plumbing items extracted: {len(items_data)} items")
+
+        # EstimateItemに変換
+        estimate_items = []
+        for item_data in items_data:
+            # cost_typeの変換
+            cost_type_str = item_data.get("cost_type", "")
+            cost_type = None
+            if cost_type_str:
+                for ct in CostType:
+                    if ct.value == cost_type_str:
+                        cost_type = ct
+                        break
+
+            estimate_item = EstimateItem(
+                item_no=item_data.get("item_no", ""),
+                level=item_data.get("level", 0),
+                name=item_data.get("name", ""),
+                specification=item_data.get("specification", ""),
+                quantity=item_data.get("quantity"),
+                unit=item_data.get("unit", ""),
+                unit_price=item_data.get("unit_price"),
+                amount=item_data.get("amount"),
+                discipline=DisciplineType.PLUMBING,
+                cost_type=cost_type,
+                remarks=item_data.get("remarks", ""),
+                source_type="ai_generated",
+                source_reference=item_data.get("estimation_basis", "AI設計"),
+                confidence=item_data.get("confidence", 0.7)
+            )
+
+            estimate_items.append(estimate_item)
+
+        return estimate_items
+
     def generate_detailed_items_for_electrical(
         self,
         building_info: Dict[str, Any]
@@ -1988,9 +2836,15 @@ JSON配列で、階層構造を持った見積項目を出力してください�
         # 仕様書準拠のプロンプト
         prompt = f"""あなたは熟練の電気設備積算技術者です。以下の仕様書と建物情報から電気設備工事の見積項目を生成してください。
 
+【最重要: 過大見積を避ける】
+★ 仕様書に明記されていない項目は生成しないでください
+★ キュービクル・受変電設備は、仕様書に高圧受電の記載がある場合のみ追加
+★ 小規模施設（事務所、定検事務所など）は簡素な電気設備です。学校のような大規模項目は不要
+★ 人間が作成する見積書は通常5〜10項目程度です。15項目以上は過剰な可能性が高い
+
 【重要な制約】
-1. 仕様書に明記されている項目を優先的に抽出
-2. 仕様書に詳細がない場合は、下記の【数量推定ルール】に従って推定
+1. 仕様書に明記されている項目のみを抽出（推測で追加しない）
+2. 仕様書に「幹線」「コンセント」「照明」など具体的な記載がある場合のみ、その項目を追加
 3. 一式工事は quantity=1, unit="式" としてください
 4. 項目名は以下の【KB登録項目名】を優先的に使用してください（マッチング精度向上のため）
 
@@ -2165,9 +3019,10 @@ JSON配列で、階層構造を持った見積項目を出力してください�
     def _get_standard_electrical_items(self, building_info: Dict[str, Any]) -> List[EstimateItem]:
         """電気設備の標準項目を生成（フォールバック用）"""
         bldg = building_info.get("building_info", {})
-        floor_area = bldg.get("total_floor_area", 2000)
-        num_floors = bldg.get("floors", 3)
-        num_rooms = bldg.get("num_rooms", 30)
+        # None対策: or でデフォルト値を確実に設定
+        floor_area = bldg.get("total_floor_area") or 500  # 小規模施設想定
+        num_floors = bldg.get("floors") or 2
+        num_rooms = bldg.get("num_rooms") or 10
 
         standard_items = [
             # 受変電設備
@@ -3176,6 +4031,35 @@ JSON配列形式で出力してください：
             if drawing_info.get("equipment_locations") or drawing_info.get("pipe_routes"):
                 building_info["drawing_info"] = drawing_info
 
+        # 2.8. 仕様書から具体的な設備数量を抽出
+        extracted_quantities = self.extract_equipment_quantities(spec_text)
+        if extracted_quantities:
+            building_info["extracted_quantities"] = extracted_quantities
+            logger.info(f"Extracted specific quantities: {len(extracted_quantities.get('raw_mentions', []))} items")
+
+            # 抽出した数量で building_info を更新
+            if extracted_quantities.get("electrical"):
+                elec_qty = extracted_quantities["electrical"]
+                if elec_qty.get("outlets", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("electrical", {})["outlet_count"] = elec_qty["outlets"]["count"]
+                if elec_qty.get("switches", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("electrical", {})["switch_count"] = elec_qty["switches"]["count"]
+                if elec_qty.get("lighting_fixtures", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("electrical", {})["lighting_count"] = elec_qty["lighting_fixtures"]["count"]
+                if elec_qty.get("air_conditioners", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("mechanical", {})["aircon_count"] = elec_qty["air_conditioners"]["count"]
+
+            if extracted_quantities.get("plumbing"):
+                plumb_qty = extracted_quantities["plumbing"]
+                if plumb_qty.get("toilets", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("plumbing", {})["toilet_count"] = plumb_qty["toilets"]["count"]
+                if plumb_qty.get("sinks", {}).get("count"):
+                    building_info.setdefault("facility_requirements", {}).setdefault("plumbing", {})["sink_count"] = plumb_qty["sinks"]["count"]
+
+        # 2.9. 仕様書から必要な工事区分を自動検出
+        required_disciplines = self.detect_required_disciplines(spec_text, building_info)
+        logger.info(f"Detected disciplines: {[d.value for d in required_disciplines]}")
+
         # 3. キャッシュから項目を読み込み、なければ生成
         cached_items = self._load_cached_items(spec_pdf_path)
 
@@ -3195,47 +4079,141 @@ JSON配列形式で出力してください：
                 except Exception as e:
                     logger.warning(f"Failed to restore cached item: {e}")
         else:
-            # 新規生成
-            logger.info("Generating unified estimate items using split LLM calls for all 6 categories")
+            # 新規生成 - テンプレートベースで詳細項目を生成
+            logger.info(f"Generating estimate items for detected disciplines: {[d.value for d in required_disciplines]}")
             estimate_items = []
 
-            # 3.1 電気設備工事
-            logger.info("Generating electrical items...")
-            electrical_items = self.generate_detailed_items_for_electrical(building_info)
-            logger.info(f"Generated {len(electrical_items)} electrical items")
-            estimate_items.extend(electrical_items)
+            # 建物タイプを判定（一度だけ）
+            spec_text = building_info.get("spec_text_excerpt", "")
+            detected_building_type = detect_building_type(spec_text)
+            logger.info(f"Building type for template selection: {detected_building_type}")
 
-            # 3.2 機械設備工事
-            logger.info("Generating mechanical items...")
-            mechanical_items = self.generate_detailed_items_for_mechanical(building_info)
-            logger.info(f"Generated {len(mechanical_items)} mechanical items")
-            estimate_items.extend(mechanical_items)
+            # 3.1 電気設備工事（検出された場合のみ）- テンプレート優先
+            if DisciplineType.ELECTRICAL in required_disciplines:
+                logger.info("Generating electrical items from template...")
+                # テンプレートから詳細項目を生成
+                electrical_items = self.generate_items_from_template(building_info, DisciplineType.ELECTRICAL)
+                if len(electrical_items) > 0:
+                    # 人間見積のパターンで補完
+                    electrical_items = self.supplement_with_learned_patterns(
+                        electrical_items, detected_building_type, DisciplineType.ELECTRICAL
+                    )
+                    # 親項目を追加
+                    parent_item = EstimateItem(
+                        item_no="E000",
+                        name="電気設備工事",
+                        specification="",
+                        quantity=1,
+                        unit="式",
+                        level=0,
+                        discipline=DisciplineType.ELECTRICAL,
+                        confidence=1.0,
+                        source_type="template",
+                    )
+                    estimate_items.append(parent_item)
+                    estimate_items.extend(electrical_items)
+                    logger.info(f"Generated {len(electrical_items)} electrical items from template + learned patterns")
+                else:
+                    # テンプレートがない場合はLLM生成にフォールバック
+                    electrical_items = self.generate_detailed_items_for_electrical(building_info)
+                    logger.info(f"Generated {len(electrical_items)} electrical items via LLM (fallback)")
+                    estimate_items.extend(electrical_items)
 
-            # 3.3 ガス設備工事
-            logger.info("Generating gas items...")
-            gas_items = self.generate_detailed_items_for_gas(building_info)
-            logger.info(f"Generated {len(gas_items)} gas items")
-            estimate_items.extend(gas_items)
+            # 3.2 機械設備工事（検出された場合のみ）- テンプレート優先
+            if DisciplineType.MECHANICAL in required_disciplines:
+                logger.info("Generating mechanical items from template...")
+                mechanical_items = self.generate_items_from_template(building_info, DisciplineType.MECHANICAL)
+                if len(mechanical_items) > 0:
+                    # 人間見積のパターンで補完
+                    mechanical_items = self.supplement_with_learned_patterns(
+                        mechanical_items, detected_building_type, DisciplineType.MECHANICAL
+                    )
+                    parent_item = EstimateItem(
+                        item_no="M000",
+                        name="機械設備工事",
+                        specification="",
+                        quantity=1,
+                        unit="式",
+                        level=0,
+                        discipline=DisciplineType.MECHANICAL,
+                        confidence=1.0,
+                        source_type="template",
+                    )
+                    estimate_items.append(parent_item)
+                    estimate_items.extend(mechanical_items)
+                    logger.info(f"Generated {len(mechanical_items)} mechanical items from template + learned patterns")
+                else:
+                    mechanical_items = self.generate_detailed_items_for_mechanical(building_info)
+                    logger.info(f"Generated {len(mechanical_items)} mechanical items via LLM (fallback)")
+                    estimate_items.extend(mechanical_items)
 
-            # 3.4 空調設備工事
-            logger.info("Generating HVAC items...")
-            hvac_items = self.generate_detailed_items_generic(building_info, DisciplineType.HVAC)
-            logger.info(f"Generated {len(hvac_items)} HVAC items")
-            estimate_items.extend(hvac_items)
+            # 3.3 ガス設備工事（検出された場合のみ）- 従来通りLLM生成
+            if DisciplineType.GAS in required_disciplines:
+                logger.info("Generating gas items...")
+                gas_items = self.generate_detailed_items_for_gas(building_info)
+                logger.info(f"Generated {len(gas_items)} gas items")
+                estimate_items.extend(gas_items)
 
-            # 3.5 衛生設備工事
-            logger.info("Generating plumbing items...")
-            plumbing_items = self.generate_detailed_items_generic(building_info, DisciplineType.PLUMBING)
-            logger.info(f"Generated {len(plumbing_items)} plumbing items")
-            estimate_items.extend(plumbing_items)
+            # 3.4 空調設備工事（検出された場合のみ）
+            if DisciplineType.HVAC in required_disciplines:
+                logger.info("Generating HVAC items...")
+                hvac_items = self.generate_items_from_template(building_info, DisciplineType.HVAC)
+                if len(hvac_items) > 0:
+                    parent_item = EstimateItem(
+                        item_no="H000",
+                        name="空調設備工事",
+                        specification="",
+                        quantity=1,
+                        unit="式",
+                        level=0,
+                        discipline=DisciplineType.HVAC,
+                        confidence=1.0,
+                        source_type="template",
+                    )
+                    estimate_items.append(parent_item)
+                    estimate_items.extend(hvac_items)
+                    logger.info(f"Generated {len(hvac_items)} HVAC items from template")
+                else:
+                    hvac_items = self.generate_detailed_items_generic(building_info, DisciplineType.HVAC)
+                    logger.info(f"Generated {len(hvac_items)} HVAC items via LLM (fallback)")
+                    estimate_items.extend(hvac_items)
 
-            # 3.6 消防設備工事
-            logger.info("Generating fire protection items...")
-            fire_items = self.generate_detailed_items_generic(building_info, DisciplineType.FIRE_PROTECTION)
-            logger.info(f"Generated {len(fire_items)} fire protection items")
-            estimate_items.extend(fire_items)
+            # 3.5 衛生設備工事（検出された場合のみ）- テンプレート優先
+            if DisciplineType.PLUMBING in required_disciplines:
+                logger.info("Generating plumbing items from template...")
+                plumbing_items = self.generate_items_from_template(building_info, DisciplineType.PLUMBING)
+                if len(plumbing_items) > 0:
+                    # 人間見積のパターンで補完
+                    plumbing_items = self.supplement_with_learned_patterns(
+                        plumbing_items, detected_building_type, DisciplineType.PLUMBING
+                    )
+                    parent_item = EstimateItem(
+                        item_no="P000",
+                        name="衛生設備工事",
+                        specification="",
+                        quantity=1,
+                        unit="式",
+                        level=0,
+                        discipline=DisciplineType.PLUMBING,
+                        confidence=1.0,
+                        source_type="template",
+                    )
+                    estimate_items.append(parent_item)
+                    estimate_items.extend(plumbing_items)
+                    logger.info(f"Generated {len(plumbing_items)} plumbing items from template + learned patterns")
+                else:
+                    plumbing_items = self.generate_detailed_items_for_plumbing(building_info)
+                    logger.info(f"Generated {len(plumbing_items)} plumbing items via LLM (fallback)")
+                    estimate_items.extend(plumbing_items)
 
-            logger.info(f"Generated total {len(estimate_items)} unified items across all 6 categories")
+            # 3.6 消防設備工事（検出された場合のみ）
+            if DisciplineType.FIRE_PROTECTION in required_disciplines:
+                logger.info("Generating fire protection items...")
+                fire_items = self.generate_detailed_items_generic(building_info, DisciplineType.FIRE_PROTECTION)
+                logger.info(f"Generated {len(fire_items)} fire protection items")
+                estimate_items.extend(fire_items)
+
+            logger.info(f"Generated total {len(estimate_items)} items for {len(required_disciplines)} detected disciplines")
 
             # 生成した項目をキャッシュに保存（単価付与前の状態）
             items_for_cache = [item.model_dump(mode='json') for item in estimate_items]
@@ -3246,16 +4224,20 @@ JSON配列形式で出力してください：
         floor_area = building_info.get("building_info", {}).get("total_floor_area", 0) or 0
         num_rooms = building_info.get("building_info", {}).get("num_rooms", 0) or 0
 
-        # 各工事区分のカバー率を検証
+        # 各工事区分のカバー率を検証（検出された工事区分のみ）
+        # チェックリストがある工事区分のみ検証
+        checkable_disciplines = [d for d in required_disciplines if d in [
+            DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL, DisciplineType.GAS
+        ]]
         coverage_results = {}
-        for disc in [DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL, DisciplineType.GAS]:
+        for disc in checkable_disciplines:
             disc_items = [item for item in estimate_items if item.discipline == disc]
             coverage = checker.check_item_coverage(disc_items, disc)
             coverage_results[disc.value] = coverage
             logger.info(f"Checklist coverage for {disc.value}: {coverage['coverage_rate']*100:.1f}%")
 
             # 不足項目を追加（カバー率が70%未満の場合）
-            if coverage['coverage_rate'] < 0.7 and coverage['missing_items']:
+            if coverage['coverage_rate'] < 0.5 and coverage['missing_items']:
                 missing_items = checker.generate_missing_items(
                     disc_items, disc, floor_area, num_rooms
                 )
@@ -3263,10 +4245,25 @@ JSON配列形式で出力してください：
                     estimate_items.extend(missing_items)
                     logger.info(f"Added {len(missing_items)} missing items for {disc.value}")
 
-        # 数量推定を適用
-        for disc in [DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL, DisciplineType.GAS]:
+        # 数量推定を適用（検出された工事区分のみ）
+        for disc in checkable_disciplines:
             disc_items = [item for item in estimate_items if item.discipline == disc]
             checker.estimate_quantities(disc_items, disc, floor_area, num_rooms)
+
+        # 3.8. カテゴリ別階層構造を適用
+        logger.info("Applying category hierarchy to items...")
+        categorized_items = []
+        for disc in required_disciplines:
+            disc_items = [item for item in estimate_items if item.discipline == disc]
+            if disc_items:
+                # カテゴリ階層を追加
+                organized = add_category_hierarchy(disc_items, disc)
+                categorized_items.extend(organized)
+
+        # カテゴリ化された項目で置き換え（カテゴリ化が有効な場合）
+        if len(categorized_items) >= len(estimate_items):
+            estimate_items = categorized_items
+            logger.info(f"Category hierarchy applied: {len(estimate_items)} items organized")
 
         # 4. KBから単価を取得（全カテゴリ使用）
         estimate_items = self.enrich_with_prices_unified(estimate_items)
@@ -3291,47 +4288,73 @@ JSON配列形式で出力してください：
             num_rooms=building_info.get("building_info", {}).get("num_rooms")
         )
 
-        # 全工事区分を含む（6カテゴリ）
-        all_disciplines = [
-            DisciplineType.ELECTRICAL,
-            DisciplineType.MECHANICAL,
-            DisciplineType.GAS,
-            DisciplineType.HVAC,
-            DisciplineType.PLUMBING,
-            DisciplineType.FIRE_PROTECTION
-        ]
+        # 検出された工事区分のみを含む（動的）
+        # required_disciplinesは上部で検出済み
 
-        # 妥当性検証（主要3区分）
+        # 妥当性検証（検出された工事区分のみ）
         unit_price_checks = {}
-        for disc in [DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL, DisciplineType.GAS]:
+        for disc in required_disciplines:
             disc_items = [item for item in estimate_items if item.discipline == disc]
-            check = checker.validate_unit_price(disc_items, disc, "学校", floor_area)
-            unit_price_checks[disc.value] = check
-            logger.info(f"Unit price validation for {disc.value}: {check['message']}")
+            if disc_items:
+                check = checker.validate_unit_price(disc_items, disc, "学校", floor_area)
+                unit_price_checks[disc.value] = check
+                logger.info(f"Unit price validation for {disc.value}: {check['message']}")
 
-        # 6. ㎡単価補正（下限を下回る場合に調整項目を追加）
+        # 6. ㎡単価補正（検出された工事区分のみ、下限を下回る場合に調整項目を追加）
         correction_results = {}
-        for disc in [DisciplineType.ELECTRICAL, DisciplineType.MECHANICAL, DisciplineType.GAS]:
+        for disc in required_disciplines:
             disc_items = [item for item in estimate_items if item.discipline == disc]
-            correction = checker.apply_all_corrections(
-                disc_items, disc, "学校", floor_area, auto_correct=True
-            )
-            correction_results[disc.value] = correction
+            if disc_items:
+                correction = checker.apply_all_corrections(
+                    disc_items, disc, "学校", floor_area, auto_correct=True
+                )
+                correction_results[disc.value] = correction
 
-            # 補正項目があれば追加
-            if correction.get("items_added"):
-                for correction_item in correction["items_added"]:
-                    estimate_items.append(correction_item)
-                    logger.info(
-                        f"Added correction item for {disc.value}: "
-                        f"¥{correction['correction_total']:,.0f}"
-                    )
+                # 補正項目があれば追加（if disc_itemsブロック内に移動）
+                if correction.get("items_added"):
+                    for correction_item in correction["items_added"]:
+                        estimate_items.append(correction_item)
+                        logger.info(
+                            f"Added correction item for {disc.value}: "
+                            f"¥{correction['correction_total']:,.0f}"
+                        )
+
+        # 7. 類似案件検索と比較
+        logger.info("Searching for similar projects...")
+        similar_project_info = {}
+        try:
+            searcher = SimilarProjectSearch()
+            detected_building_type = building_info.get("detected_building_type", "temporary_office")
+            discipline_names = [d.value for d in required_disciplines]
+
+            similar_projects = searcher.search_similar_projects(
+                target_building_type=detected_building_type,
+                target_disciplines=discipline_names,
+                top_k=3
+            )
+
+            if similar_projects:
+                similar_project_info["similar_projects"] = similar_projects
+                top_project = similar_projects[0]["project_name"]
+                similar_project_info["top_match"] = searcher.get_project_details(top_project)
+
+                # 現在の見積と比較
+                current_items_for_compare = [
+                    {"name": item.name, "unit_price": item.unit_price, "amount": item.amount}
+                    for item in estimate_items
+                ]
+                comparison = searcher.compare_estimates(current_items_for_compare, top_project)
+                similar_project_info["comparison"] = comparison
+
+                logger.info(f"Found {len(similar_projects)} similar projects, top: {top_project}")
+        except Exception as e:
+            logger.warning(f"Similar project search failed: {e}")
 
         fmt_doc = FMTDocument(
             created_at=datetime.now().isoformat(),
             project_info=project_info,
             facility_type=FacilityType.SCHOOL,
-            disciplines=all_disciplines,
+            disciplines=required_disciplines,
             estimate_items=estimate_items,
             metadata={
                 "payment_terms": "本紙記載内容のみ有効とする。",
@@ -3348,6 +4371,8 @@ JSON配列形式で出力してください：
                         "corrected": v.get("correction_total", 0) > 0
                     } for k, v in correction_results.items()
                 },
+                "similar_projects": similar_project_info,
+                "extracted_quantities": building_info.get("extracted_quantities", {}),
             }
         )
 
